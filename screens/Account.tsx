@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from 'react-native-elements'
-import { Session } from '@supabase/supabase-js'
+import { useAuthContext } from '../providers/AuthProvider'
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
   const [loading, setLoading] = useState(true)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
+  const { signedIn, session } = useAuthContext()
 
   useEffect(() => {
-    if (session) getProfile()
-  }, [session])
+    if (signedIn) getProfile()
+  }, [signedIn])
 
   async function getProfile() {
     try {

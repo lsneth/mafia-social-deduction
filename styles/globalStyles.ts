@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import colors from './colors'
 
-const styles = StyleSheet.create({
+const globalStyles = StyleSheet.create({
   // typography
   baseText: { color: colors.white, fontSize: 16 },
   heading: {
@@ -11,17 +11,19 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   // input
-  baseButton: {
-    backgroundColor: colors.red,
-    paddingTop: 12,
-    paddingBottom: 12,
-    margin: 7,
-    marginLeft: 30,
-    marginRight: 30,
-    borderRadius: 22,
+  baseTextInputContainer: {
+    marginLeft: 25,
+    marginRight: 25,
   },
-  baseInput: {
+  baseTextInput: {
     color: colors.white,
+    borderWidth: 1,
+    borderRadius: 22,
+    backgroundColor: colors.gray,
+    padding: 8,
+    paddingLeft: 16,
+    marginTop: 5,
+    marginBottom: 5,
   },
   // alignment
   center: { textAlign: 'center' },
@@ -33,9 +35,12 @@ const styles = StyleSheet.create({
   paddingLarge: {
     padding: 70,
   },
+  paddingTopMedium: {
+    paddingTop: 40,
+  },
   paddingBottomMedium: {
     paddingBottom: 40,
   },
 })
 
-export default styles
+export default globalStyles

@@ -1,25 +1,30 @@
 import 'react-native-url-polyfill/auto'
-import { useState, useEffect } from 'react'
-import { supabase } from './lib/supabase'
-import Auth from './components/Auth'
-import Account from './components/Account'
-import { View } from 'react-native'
-import { Session } from '@supabase/supabase-js'
-import Home from './components/Home'
+import Auth from './screens/Auth'
+import Account from './screens/Account'
+import Home from './screens/Home'
+import { NavigationContainer } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import AuthProvider from './providers/AuthProvider'
+
+export type RootStackParamList = {
+  Home: undefined
+  Auth: { hasAccount: boolean }
+  Account: undefined
+}
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null)
+  const Stack = createNativeStackNavigator<RootStackParamList>()
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-  }, [])
-
-  return <View>{session && session.user ? <Account key={session.user.id} session={session} /> : <Home />}</View>
-  // return <View>{session && session.user ? <Account key={session.user.id} session={session} /> : <Auth />}</View>
+  // TODO: style headers, make them transparent, or hide them: options={{ headerShown: false }}
+  return (
+    <NavigationContainer>
+      <AuthProvider>
+        <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Auth" initialParams={{ hasAccount: true }} component={Auth} />
+          <Stack.Screen name="Account" component={Account} />
+        </Stack.Navigator>
+      </AuthProvider>
+    </NavigationContainer>
+  )
 }
