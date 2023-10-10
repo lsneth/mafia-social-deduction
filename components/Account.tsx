@@ -6,9 +6,8 @@ import { Session } from '@supabase/supabase-js'
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState('')
-  const [website, setWebsite] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
 
   useEffect(() => {
     if (session) getProfile()
@@ -21,7 +20,7 @@ export default function Account({ session }: { session: Session }) {
 
       let { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, website, avatar_url`)
+        .select(`first_name, last_name`)
         .eq('id', session?.user.id)
         .single()
       if (error && status !== 406) {
@@ -29,9 +28,8 @@ export default function Account({ session }: { session: Session }) {
       }
 
       if (data) {
-        setUsername(data.username)
-        setWebsite(data.website)
-        setAvatarUrl(data.avatar_url)
+        setFirstName(data.first_name)
+        setLastName(data.last_name)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -42,24 +40,15 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string
-    website: string
-    avatar_url: string
-  }) {
+  async function updateProfile({ first_name, last_name }: { first_name: string; last_name: string }) {
     try {
       setLoading(true)
       if (!session?.user) throw new Error('No user on the session!')
 
       const updates = {
         id: session?.user.id,
-        username,
-        website,
-        avatar_url,
+        first_name,
+        last_name,
         updated_at: new Date(),
       }
 
@@ -83,16 +72,16 @@ export default function Account({ session }: { session: Session }) {
         <Input label="Email" value={session?.user?.email} disabled />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
+        <Input label="First Name" value={firstName || ''} onChangeText={(text) => setFirstName(text)} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
+        <Input label="Last Name" value={lastName || ''} onChangeText={(text) => setLastName(text)} />
       </View>
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
+          onPress={() => updateProfile({ first_name: firstName, last_name: lastName })}
           disabled={loading}
         />
       </View>
