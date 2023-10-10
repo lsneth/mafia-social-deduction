@@ -1,14 +1,19 @@
+import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
-export default function Separator({ size }: { size: 'sm' | 'md' | 'lg' }) {
+export default function Separator({ size }: { size: 'xs' | 'sm' | 'md' | 'lg' }) {
   const styles = StyleSheet.create({
+    xs: {
+      marginTop: 5,
+      marginBottom: 5,
+    },
     sm: {
-      marginTop: 10,
-      marginBottom: 10,
+      marginTop: 12,
+      marginBottom: 12,
     },
     md: {
-      marginTop: 25,
-      marginBottom: 25,
+      marginTop: 30,
+      marginBottom: 30,
     },
     lg: {
       marginTop: 50,

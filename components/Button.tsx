@@ -1,7 +1,7 @@
-import { StyleSheet } from 'react-native'
+import React from 'react'
+import { StyleSheet, View } from 'react-native'
 import { Button as BaseButton } from 'react-native-elements'
 import colors from '../styles/colors'
-import globalStyles from '../styles/globalStyles'
 
 export default function Button({
   disabled,
@@ -22,15 +22,21 @@ export default function Button({
       marginRight: 25,
       borderRadius: 22,
     },
+    text: {
+      color: colors.white,
+      fontSize: 16,
+    },
   })
 
   return (
-    <BaseButton
-      title={title}
-      onPress={() => onPress()}
-      disabled={disabled}
-      titleStyle={globalStyles.baseText}
-      buttonStyle={styles.button}
-    />
+    <View>
+      <BaseButton
+        title={title}
+        onPress={() => onPress()}
+        disabled={disabled}
+        titleStyle={styles.text}
+        buttonStyle={styles.button}
+      />
+    </View>
   )
 }

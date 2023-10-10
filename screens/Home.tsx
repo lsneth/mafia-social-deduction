@@ -2,29 +2,44 @@ import React from 'react'
 import { useAuthContext } from '../providers/AuthProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../App'
-import { ImageBackground, View } from 'react-native'
-import { Text } from 'react-native-elements'
+import { RouteProp } from '@react-navigation/native'
+import Text from '../components/Text'
 import Button from '../components/Button'
-import globalStyles from '../styles/globalStyles'
-import { LinearGradient } from 'expo-linear-gradient'
+import Separator from '../components/Separator'
+import ParentView from '../components/ParentView'
+import BottomView from '../components/BottomView'
 
-export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
-  const { signedIn } = useAuthContext() // TODO: when signed in, render join game/host game instead of create account/login
+export default function Home({
+  route,
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>
+  route: RouteProp<RootStackParamList, 'Home'>
+}) {
+  const { signedIn } = useAuthContext()
 
   return (
-    <View>
-      <ImageBackground source={require('../assets/background-images/mafia.png')} style={{ height: '100%' }}>
-        <LinearGradient colors={['#000000', 'transparent', '#000000']} style={{ height: '100%' }}>
-          <View style={globalStyles.paddingLarge}>
-            <Text style={[globalStyles.baseText, globalStyles.center, globalStyles.heading]}>MAFIA</Text>
-            <Text style={[globalStyles.baseText, globalStyles.center, globalStyles.subheading]}>Social Deduction</Text>
-          </View>
-          <View style={[globalStyles.bottom, globalStyles.paddingBottomMedium]}>
+    <ParentView
+      backgroundImage={require('../assets/background-images/mafia.png')}
+      gradientValues={['#000000', 'transparent', '#000000']}
+    >
+      <Text size="lg">MAFIA</Text>
+      <Text size="md">Social Deduction</Text>
+      <BottomView>
+        {signedIn ? (
+          <>
+            <Button title="JOIN GAME" onPress={() => {}} />
+            <Button title="HOST GAME" onPress={() => {}} />
+            <Separator size="sm" />
+            <Button title="ACCOUNT" onPress={() => navigation.navigate('Account')} />
+          </>
+        ) : (
+          <>
             <Button title="CREATE ACCOUNT" onPress={() => navigation.navigate('Auth', { hasAccount: false })} />
             <Button title="LOG IN" onPress={() => navigation.navigate('Auth', { hasAccount: true })} />
-          </View>
-        </LinearGradient>
-      </ImageBackground>
-    </View>
+          </>
+        )}
+      </BottomView>
+    </ParentView>
   )
 }

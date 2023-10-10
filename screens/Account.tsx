@@ -1,10 +1,24 @@
+import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert } from 'react-native'
-import { Button, Input } from 'react-native-elements'
 import { useAuthContext } from '../providers/AuthProvider'
+import { RouteProp } from '@react-navigation/native'
+import { RootStackParamList } from '../App'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import ParentView from '../components/ParentView'
+import Button from '../components/Button'
+import TextInput from '../components/TextInput'
+import Separator from '../components/Separator'
+import Text from '../components/Text'
 
-export default function Account() {
+export default function Account({
+  route,
+  navigation,
+}: {
+  route: RouteProp<RootStackParamList, 'Account'>
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Account'>
+}) {
   const [loading, setLoading] = useState(true)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -68,29 +82,30 @@ export default function Account() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input label="First Name" value={firstName || ''} onChangeText={(text) => setFirstName(text)} />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input label="Last Name" value={lastName || ''} onChangeText={(text) => setLastName(text)} />
-      </View>
+    <ParentView>
+      <Text size="md">Account</Text>
+      <Separator size="xs" />
+      <Text size="sm">{session?.user?.email}</Text>
+      <Separator size="md" />
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ first_name: firstName, last_name: lastName })}
-          disabled={loading}
-        />
-      </View>
+      <TextInput value={firstName || 'first name'} onChangeText={(text) => setFirstName(text)} />
+      <TextInput value={lastName || 'last name'} onChangeText={(text) => setLastName(text)} />
 
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
-    </View>
+      <Separator size="sm" />
+
+      <Button
+        title={loading ? 'Loading ...' : 'Update'}
+        onPress={() => updateProfile({ first_name: firstName, last_name: lastName })}
+        disabled={loading}
+      />
+      <Button
+        title="Log Out"
+        onPress={() => {
+          supabase.auth.signOut()
+          navigation.navigate('Home')
+        }}
+      />
+    </ParentView>
   )
 }
 
