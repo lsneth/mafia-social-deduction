@@ -3,7 +3,7 @@ import colors from './colors'
 
 const styles = StyleSheet.create({
   // typography
-  baseText: { color: colors.white, fontSize: 18 },
+  baseText: { color: colors.white, fontSize: 16 },
   heading: {
     fontSize: 65,
   },
