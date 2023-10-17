@@ -17,23 +17,6 @@ export default function TextInput({
   autoFocus?: boolean
   secureTextEntry?: boolean
 }) {
-  const styles = StyleSheet.create({
-    container: {
-      marginLeft: 25,
-      marginRight: 25,
-    },
-    textInput: {
-      color: colors.white,
-      borderWidth: 1,
-      borderRadius: 22,
-      backgroundColor: colors.gray,
-      padding: 8,
-      paddingLeft: 16,
-      marginTop: 5,
-      marginBottom: 5,
-    },
-  })
-
   return (
     <View style={styles.container}>
       <BaseTextInput
@@ -50,3 +33,20 @@ export default function TextInput({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    marginLeft: 25,
+    marginRight: 25,
+  },
+  textInput: {
+    color: colors.white,
+    borderWidth: 1,
+    borderRadius: 22,
+    backgroundColor: colors.gray,
+    padding: 8,
+    paddingLeft: 16,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+})

@@ -55,22 +55,22 @@ export default function Auth({
       {route.params.hasAccount ? ( // this needs to be different than the state `hasAccount` because we don't want the welcome text to change on a user's first time like we want to button text to
         <>
           <Text size="md">Welcome Back!</Text>
-          <Separator size="xs" />
+          <Separator size={10} />
           <Text size="sm">We're excited to see you again!</Text>
         </>
       ) : (
         <>
           <Text size="md">Welcome!</Text>
-          <Separator size="xs" />
+          <Separator size={10} />
           <Text size="sm">We're happy for you to join us!</Text>
         </>
       )}
 
-      <Separator size="md" />
+      <Separator size={60} />
       <TextInput value={email} onChangeText={(text) => setEmail(text)} placeholder="email@address.com" autoFocus />
       <TextInput value={password} onChangeText={(text) => setPassword(text)} placeholder="password" secureTextEntry />
 
-      <Separator size="sm" />
+      <Separator size={20} />
 
       {hasAccount ? (
         <Button title="LOG IN" disabled={loading} onPress={() => signInWithEmail()} />

@@ -11,24 +11,24 @@ export default function Text({
   align?: 'left' | 'center'
   size?: 'sm' | 'md' | 'lg'
 }) {
-  const styles = StyleSheet.create({
-    text: {
-      color: colors.white,
-      textAlign: align,
-    },
-    sm: {
-      fontSize: 16,
-    },
-    md: {
-      fontSize: 25,
-    },
-    lg: {
-      fontSize: 65,
-    },
-  })
   return (
     <View>
-      <BaseText style={[styles.text, styles[size]]}>{children}</BaseText>
+      <BaseText style={[{ textAlign: align }, styles.text, styles[size]]}>{children}</BaseText>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  text: {
+    color: colors.white,
+  },
+  sm: {
+    fontSize: 16,
+  },
+  md: {
+    fontSize: 25,
+  },
+  lg: {
+    fontSize: 65,
+  },
+})

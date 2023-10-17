@@ -12,22 +12,6 @@ export default function Button({
   onPress: () => void
   title: string
 }) {
-  const styles = StyleSheet.create({
-    button: {
-      backgroundColor: colors.red,
-      paddingTop: 12,
-      paddingBottom: 12,
-      margin: 7,
-      marginLeft: 25,
-      marginRight: 25,
-      borderRadius: 22,
-    },
-    text: {
-      color: colors.white,
-      fontSize: 16,
-    },
-  })
-
   return (
     <View>
       <BaseButton
@@ -40,3 +24,19 @@ export default function Button({
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: colors.red,
+    paddingTop: 12,
+    paddingBottom: 12,
+    margin: 5,
+    marginLeft: 25,
+    marginRight: 25,
+    borderRadius: 22,
+  },
+  text: {
+    color: colors.white,
+    fontSize: 16,
+  },
+})

@@ -20,7 +20,7 @@ export default function Home({
 
   return (
     <ParentView
-      backgroundImage={require('../assets/background-images/mafia.png')}
+      backgroundImage={require('../assets/images/mafia.png')}
       gradientValues={['#000000', 'transparent', '#000000']}
     >
       <Text size="lg">MAFIA</Text>
@@ -30,7 +30,7 @@ export default function Home({
           <>
             <Button title="JOIN GAME" onPress={() => {}} />
             <Button title="HOST GAME" onPress={() => {}} />
-            <Separator size="sm" />
+            <Separator size={20} />
             <Button title="ACCOUNT" onPress={() => navigation.navigate('Account')} />
           </>
         ) : (

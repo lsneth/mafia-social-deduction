@@ -84,14 +84,14 @@ export default function Account({
   return (
     <ParentView>
       <Text size="md">Account</Text>
-      <Separator size="xs" />
+      <Separator size={10} />
       <Text size="sm">{session?.user?.email}</Text>
-      <Separator size="md" />
+      <Separator size={60} />
 
       <TextInput value={firstName || 'first name'} onChangeText={(text) => setFirstName(text)} />
       <TextInput value={lastName || 'last name'} onChangeText={(text) => setLastName(text)} />
 
-      <Separator size="sm" />
+      <Separator size={20} />
 
       <Button
         title={loading ? 'Loading ...' : 'Update'}
@@ -108,18 +108,3 @@ export default function Account({
     </ParentView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
-  },
-  mt20: {
-    marginTop: 20,
-  },
-})
