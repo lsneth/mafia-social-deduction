@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, TextInput as BaseTextInput, StyleSheet } from 'react-native'
 import colors from '../styles/colors'
+import Text from './Text'
+import Separator from './Separator'
 
 export default function TextInput({
   value,
@@ -9,6 +11,7 @@ export default function TextInput({
   editable,
   autoFocus,
   secureTextEntry,
+  label,
 }: {
   value?: string
   onChangeText?: (text: string) => void
@@ -16,19 +19,33 @@ export default function TextInput({
   editable?: boolean
   autoFocus?: boolean
   secureTextEntry?: boolean
+  label: string
 }) {
+  const [focused, setFocused] = useState(false)
+
   return (
     <View style={styles.container}>
+      {label && (
+        <View style={{ paddingLeft: 5 }}>
+          <Text align="left">{label}</Text>
+        </View>
+      )}
       <BaseTextInput
         value={value}
         onChangeText={onChangeText ? (text) => onChangeText(text) : undefined}
         placeholder={placeholder}
-        placeholderTextColor={colors.white}
+        placeholderTextColor={colors.lightGray}
         autoCapitalize={'none'}
         editable={editable}
         autoFocus={autoFocus}
         secureTextEntry={secureTextEntry}
-        style={styles.textInput}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        style={[
+          styles.textInput,
+          focused ? styles.focusedBorder : focused && styles.blurredBorder,
+          !editable && styles.notEditableBorder,
+        ]}
       />
     </View>
   )
@@ -43,10 +60,19 @@ const styles = StyleSheet.create({
     color: colors.white,
     borderWidth: 1,
     borderRadius: 22,
-    backgroundColor: colors.gray,
+    backgroundColor: colors.black,
     padding: 8,
     paddingLeft: 16,
     marginTop: 5,
     marginBottom: 5,
+  },
+  focusedBorder: {
+    borderColor: colors.white,
+  },
+  blurredBorder: {
+    borderColor: colors.lightGray,
+  },
+  notEditableBorder: {
+    borderColor: colors.gray,
   },
 })

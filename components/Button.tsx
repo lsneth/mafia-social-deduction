@@ -7,19 +7,20 @@ export default function Button({
   disabled,
   onPress,
   title,
+  backgroundColor = 'red',
 }: {
   disabled?: boolean
   onPress: () => void
   title: string
+  backgroundColor?: 'red' | 'gray'
 }) {
   return (
     <View>
       <BaseButton
         title={title}
-        onPress={() => onPress()}
-        disabled={disabled}
+        onPress={disabled ? () => {} : () => onPress()}
         titleStyle={styles.text}
-        buttonStyle={styles.button}
+        buttonStyle={[styles.button, disabled ? styles.disabled : styles[backgroundColor]]}
       />
     </View>
   )
@@ -27,7 +28,6 @@ export default function Button({
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.red,
     paddingTop: 12,
     paddingBottom: 12,
     margin: 5,
@@ -38,5 +38,14 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     fontSize: 16,
+  },
+  red: {
+    backgroundColor: colors.red,
+  },
+  gray: {
+    backgroundColor: colors.gray,
+  },
+  disabled: {
+    backgroundColor: colors.gray,
   },
 })

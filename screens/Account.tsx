@@ -11,6 +11,7 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import Separator from '../components/Separator'
 import Text from '../components/Text'
+import BottomView from '../components/BottomView'
 
 export default function Account({
   route,
@@ -23,6 +24,8 @@ export default function Account({
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const { signedIn, session } = useAuthContext()
+
+  const [editMode, setEditMode] = useState<boolean>(false)
 
   useEffect(() => {
     if (signedIn) getProfile()
@@ -86,25 +89,46 @@ export default function Account({
       <Text size="md">Account</Text>
       <Separator size={10} />
       <Text size="sm">{session?.user?.email}</Text>
-      <Separator size={60} />
+      <Separator size={30} />
 
-      <TextInput value={firstName || 'first name'} onChangeText={(text) => setFirstName(text)} />
-      <TextInput value={lastName || 'last name'} onChangeText={(text) => setLastName(text)} />
-
+      <TextInput value={firstName} onChangeText={(text) => setFirstName(text)} editable={editMode} label="First Name" />
       <Separator size={20} />
+      <TextInput value={lastName} onChangeText={(text) => setLastName(text)} editable={editMode} label="Last Name" />
 
-      <Button
-        title={loading ? 'Loading ...' : 'Update'}
-        onPress={() => updateProfile({ first_name: firstName, last_name: lastName })}
-        disabled={loading}
-      />
-      <Button
-        title="Log Out"
-        onPress={() => {
-          supabase.auth.signOut()
-          navigation.navigate('Home')
-        }}
-      />
+      <Separator size={40} />
+
+      {editMode ? (
+        <>
+          <Button
+            title={loading ? 'Loading ...' : 'Save'}
+            onPress={() => {
+              updateProfile({ first_name: firstName, last_name: lastName })
+              setEditMode(false)
+            }}
+            disabled={loading}
+          />
+          <Button
+            title={'Cancel'}
+            onPress={() => {
+              setEditMode(false)
+              getProfile() // TODO: manage state instead of making another call like this
+            }}
+          />
+        </>
+      ) : (
+        <Button title={'Edit Profile'} onPress={() => setEditMode(true)} />
+      )}
+
+      <BottomView>
+        <Button
+          title="Log Out"
+          backgroundColor="gray"
+          onPress={() => {
+            supabase.auth.signOut()
+            navigation.navigate('Home')
+          }}
+        />
+      </BottomView>
     </ParentView>
   )
 }

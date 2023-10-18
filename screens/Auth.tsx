@@ -67,10 +67,23 @@ export default function Auth({
       )}
 
       <Separator size={60} />
-      <TextInput value={email} onChangeText={(text) => setEmail(text)} placeholder="email@address.com" autoFocus />
-      <TextInput value={password} onChangeText={(text) => setPassword(text)} placeholder="password" secureTextEntry />
-
+      <TextInput
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+        placeholder="email@address.com"
+        autoFocus
+        label="Email"
+      />
       <Separator size={20} />
+      <TextInput
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+        placeholder="password"
+        secureTextEntry
+        label="Password"
+      />
+
+      <Separator size={30} />
 
       {hasAccount ? (
         <Button title="LOG IN" disabled={loading} onPress={() => signInWithEmail()} />
