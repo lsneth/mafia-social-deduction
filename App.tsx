@@ -5,12 +5,14 @@ import Auth from './screens/Auth'
 import Account from './screens/Account'
 import Home from './screens/Home'
 import AuthProvider from './providers/AuthProvider'
+import Stats from './screens/Stats'
 import colors from './styles/colors'
 
 export type RootStackParamList = {
   Home: undefined
   Auth: { hasAccount: boolean }
   Account: undefined
+  Stats: undefined
 }
 
 export default function App() {
@@ -30,6 +32,7 @@ export default function App() {
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Auth" initialParams={{ hasAccount: true }} component={Auth} />
           <Stack.Screen name="Account" component={Account} />
+          <Stack.Screen name="Stats" component={Stats} />
         </Stack.Navigator>
       </AuthProvider>
     </NavigationContainer>

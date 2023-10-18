@@ -8,7 +8,7 @@ export default function TextInput({
   value,
   onChangeText,
   placeholder,
-  editable,
+  editable = true,
   autoFocus,
   secureTextEntry,
   label,
@@ -43,8 +43,7 @@ export default function TextInput({
         onBlur={() => setFocused(false)}
         style={[
           styles.textInput,
-          focused ? styles.focusedBorder : focused && styles.blurredBorder,
-          !editable && styles.notEditableBorder,
+          editable ? (focused ? styles.focusedBorder : styles.blurredBorder) : styles.notEditableBorder,
         ]}
       />
     </View>

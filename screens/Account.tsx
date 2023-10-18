@@ -21,6 +21,8 @@ export default function Account({
   navigation: NativeStackNavigationProp<RootStackParamList, 'Account'>
 }) {
   const [loading, setLoading] = useState(true)
+  const [tempFirstName, setTempFirstName] = useState('') // state the user changes during edit mode
+  const [tempLastName, setTempLastName] = useState('') // state the user changes during edit mode
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const { signedIn, session } = useAuthContext()
@@ -91,9 +93,19 @@ export default function Account({
       <Text size="sm">{session?.user?.email}</Text>
       <Separator size={30} />
 
-      <TextInput value={firstName} onChangeText={(text) => setFirstName(text)} editable={editMode} label="First Name" />
+      <TextInput
+        value={editMode ? tempFirstName : firstName}
+        onChangeText={(text) => setTempFirstName(text)}
+        editable={editMode}
+        label="First Name"
+      />
       <Separator size={20} />
-      <TextInput value={lastName} onChangeText={(text) => setLastName(text)} editable={editMode} label="Last Name" />
+      <TextInput
+        value={editMode ? tempLastName : lastName}
+        onChangeText={(text) => setTempLastName(text)}
+        editable={editMode}
+        label="Last Name"
+      />
 
       <Separator size={40} />
 
@@ -102,7 +114,9 @@ export default function Account({
           <Button
             title={loading ? 'Loading ...' : 'Save'}
             onPress={() => {
-              updateProfile({ first_name: firstName, last_name: lastName })
+              updateProfile({ first_name: tempFirstName, last_name: tempLastName })
+              setFirstName(tempFirstName)
+              setLastName(tempLastName)
               setEditMode(false)
             }}
             disabled={loading}
@@ -111,15 +125,22 @@ export default function Account({
             title={'Cancel'}
             onPress={() => {
               setEditMode(false)
-              getProfile() // TODO: manage state instead of making another call like this
             }}
           />
         </>
       ) : (
-        <Button title={'Edit Profile'} onPress={() => setEditMode(true)} />
+        <Button
+          title={'Edit Profile'}
+          onPress={() => {
+            setEditMode(true)
+            setTempFirstName(firstName)
+            setTempLastName(lastName)
+          }}
+        />
       )}
 
       <BottomView>
+        <Button title={'Stats'} onPress={() => navigation.navigate('Stats')} />
         <Button
           title="Log Out"
           backgroundColor="gray"
