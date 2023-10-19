@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAuthContext } from '../providers/AuthProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../App'
+import { RootStackParamList } from '../../App'
 import { RouteProp } from '@react-navigation/native'
 import Text from '../components/Text'
 import Button from '../components/Button'
@@ -20,7 +20,7 @@ export default function Home({
 
   return (
     <ParentView
-      backgroundImage={require('../assets/images/mafia.png')}
+      backgroundImage={require('../../assets/images/mafia.png')}
       gradientValues={['#000000', 'transparent', '#000000']}
     >
       <Text size="lg">MAFIA</Text>

@@ -1,18 +1,20 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Auth from './screens/Auth'
-import Account from './screens/Account'
-import Home from './screens/Home'
-import AuthProvider from './providers/AuthProvider'
-import Stats from './screens/Stats'
-import colors from './styles/colors'
+import Auth from './src/screens/Auth'
+import Account from './src/screens/Account'
+import Home from './src/screens/Home'
+import AuthProvider from './src/providers/AuthProvider'
+import Stats from './src/screens/Stats'
+import colors from './src/styles/colors'
+import Lobby from './src/screens/Lobby'
 
 export type RootStackParamList = {
   Home: undefined
   Auth: { hasAccount: boolean }
   Account: undefined
   Stats: undefined
+  Lobby: undefined
 }
 
 export default function App() {
@@ -33,6 +35,7 @@ export default function App() {
           <Stack.Screen name="Auth" initialParams={{ hasAccount: true }} component={Auth} />
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Stats" component={Stats} />
+          <Stack.Screen name="Lobby" component={Lobby} />
         </Stack.Navigator>
       </AuthProvider>
     </NavigationContainer>
