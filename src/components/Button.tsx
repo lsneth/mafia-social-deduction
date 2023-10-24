@@ -6,18 +6,18 @@ import colors from '../styles/colors'
 export default function Button({
   disabled,
   onPress,
-  title,
+  children,
   backgroundColor = 'red',
 }: {
   disabled?: boolean
   onPress: () => void
-  title: string
+  children: string
   backgroundColor?: 'red' | 'gray'
 }) {
   return (
     <View>
       <BaseButton
-        title={title}
+        title={children}
         onPress={disabled ? () => {} : () => onPress()}
         titleStyle={styles.text}
         buttonStyle={[styles.button, disabled ? styles.disabled : styles[backgroundColor]]}

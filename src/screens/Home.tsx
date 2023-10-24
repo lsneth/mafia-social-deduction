@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuthContext } from '../providers/AuthProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
@@ -8,6 +8,8 @@ import Button from '../components/Button'
 import Separator from '../components/Separator'
 import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
+import { createGameSession, deleteGameSession } from '../services/supabaseServices'
+import { Alert } from 'react-native'
 
 export default function Home({
   route,
@@ -17,6 +19,7 @@ export default function Home({
   route: RouteProp<RootStackParamList, 'Home'>
 }) {
   const { signedIn } = useAuthContext()
+  const [gameSessionCode, setGameSessionCode] = useState<string>('')
 
   return (
     <ParentView
@@ -28,15 +31,22 @@ export default function Home({
       <BottomView>
         {signedIn ? (
           <>
-            <Button title="JOIN GAME" onPress={() => {}} />
-            <Button title="HOST GAME" onPress={() => {}} />
+            <Button onPress={() => {}}>JOIN GAME</Button>
+            <Button
+              onPress={async () => {
+                createGameSession().then((gsCode) => gsCode && setGameSessionCode(gsCode))
+                navigation.navigate('Lobby', { gameSessionCode: gameSessionCode })
+              }}
+            >
+              HOST GAME
+            </Button>
             <Separator size={20} />
-            <Button title="ACCOUNT" onPress={() => navigation.navigate('Account')} />
+            <Button onPress={() => navigation.navigate('Account')}>ACCOUNT</Button>
           </>
         ) : (
           <>
-            <Button title="CREATE ACCOUNT" onPress={() => navigation.navigate('Auth', { hasAccount: false })} />
-            <Button title="LOG IN" onPress={() => navigation.navigate('Auth', { hasAccount: true })} />
+            <Button onPress={() => navigation.navigate('Auth', { hasAccount: false })}>CREATE ACCOUNT</Button>
+            <Button onPress={() => navigation.navigate('Auth', { hasAccount: true })}>LOG IN</Button>
           </>
         )}
       </BottomView>

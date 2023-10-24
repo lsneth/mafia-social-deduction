@@ -112,7 +112,6 @@ export default function Account({
       {editMode ? (
         <>
           <Button
-            title={loading ? 'Loading ...' : 'Save'}
             onPress={() => {
               updateProfile({ first_name: tempFirstName, last_name: tempLastName })
               setFirstName(tempFirstName)
@@ -120,35 +119,40 @@ export default function Account({
               setEditMode(false)
             }}
             disabled={loading}
-          />
+          >
+            {loading ? 'Loading ...' : 'Save'}
+          </Button>
           <Button
-            title={'Cancel'}
             onPress={() => {
               setEditMode(false)
             }}
-          />
+          >
+            CANCEL
+          </Button>
         </>
       ) : (
         <Button
-          title={'Edit Profile'}
           onPress={() => {
             setEditMode(true)
             setTempFirstName(firstName)
             setTempLastName(lastName)
           }}
-        />
+        >
+          EDIT PROFILE
+        </Button>
       )}
 
       <BottomView>
-        <Button title={'Stats'} onPress={() => navigation.navigate('Stats')} />
+        <Button onPress={() => navigation.navigate('Stats')}>STATS</Button>
         <Button
-          title="Log Out"
           backgroundColor="gray"
           onPress={() => {
             supabase.auth.signOut()
             navigation.navigate('Home')
           }}
-        />
+        >
+          LOG OUT
+        </Button>
       </BottomView>
     </ParentView>
   )

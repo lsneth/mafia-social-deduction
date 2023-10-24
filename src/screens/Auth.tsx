@@ -86,9 +86,13 @@ export default function Auth({
       <Separator size={30} />
 
       {hasAccount ? (
-        <Button title="LOG IN" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button disabled={loading} onPress={() => signInWithEmail()}>
+          LOG IN
+        </Button>
       ) : (
-        <Button title="CREATE ACCOUNT" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button disabled={loading} onPress={() => signUpWithEmail()}>
+          CREATE ACCOUNT
+        </Button>
       )}
     </ParentView>
   )
