@@ -24,6 +24,7 @@ export default function Lobby({
       <Text>Share this code for others to join your session.</Text>
       <BottomView>
         <Table title="8 Players" />
+        <Separator size={20} />
         <Button
           onPress={() => {
             joinGameSession(route.params.gameSessionCode)

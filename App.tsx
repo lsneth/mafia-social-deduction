@@ -8,6 +8,7 @@ import AuthProvider from './src/providers/AuthProvider'
 import Stats from './src/screens/Stats'
 import colors from './src/styles/colors'
 import Lobby from './src/screens/Lobby'
+import Join from './src/screens/Join'
 
 export type RootStackParamList = {
   Home: undefined
@@ -15,6 +16,7 @@ export type RootStackParamList = {
   Account: undefined
   Stats: undefined
   Lobby: { gameSessionCode: string }
+  Join: undefined
 }
 
 export default function App() {
@@ -36,6 +38,7 @@ export default function App() {
           <Stack.Screen name="Account" component={Account} />
           <Stack.Screen name="Stats" component={Stats} />
           <Stack.Screen name="Lobby" component={Lobby} initialParams={{ gameSessionCode: '' }} />
+          <Stack.Screen name="Join" component={Join} />
         </Stack.Navigator>
       </AuthProvider>
     </NavigationContainer>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useAuthContext } from '../providers/AuthProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
@@ -8,8 +8,7 @@ import Button from '../components/Button'
 import Separator from '../components/Separator'
 import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
-import { createGameSession, deleteGameSession } from '../services/supabaseServices'
-import { Alert } from 'react-native'
+import { joinGameSession, createGameSession, deleteGameSession } from '../services/supabaseServices'
 
 export default function Home({
   route,
@@ -19,7 +18,6 @@ export default function Home({
   route: RouteProp<RootStackParamList, 'Home'>
 }) {
   const { signedIn } = useAuthContext()
-  const [gameSessionCode, setGameSessionCode] = useState<string>('')
 
   return (
     <ParentView
@@ -31,11 +29,13 @@ export default function Home({
       <BottomView>
         {signedIn ? (
           <>
-            <Button onPress={() => {}}>JOIN GAME</Button>
+            <Button onPress={() => navigation.navigate('Join')}>JOIN GAME</Button>
             <Button
-              onPress={async () => {
-                createGameSession().then((gsCode) => gsCode && setGameSessionCode(gsCode))
-                navigation.navigate('Lobby', { gameSessionCode: gameSessionCode })
+              onPress={() => {
+                createGameSession().then((gsCode) => {
+                  joinGameSession(gsCode)
+                  navigation.navigate('Lobby', { gameSessionCode: gsCode })
+                })
               }}
             >
               HOST GAME

@@ -2,12 +2,12 @@ import { PostgrestError, PostgrestSingleResponse } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { Alert } from 'react-native'
 
-export async function createGameSession(): Promise<string | void> {
+export async function createGameSession(): Promise<string> {
   const { data, error } = await supabase.rpc('create_gs_table')
 
   if (error) {
     Alert.alert(error.message)
-    return
+    return 'error creating game session'
   }
   return data
 }
@@ -21,14 +21,15 @@ export async function deleteGameSession(gameSessionCode: string): Promise<void> 
 }
 
 export function joinGameSession(gameSessionCode: string) {
+  console.log('join', gameSessionCode)
   supabase
     .channel(gameSessionCode)
     .on(
       'postgres_changes',
       {
         event: '*',
-        schema: 'public',
-        // table: gameSessionCode,
+        schema: 'game_sessions',
+        table: gameSessionCode,
       },
       (payload) => console.log(payload)
     )
