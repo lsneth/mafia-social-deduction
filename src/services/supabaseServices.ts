@@ -19,3 +19,18 @@ export async function deleteGameSession(gameSessionCode: string): Promise<void> 
     return
   }
 }
+
+export function joinGameSession(gameSessionCode: string) {
+  supabase
+    .channel(gameSessionCode)
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        // table: gameSessionCode,
+      },
+      (payload) => console.log(payload)
+    )
+    .subscribe()
+}

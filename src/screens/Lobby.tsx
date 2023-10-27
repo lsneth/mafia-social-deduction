@@ -7,6 +7,7 @@ import Separator from '../components/Separator'
 import BottomView from '../components/BottomView'
 import Button from '../components/Button'
 import Table from '../components/Table'
+import { joinGameSession } from '../services/supabaseServices'
 
 export default function Lobby({
   route,
@@ -23,7 +24,13 @@ export default function Lobby({
       <Text>Share this code for others to join your session.</Text>
       <BottomView>
         <Table title="8 Players" />
-        <Button onPress={() => {}}>START GAME</Button>
+        <Button
+          onPress={() => {
+            joinGameSession(route.params.gameSessionCode)
+          }}
+        >
+          START GAME
+        </Button>
       </BottomView>
     </ParentView>
   )
