@@ -8,7 +8,8 @@ import Button from '../components/Button'
 import Separator from '../components/Separator'
 import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
-import { joinGameSession, createGameSession, deleteGameSession } from '../services/supabaseServices'
+import { createGameSession, deleteGameSession } from '../services/supabaseServices'
+import { useGameContext } from '../providers/GameProvider'
 
 export default function Home({
   route,
@@ -18,6 +19,7 @@ export default function Home({
   route: RouteProp<RootStackParamList, 'Home'>
 }) {
   const { signedIn } = useAuthContext()
+  const { joinGame } = useGameContext()
 
   return (
     <ParentView
@@ -32,9 +34,9 @@ export default function Home({
             <Button onPress={() => navigation.navigate('Join')}>JOIN GAME</Button>
             <Button
               onPress={() => {
-                createGameSession().then((gsCode) => {
-                  joinGameSession(gsCode)
-                  navigation.navigate('Lobby', { gameSessionCode: gsCode })
+                createGameSession().then((gameId) => {
+                  joinGame(gameId)
+                  navigation.navigate('Lobby', { gameId })
                 })
               }}
             >

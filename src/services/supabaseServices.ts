@@ -12,26 +12,29 @@ export async function createGameSession(): Promise<string> {
   return data
 }
 
-export async function deleteGameSession(gameSessionCode: string): Promise<void> {
-  const { error } = await supabase.rpc('delete_gs_table', { table_name: gameSessionCode })
+export async function deleteGameSession(gameId: string): Promise<void> {
+  const { error } = await supabase.rpc('delete_gs_table', { table_name: gameId })
   if (error) {
     Alert.alert(error.message)
     return
   }
 }
 
-export function joinGameSession(gameSessionCode: string) {
-  console.log('join', gameSessionCode)
+function subscribeToChanges(gameId: string) {
+  let gameData = null
   supabase
-    .channel(gameSessionCode)
+    .channel(gameId)
     .on(
       'postgres_changes',
       {
         event: '*',
         schema: 'game_sessions',
-        table: gameSessionCode,
+        table: gameId,
       },
-      (payload) => console.log(payload)
+      // (change) => console.log(change)
+      (payload) => (gameData = payload)
     )
     .subscribe()
+
+  return { gameData }
 }

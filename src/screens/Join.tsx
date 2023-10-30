@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import ParentView from '../components/ParentView'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
-import { joinGameSession } from '../services/supabaseServices'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 import { RouteProp } from '@react-navigation/native'
+import { useGameContext } from '../providers/GameProvider'
 
 export default function Join({
   route,
@@ -14,19 +14,16 @@ export default function Join({
   navigation: NativeStackNavigationProp<RootStackParamList, 'Join'>
   route: RouteProp<RootStackParamList, 'Join'>
 }) {
-  const [gameSessionCode, setGameSessionCode] = useState('')
+  const [gameId, setGameId] = useState('')
+  const { joinGame } = useGameContext()
+
   return (
     <ParentView>
-      <TextInput
-        label="Game Session Code"
-        placeholder="XXXXXX"
-        value={gameSessionCode}
-        onChangeText={(text) => setGameSessionCode(text)}
-      />
+      <TextInput label="Game ID" placeholder="XXXXXX" value={gameId} onChangeText={(text) => setGameId(text)} />
       <Button
         onPress={() => {
-          joinGameSession(`gs_${gameSessionCode}`)
-          navigation.navigate('Lobby', { gameSessionCode: gameSessionCode })
+          joinGame(`gs_${gameId}`)
+          navigation.navigate('Lobby', { gameId })
         }}
       >
         Join

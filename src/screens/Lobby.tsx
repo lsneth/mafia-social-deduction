@@ -7,7 +7,9 @@ import Separator from '../components/Separator'
 import BottomView from '../components/BottomView'
 import Button from '../components/Button'
 import Table from '../components/Table'
-import { joinGameSession } from '../services/supabaseServices'
+import { useGameContext } from '../providers/GameProvider'
+import PlayerCard from '../components/PlayerCard'
+import PlayerGrid from '../components/PlayerGrid'
 
 export default function Lobby({
   route,
@@ -16,18 +18,22 @@ export default function Lobby({
   route: RouteProp<RootStackParamList, 'Lobby'>
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const formattedGsCode = route.params.gameSessionCode.toUpperCase().substring(3)
+  const formattedGameId = route.params.gameId.toUpperCase().substring(3)
+  const { joinGame } = useGameContext()
+
   return (
     <ParentView>
-      <Text size="lg">{formattedGsCode}</Text>
+      <Text size="lg">{formattedGameId}</Text>
       <Separator />
-      <Text>Share this code for others to join your session.</Text>
+      <Text>Share this game ID for others to join your session.</Text>
+      <Separator size={40} />
+      <PlayerGrid />
       <BottomView>
         <Table title="8 Players" />
         <Separator size={20} />
         <Button
           onPress={() => {
-            joinGameSession(route.params.gameSessionCode)
+            joinGame(route.params.gameId)
           }}
         >
           START GAME

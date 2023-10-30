@@ -9,13 +9,14 @@ import Stats from './src/screens/Stats'
 import colors from './src/styles/colors'
 import Lobby from './src/screens/Lobby'
 import Join from './src/screens/Join'
+import GameDataProvider from './src/providers/GameProvider'
 
 export type RootStackParamList = {
   Home: undefined
   Auth: { hasAccount: boolean }
   Account: undefined
   Stats: undefined
-  Lobby: { gameSessionCode: string }
+  Lobby: { gameId: string }
   Join: undefined
 }
 
@@ -25,21 +26,23 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider>
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{
-            headerTintColor: colors.white,
-            headerTitle: () => <></>,
-            headerTransparent: true,
-          }}
-        >
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Auth" component={Auth} initialParams={{ hasAccount: true }} />
-          <Stack.Screen name="Account" component={Account} />
-          <Stack.Screen name="Stats" component={Stats} />
-          <Stack.Screen name="Lobby" component={Lobby} initialParams={{ gameSessionCode: '' }} />
-          <Stack.Screen name="Join" component={Join} />
-        </Stack.Navigator>
+        <GameDataProvider>
+          <Stack.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+              headerTintColor: colors.white,
+              headerTitle: () => <></>,
+              headerTransparent: true,
+            }}
+          >
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Auth" component={Auth} initialParams={{ hasAccount: true }} />
+            <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="Stats" component={Stats} />
+            <Stack.Screen name="Lobby" component={Lobby} initialParams={{ gameId: '' }} />
+            <Stack.Screen name="Join" component={Join} />
+          </Stack.Navigator>
+        </GameDataProvider>
       </AuthProvider>
     </NavigationContainer>
   )
