@@ -16,7 +16,7 @@ export type RootStackParamList = {
   Auth: { hasAccount: boolean }
   Account: undefined
   Stats: undefined
-  Lobby: { gameId: string }
+  Lobby: undefined
   Join: undefined
 }
 
@@ -39,7 +39,7 @@ export default function App() {
             <Stack.Screen name="Auth" component={Auth} initialParams={{ hasAccount: true }} />
             <Stack.Screen name="Account" component={Account} />
             <Stack.Screen name="Stats" component={Stats} />
-            <Stack.Screen name="Lobby" component={Lobby} initialParams={{ gameId: '' }} />
+            <Stack.Screen name="Lobby" component={Lobby} />
             <Stack.Screen name="Join" component={Join} />
           </Stack.Navigator>
         </GameDataProvider>

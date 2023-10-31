@@ -25,5 +25,7 @@ export default function AuthProvider({ children }: { children: JSX.Element }): J
     })
   }, [])
 
+  useEffect(() => console.log(session), [session])
+
   return <AuthContext.Provider value={{ signedIn: !!session, session }}>{children}</AuthContext.Provider>
 }

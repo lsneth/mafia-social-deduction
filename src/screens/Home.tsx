@@ -36,7 +36,7 @@ export default function Home({
               onPress={() => {
                 createGameSession().then((gameId) => {
                   joinGame(gameId)
-                  navigation.navigate('Lobby', { gameId })
+                  navigation.navigate('Lobby')
                 })
               }}
             >

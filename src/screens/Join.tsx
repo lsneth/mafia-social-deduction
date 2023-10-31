@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ParentView from '../components/ParentView'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
@@ -23,7 +23,7 @@ export default function Join({
       <Button
         onPress={() => {
           joinGame(`gs_${gameId}`)
-          navigation.navigate('Lobby', { gameId })
+          navigation.navigate('Lobby')
         }}
       >
         Join
