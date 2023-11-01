@@ -39,6 +39,7 @@ export default function Account({
       if (!session?.user) throw new Error('No user on the session!')
 
       let { data, error, status } = await supabase
+        .schema('public')
         .from('profiles')
         .select(`first_name, last_name`)
         .eq('id', session?.user.id)
