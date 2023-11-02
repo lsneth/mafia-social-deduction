@@ -6,7 +6,7 @@ import { RouteProp } from '@react-navigation/native'
 import Separator from '../components/Separator'
 import BottomView from '../components/BottomView'
 import Button from '../components/Button'
-import Table from '../components/Table'
+import SummaryTable from '../components/SummaryTable'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 
@@ -28,7 +28,7 @@ export default function Lobby({
       <Separator size={40} />
       <PlayerGrid />
       <BottomView>
-        <Table title="8 Players" />
+        <SummaryTable title="8 Players" />
         <Separator size={20} />
         <Button
           onPress={() => {

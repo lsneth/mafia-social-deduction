@@ -1,3 +1,13 @@
+export type GameContext = {
+  gameId: string
+  players: Player[]
+  joinGame: (gameId: string) => void
+  mutatePlayers: (gameId: string) => void
+  deleteGame: (gameId: string) => void
+  createGame: () => Promise<string>
+  roleCounts: RoleCount
+}
+
 export type Player = {
   player_id: string // 'bab1a7b5-0316-4840-9af8-ce044d687d80'
   first_name: string //'Luke'
@@ -21,15 +31,6 @@ export type Change = {
   table: `gs_${string}` & { length: 9 }
 }
 
-export type GameContext = {
-  gameId: string
-  players: Player[]
-  joinGame: (gameId: string) => void
-  mutatePlayers: (gameId: string) => void
-  deleteGame: (gameId: string) => void
-  createGame: () => Promise<string>
-}
-
 export type PlayersReducerAction =
   | {
       type: 'UPDATE' | 'INSERT' | 'DELETE'
@@ -50,3 +51,10 @@ export type UserProfile = [
     updated_at: string
   }
 ]
+
+export type RoleCount = {
+  mafia: number
+  detective: number
+  commonfolk: number
+  total: number
+}

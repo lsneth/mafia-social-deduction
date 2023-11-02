@@ -7,7 +7,7 @@ import {
   deleteGame as sDeleteGame,
   createGame as sCreateGame,
 } from '../services/mafiaServices'
-import { Player, PlayersReducerAction, GameContext as GameContextType, Change } from '../types/types'
+import { Player, PlayersReducerAction, GameContext as GameContextType, Change, RoleCount } from '../types/types'
 
 const UPDATE = 'UPDATE'
 const INSERT = 'INSERT'
@@ -39,6 +39,53 @@ function playersReducer(players: Player[], action: PlayersReducerAction): Player
   }
 }
 
+function getRoleCounts(playerCount: number): RoleCount {
+  switch (playerCount) {
+    // not enough players
+    case 0:
+      return { mafia: 0, detective: 0, commonfolk: 0, total: 0 }
+    case 1:
+      return { mafia: 0, detective: 0, commonfolk: 1, total: 1 }
+    case 2:
+      return { mafia: 0, detective: 0, commonfolk: 2, total: 2 }
+    case 3:
+      return { mafia: 0, detective: 0, commonfolk: 3, total: 3 }
+    case 4:
+      return { mafia: 0, detective: 0, commonfolk: 4, total: 4 }
+
+    // 1 mafia, 1 detective
+    case 5:
+      return { mafia: 1, detective: 1, commonfolk: 3, total: 5 }
+    case 6:
+      return { mafia: 1, detective: 1, commonfolk: 4, total: 6 }
+
+    // 2 mafia, 1 detective
+    case 7:
+      return { mafia: 2, detective: 1, commonfolk: 4, total: 7 }
+    case 8:
+      return { mafia: 2, detective: 1, commonfolk: 5, total: 8 }
+    case 9:
+      return { mafia: 2, detective: 1, commonfolk: 6, total: 9 }
+    case 10:
+      return { mafia: 2, detective: 1, commonfolk: 7, total: 10 }
+    case 11:
+      return { mafia: 2, detective: 1, commonfolk: 8, total: 11 }
+
+    // 3 mafia, 2 detectives
+    case 12:
+      return { mafia: 3, detective: 2, commonfolk: 7, total: 12 }
+    case 13:
+      return { mafia: 3, detective: 2, commonfolk: 8, total: 13 }
+    case 14:
+      return { mafia: 3, detective: 2, commonfolk: 9, total: 14 }
+    case 15:
+      return { mafia: 3, detective: 2, commonfolk: 10, total: 15 }
+
+    default:
+      return { mafia: 0, detective: 0, commonfolk: 0, total: 0 }
+  }
+}
+
 const GameContext = createContext<GameContextType>({
   gameId: '',
   players: [],
@@ -46,6 +93,7 @@ const GameContext = createContext<GameContextType>({
   mutatePlayers: () => {},
   deleteGame: () => {},
   createGame: async () => '',
+  roleCounts: { mafia: 0, detective: 0, commonfolk: 0, total: 0 },
 })
 
 export const useGameContext = () => {
@@ -56,6 +104,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   const [gameId, setGameId] = useState<string>('258530')
   const [players, dispatch] = useReducer(playersReducer, [])
   const { session } = useAuthContext()
+  const roleCounts = getRoleCounts(players.length)
 
   function handleChange(change: Change): void {
     dispatch({
@@ -95,7 +144,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   return (
-    <GameContext.Provider value={{ gameId, players, joinGame, mutatePlayers, deleteGame, createGame }}>
+    <GameContext.Provider value={{ gameId, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts }}>
       {children}
     </GameContext.Provider>
   )

@@ -19,7 +19,7 @@ export default function TextInput({
   editable?: boolean
   autoFocus?: boolean
   secureTextEntry?: boolean
-  label: string
+  label?: string
 }) {
   const [focused, setFocused] = useState(false)
 

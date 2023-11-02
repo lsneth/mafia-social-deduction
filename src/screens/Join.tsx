@@ -6,6 +6,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 import { RouteProp } from '@react-navigation/native'
 import { useGameContext } from '../providers/GameProvider'
+import Separator from '../components/Separator'
+import Text from '../components/Text'
 
 export default function Join({
   route,
@@ -19,8 +21,11 @@ export default function Join({
 
   return (
     <ParentView>
+      <Separator size={100} />
+
+      <Text>Enter a game ID to join a game</Text>
+      <Separator size={20} />
       <TextInput
-        label="Game ID"
         placeholder="XXXXXX"
         value={gameId}
         onChangeText={(text) => {
@@ -33,7 +38,7 @@ export default function Join({
           navigation.navigate('Lobby')
         }}
       >
-        Join
+        JOIN
       </Button>
     </ParentView>
   )

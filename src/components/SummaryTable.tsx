@@ -2,22 +2,25 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import Text from './Text'
 import colors from '../styles/colors'
+import { useGameContext } from '../providers/GameProvider'
 
-export default function Table({ title }: { title: string }) {
+export default function SummaryTable() {
+  const { roleCounts } = useGameContext()
+
   return (
     <View style={styles.table}>
       <View style={styles.titleCell}>
-        <Text>{title}</Text>
+        <Text>{`${roleCounts.total} Player${roleCounts.total !== 1 ? 's' : ''}`}</Text>
       </View>
       <View style={{ display: 'flex', flexDirection: 'row' }}>
         <View style={[styles.cell, styles.mafiaCell]}>
-          <Text>2 Mafia</Text>
+          <Text>{`${roleCounts.mafia} Mafia`}</Text>
         </View>
         <View style={[styles.cell, styles.detectiveCell]}>
-          <Text>1 Detective</Text>
+          <Text>{`${roleCounts.detective} Detectives`}</Text>
         </View>
         <View style={[styles.cell, styles.commonfolkCell]}>
-          <Text>5 Commonfolk</Text>
+          <Text>{`${roleCounts.commonfolk} Commonfolk`}</Text>
         </View>
       </View>
     </View>
