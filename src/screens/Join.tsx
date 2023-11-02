@@ -19,10 +19,17 @@ export default function Join({
 
   return (
     <ParentView>
-      <TextInput label="Game ID" placeholder="XXXXXX" value={gameId} onChangeText={(text) => setGameId(text)} />
+      <TextInput
+        label="Game ID"
+        placeholder="XXXXXX"
+        value={gameId}
+        onChangeText={(text) => {
+          setGameId(text.toUpperCase())
+        }}
+      />
       <Button
         onPress={() => {
-          joinGame(`gs_${gameId}`)
+          joinGame(`gs_${gameId.toLowerCase()}`)
           navigation.navigate('Lobby')
         }}
       >

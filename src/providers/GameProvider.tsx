@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { useAuthContext } from './AuthProvider'
 
 type Player = {
   player_id: string // 'bab1a7b5-0316-4840-9af8-ce044d687d80'
@@ -38,10 +39,18 @@ export const useGameContext = () => {
 
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [gameData, setGameData] = useState<GameData>({ gameId: '', players: [] })
+  const gameId = gameData.gameId
+  const { session } = useAuthContext()
+  const playerId = session?.user.id
 
-  useEffect(() => {
-    console.log(gameData)
-  }, [gameData])
+  function getCurrentGameData(gameId: string) {
+    supabase
+      .schema('game_sessions')
+      .from(gameId)
+      .select()
+      .then((res) => setGameData((prev) => ({ gameId, players: res.data as Player[] })))
+      .then(console.log('updated'))
+  }
 
   function handleChange(change: Change) {
     if (change.eventType === 'UPDATE') {
@@ -58,7 +67,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   async function joinGame(gameId: string): Promise<void> {
-    setGameData({ ...gameData, gameId: gameId })
+    getCurrentGameData(gameId)
     supabase
       .channel(gameId)
       .on(
@@ -72,10 +81,8 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
       )
       .subscribe()
 
-    const { data, error } = await supabase
-      .schema('game_sessions')
-      .from(gameId)
-      .insert({ player_id: 'bab1a7b5-0316-4840-9af8-ce044d687d80' })
+    // add player to game
+    const { data, error } = await supabase.schema('game_sessions').from(gameId).insert({ player_id: playerId })
   }
 
   return <GameContext.Provider value={{ gameData: gameData, joinGame: joinGame }}>{children}</GameContext.Provider>
