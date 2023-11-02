@@ -1,89 +1,102 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { createContext, useContext, useEffect, useReducer, useState } from 'react'
 import { useAuthContext } from './AuthProvider'
+import {
+  addPlayerToGame,
+  getGameData,
+  subscribeToGame,
+  deleteGame as sDeleteGame,
+  createGame as sCreateGame,
+} from '../services/mafiaServices'
+import { Player, PlayersReducerAction, GameContext as GameContextType, Change } from '../types/types'
 
-type Player = {
-  player_id: string // 'bab1a7b5-0316-4840-9af8-ce044d687d80'
-  is_alive: boolean
-  votes_for: any // TODO
-  votes_against: any // TODO
-  investigated: boolean
-  role: 'commonfolk' | 'detective' | 'mafia'
-  cause_of_death: 'murder' | 'execution' | null
+const UPDATE = 'UPDATE'
+const INSERT = 'INSERT'
+const DELETE = 'DELETE'
+const MUTATE = 'mutate'
+
+function playersReducer(players: Player[], action: PlayersReducerAction): Player[] {
+  switch (action.type) {
+    case UPDATE:
+      return players.map((player) => {
+        if (player.player_id === action.new.player_id) {
+          return action.new
+        } else {
+          return player
+        }
+      })
+
+    case INSERT:
+      return [...players, action.new]
+
+    case DELETE:
+      return players.filter((player) => player.player_id !== action.old.player_id)
+
+    case MUTATE:
+      return [...action.mutation]
+
+    default:
+      return players
+  }
 }
 
-type GameData = {
-  gameId: string
-  players: Player[]
-}
+const GameContext = createContext<GameContextType>({
+  gameId: '',
+  players: [],
+  joinGame: () => {},
+  mutatePlayers: () => {},
+  deleteGame: () => {},
+  createGame: async () => '',
+})
 
-type Change = {
-  commit_timestamp: string // '2023-10-27T14:02:37.898Z'
-  errors: any // TODO
-  eventType: 'INSERT' | 'UPDATE' | 'DELETE'
-  new: Player
-  old: Player
-  schema: 'game_sessions'
-  table: `gs_${string}` & { length: 9 }
-}
-
-type GameContext = {
-  gameData: GameData
-  joinGame: (gameId: string) => void
-}
-
-const GameContext = createContext<GameContext>({ gameData: { gameId: '', players: [] }, joinGame: () => {} })
 export const useGameContext = () => {
   return useContext(GameContext)
 }
 
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
-  const [gameData, setGameData] = useState<GameData>({ gameId: '', players: [] })
-  const gameId = gameData.gameId
+  const [gameId, setGameId] = useState<string>('258530')
+  const [players, dispatch] = useReducer(playersReducer, [])
   const { session } = useAuthContext()
-  const playerId = session?.user.id
 
-  function getCurrentGameData(gameId: string) {
-    supabase
-      .schema('game_sessions')
-      .from(gameId)
-      .select()
-      .then((res) => setGameData((prev) => ({ gameId, players: res.data as Player[] })))
-      .then(console.log('updated'))
+  function handleChange(change: Change): void {
+    dispatch({
+      type: change.eventType,
+      new: change.new,
+      old: change.old,
+    })
   }
 
-  function handleChange(change: Change) {
-    if (change.eventType === 'UPDATE') {
-      const updatedPlayers = gameData.players.map((player) => {
-        if (player.player_id === change.new.player_id) {
-          return change.new // Update the player with the new data
-        }
-        return player // Keep other players as they are
-      })
-      setGameData((prev) => ({ ...prev, players: updatedPlayers }))
-    } else if (change.eventType === 'INSERT') {
-      setGameData((prev) => ({ ...prev, players: [...prev.players, change.new] }))
-    }
+  async function mutatePlayers(gameId: string): Promise<void> {
+    dispatch({
+      type: MUTATE,
+      mutation: await getGameData(gameId),
+    })
+  }
+
+  async function deleteGame(gameId: string): Promise<void> {
+    await sDeleteGame(gameId)
+  }
+
+  async function createGame(): Promise<string> {
+    return sCreateGame()
   }
 
   async function joinGame(gameId: string): Promise<void> {
-    getCurrentGameData(gameId)
-    supabase
-      .channel(gameId)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'game_sessions',
-          table: gameId,
-        },
-        (payload) => handleChange(payload as Change)
-      )
-      .subscribe()
+    // save game id to state
+    setGameId(gameId)
+
+    // get up to date with current game state
+    mutatePlayers(gameId)
+
+    // subscribe to further changes in game
+    subscribeToGame(gameId, handleChange)
 
     // add player to game
-    const { data, error } = await supabase.schema('game_sessions').from(gameId).insert({ player_id: playerId })
+    addPlayerToGame(gameId, session?.user.id || '')
   }
 
-  return <GameContext.Provider value={{ gameData: gameData, joinGame: joinGame }}>{children}</GameContext.Provider>
+  return (
+    <GameContext.Provider value={{ gameId, players, joinGame, mutatePlayers, deleteGame, createGame }}>
+      {children}
+    </GameContext.Provider>
+  )
 }

@@ -1,18 +1,15 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import Icon from './Icon'
-import Text from './Text'
-import colors from '../styles/colors'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerCard from './PlayerCard'
 
 export default function PlayerGrid() {
-  const { gameData } = useGameContext()
+  const { players } = useGameContext()
 
   return (
     <View style={styles.grid}>
-      {gameData.players.map((player) => (
-        <PlayerCard name={player.player_id} />
+      {players.map((player) => (
+        <PlayerCard name={player.first_name} key={player.player_id} />
       ))}
     </View>
   )

@@ -9,7 +9,6 @@ import Button from '../components/Button'
 import Table from '../components/Table'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
-import { deleteGameSession } from '../services/supabaseServices'
 
 export default function Lobby({
   route,
@@ -18,8 +17,8 @@ export default function Lobby({
   route: RouteProp<RootStackParamList, 'Lobby'>
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameData } = useGameContext()
-  const formattedGameId = gameData.gameId.substring(3).toUpperCase()
+  const { gameId, mutatePlayers, deleteGame } = useGameContext()
+  const formattedGameId = gameId.substring(3).toUpperCase()
 
   return (
     <ParentView>
@@ -33,7 +32,14 @@ export default function Lobby({
         <Separator size={20} />
         <Button
           onPress={() => {
-            deleteGameSession(gameData.gameId)
+            mutatePlayers(gameId)
+          }}
+        >
+          REFRESH GAME
+        </Button>
+        <Button
+          onPress={() => {
+            deleteGame(gameId)
             navigation.goBack()
           }}
         >
