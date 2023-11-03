@@ -21,13 +21,13 @@ export default function Account({
   navigation: NativeStackNavigationProp<RootStackParamList, 'Account'>
 }) {
   const [loading, setLoading] = useState(true)
-  const [tempFirstName, setTempFirstName] = useState('') // state the user changes during edit mode
-  const [tempLastName, setTempLastName] = useState('') // state the user changes during edit mode
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
+  const [tempFirstName, setTempFirstName] = useState<string>('') // state the user changes during edit mode
+  const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode
+  const [firstName, setFirstName] = useState<string>('')
+  const [lastName, setLastName] = useState<string>('')
   const { signedIn, session } = useAuthContext()
 
-  const [editMode, setEditMode] = useState<boolean>(false)
+  const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
 
   useEffect(() => {
     if (signedIn) getProfile()
@@ -98,6 +98,7 @@ export default function Account({
         value={editMode ? tempFirstName : firstName}
         onChangeText={(text) => setTempFirstName(text)}
         editable={editMode}
+        autoFocus
         label="First Name"
       />
       <Separator size={20} />
@@ -121,7 +122,7 @@ export default function Account({
             }}
             disabled={loading}
           >
-            {loading ? 'Loading ...' : 'Save'}
+            {loading ? 'Loading ...' : 'SAVE'}
           </Button>
           <Button
             onPress={() => {

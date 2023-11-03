@@ -9,22 +9,21 @@ import Separator from '../components/Separator'
 import TextInput from '../components/TextInput'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
+import { useAuthContext } from '../providers/AuthProvider'
 
-export default function Auth({
+export default function Login({
   route,
   navigation,
 }: {
-  route: RouteProp<RootStackParamList, 'Auth'>
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Auth'>
+  route: RouteProp<RootStackParamList, 'Login'>
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>
 }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  const [hasAccount, setHasAccount] = useState(route.params.hasAccount)
 
   async function signInWithEmail() {
     setLoading(true)
-    navigation.navigate('Home')
     const { error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
@@ -34,38 +33,24 @@ export default function Auth({
     setLoading(false)
   }
 
-  async function signUpWithEmail() {
-    setLoading(true)
-    const { error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
-
-    if (error) Alert.alert(error.message)
-    else {
-      setHasAccount(true)
-      Alert.alert('Please check your email for a verification link.')
-    }
-    setLoading(false)
-  }
-
   return (
     <ParentView>
-      {route.params.hasAccount ? ( // this needs to be different than the state `hasAccount` because we don't want the welcome text to change on a user's first time like we want to button text to
+      {route.params.firstLogin ? (
+        <>
+          <Text size="md">Welcome!</Text>
+          <Separator size={10} />
+          <Text size="sm">Hours of fun are just around the corner.</Text>
+          <Separator size={60} />
+        </>
+      ) : (
         <>
           <Text size="md">Welcome Back!</Text>
           <Separator size={10} />
           <Text size="sm">We're excited to see you again!</Text>
-        </>
-      ) : (
-        <>
-          <Text size="md">Welcome!</Text>
-          <Separator size={10} />
-          <Text size="sm">We're happy for you to join us!</Text>
+          <Separator size={60} />
         </>
       )}
 
-      <Separator size={60} />
       <TextInput
         value={email}
         onChangeText={(text) => setEmail(text)}
@@ -74,6 +59,7 @@ export default function Auth({
         label="Email"
       />
       <Separator size={20} />
+
       <TextInput
         value={password}
         onChangeText={(text) => setPassword(text)}
@@ -81,18 +67,22 @@ export default function Auth({
         secureTextEntry
         label="Password"
       />
-
       <Separator size={30} />
 
-      {hasAccount ? (
-        <Button disabled={loading} onPress={() => signInWithEmail()}>
-          LOG IN
-        </Button>
-      ) : (
-        <Button disabled={loading} onPress={() => signUpWithEmail()}>
-          CREATE ACCOUNT
-        </Button>
-      )}
+      <Button
+        disabled={loading}
+        onPress={async () => {
+          await signInWithEmail()
+          route.params.firstLogin
+            ? navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }, { name: 'Account', params: { loadInEditMode: true } }],
+              })
+            : navigation.navigate('Home')
+        }}
+      >
+        LOG IN
+      </Button>
     </ParentView>
   )
 }

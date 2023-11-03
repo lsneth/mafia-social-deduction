@@ -1,20 +1,22 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Auth from './src/screens/Auth'
+import Login from './src/screens/Login'
 import Account from './src/screens/Account'
 import Home from './src/screens/Home'
-import AuthProvider from './src/providers/AuthProvider'
+import UserProvider from './src/providers/AuthProvider'
 import Stats from './src/screens/Stats'
 import colors from './src/styles/colors'
 import Lobby from './src/screens/Lobby'
 import Join from './src/screens/Join'
 import GameDataProvider from './src/providers/GameProvider'
+import CreateAccount from './src/screens/CreateAccount'
 
 export type RootStackParamList = {
   Home: undefined
-  Auth: { hasAccount: boolean }
-  Account: undefined
+  Login: { firstLogin: boolean }
+  CreateAccount: undefined
+  Account: { loadInEditMode: boolean }
   Stats: undefined
   Lobby: undefined
   Join: undefined
@@ -25,7 +27,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <AuthProvider>
+      <UserProvider>
         <GameDataProvider>
           <Stack.Navigator
             initialRouteName="Home"
@@ -36,14 +38,15 @@ export default function App() {
             }}
           >
             <Stack.Screen name="Home" component={Home} />
-            <Stack.Screen name="Auth" component={Auth} initialParams={{ hasAccount: true }} />
-            <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="Login" component={Login} initialParams={{ firstLogin: false }} />
+            <Stack.Screen name="CreateAccount" component={CreateAccount} />
+            <Stack.Screen name="Account" component={Account} initialParams={{ loadInEditMode: false }} />
             <Stack.Screen name="Stats" component={Stats} />
             <Stack.Screen name="Lobby" component={Lobby} />
             <Stack.Screen name="Join" component={Join} />
           </Stack.Navigator>
         </GameDataProvider>
-      </AuthProvider>
+      </UserProvider>
     </NavigationContainer>
   )
 }

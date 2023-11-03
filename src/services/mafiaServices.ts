@@ -40,6 +40,15 @@ export async function subscribeToGame(gameId: string, handleChange: (change: Cha
     .subscribe()
 }
 
+export async function getUserProfile(userId: string): Promise<UserProfile> {
+  const { data, error } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
+  if (error) {
+    Alert.alert('getGameData', error.message)
+    console.log('getGameData', error.message)
+  }
+  return (data as UserProfile[])[0]
+}
+
 export async function addPlayerToGame(gameId: string, userId: string): Promise<void> {
   const { data, error } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   await supabase
@@ -47,8 +56,8 @@ export async function addPlayerToGame(gameId: string, userId: string): Promise<v
     .from(gameId)
     .insert({
       player_id: userId,
-      first_name: (data as UserProfile)[0].first_name,
-      last_name: (data as UserProfile)[0].last_name,
+      first_name: (data as UserProfile[])[0].first_name,
+      last_name: (data as UserProfile[])[0].last_name,
     })
 }
 

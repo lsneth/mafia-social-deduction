@@ -42,12 +42,16 @@ export default function Home({
               HOST GAME
             </Button>
             <Separator size={20} />
-            <Button onPress={() => navigation.navigate('Account')}>ACCOUNT</Button>
+            <Button onPress={() => navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })}>
+              ACCOUNT
+            </Button>
           </>
         ) : (
           <>
-            <Button onPress={() => navigation.navigate('Auth', { hasAccount: false })}>CREATE ACCOUNT</Button>
-            <Button onPress={() => navigation.navigate('Auth', { hasAccount: true })}>LOG IN</Button>
+            <Button onPress={() => navigation.navigate('CreateAccount')}>CREATE ACCOUNT</Button>
+            <Button onPress={() => navigation.navigate({ name: 'Login', params: { firstLogin: false } })}>
+              LOG IN
+            </Button>
           </>
         )}
       </BottomView>

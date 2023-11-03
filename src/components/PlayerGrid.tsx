@@ -6,6 +6,8 @@ import PlayerCard from './PlayerCard'
 export default function PlayerGrid() {
   const { players } = useGameContext()
 
+  // TODO: show last initial for duplicate names. if last initial is the same, figure out another way to differentiate them.
+
   return (
     <View style={styles.grid}>
       {players.map((player) => (

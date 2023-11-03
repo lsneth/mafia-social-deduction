@@ -42,15 +42,13 @@ export type PlayersReducerAction =
       mutation: Player[]
     }
 
-export type UserProfile = [
-  {
-    first_name: string
-    id: string
-    last_name: string
-    stats_id: string
-    updated_at: string
-  }
-]
+export type UserProfile = {
+  first_name: string
+  id: string
+  last_name: string
+  stats_id: string
+  updated_at: string
+}
 
 export type RoleCount = {
   mafia: number
