@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
@@ -9,6 +10,7 @@ import Button from '../components/Button'
 import SummaryTable from '../components/SummaryTable'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
+import { BackHandler } from 'react-native'
 
 export default function Lobby({
   route,
@@ -17,19 +19,33 @@ export default function Lobby({
   route: RouteProp<RootStackParamList, 'Lobby'>
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, mutatePlayers, deleteGame } = useGameContext()
+  const { gameId, mutatePlayers, deleteGame, loading } = useGameContext()
   const formattedGameId = gameId.substring(3).toUpperCase()
+
+  // this useEffect is to add functionality to the native OS back functionality: delete the game in supabase
+  useEffect(() => {
+    const backAction = () => {
+      deleteGame(gameId)
+      return undefined // don't override default behavior (going back)
+    }
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+
+    return () => backHandler.remove() // Clean up the event listener on component unmount
+  }, [gameId])
 
   return (
     <ParentView>
-      <Text size="lg">{formattedGameId}</Text>
+      {!loading ? <Text size="lg">{formattedGameId}</Text> : <></>}
       <Separator />
       <Text>Share this game ID for others to join your session.</Text>
       <Separator size={40} />
-      <PlayerGrid />
+      {!loading ? <PlayerGrid /> : <></>}
+
       <BottomView>
-        <SummaryTable title="8 Players" />
+        <SummaryTable />
         <Separator size={20} />
+        {/* TODO: remove refresh button. for testing only. */}
         <Button
           onPress={() => {
             mutatePlayers(gameId)
@@ -38,12 +54,13 @@ export default function Lobby({
           REFRESH GAME
         </Button>
         <Button
-          onPress={() => {
-            deleteGame(gameId)
+          onPress={async () => {
+            await deleteGame(gameId)
             navigation.goBack()
           }}
+          backgroundColor="gray"
         >
-          DELETE GAME
+          CANCEL
         </Button>
       </BottomView>
     </ParentView>

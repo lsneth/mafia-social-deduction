@@ -42,7 +42,10 @@ export default function Home({
               HOST GAME
             </Button>
             <Separator size={20} />
-            <Button onPress={() => navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })}>
+            <Button
+              onPress={() => navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })}
+              backgroundColor="gray"
+            >
               ACCOUNT
             </Button>
           </>

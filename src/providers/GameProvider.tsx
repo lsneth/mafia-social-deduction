@@ -94,6 +94,7 @@ const GameContext = createContext<GameContextType>({
   deleteGame: () => {},
   createGame: async () => '',
   roleCounts: { mafia: 0, detective: 0, commonfolk: 0, total: 0 },
+  loading: false,
 })
 
 export const useGameContext = () => {
@@ -105,6 +106,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   const [players, dispatch] = useReducer(playersReducer, [])
   const { session } = useAuthContext()
   const roleCounts = getRoleCounts(players.length)
+  const [loading, setLoading] = useState<boolean>(false)
 
   function handleChange(change: Change): void {
     dispatch({
@@ -115,10 +117,12 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   async function mutatePlayers(gameId: string): Promise<void> {
+    setLoading(true)
     dispatch({
       type: MUTATE,
       mutation: await getGameData(gameId),
     })
+    setLoading(false)
   }
 
   async function deleteGame(gameId: string): Promise<void> {
@@ -130,21 +134,27 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   async function joinGame(gameId: string): Promise<void> {
+    setLoading(true)
+
+    // add player to game
+    await addPlayerToGame(gameId, session?.user.id || '')
+
+    // get up to date with current game state
+    await mutatePlayers(gameId)
+
+    // subscribe to further changes in game
+    await subscribeToGame(gameId, handleChange)
+
     // save game id to state
     setGameId(gameId)
 
-    // get up to date with current game state
-    mutatePlayers(gameId)
-
-    // subscribe to further changes in game
-    subscribeToGame(gameId, handleChange)
-
-    // add player to game
-    addPlayerToGame(gameId, session?.user.id || '')
+    setLoading(false)
   }
 
   return (
-    <GameContext.Provider value={{ gameId, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts }}>
+    <GameContext.Provider
+      value={{ gameId, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts, loading }}
+    >
       {children}
     </GameContext.Provider>
   )

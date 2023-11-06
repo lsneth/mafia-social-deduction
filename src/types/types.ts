@@ -6,6 +6,7 @@ export type GameContext = {
   deleteGame: (gameId: string) => void
   createGame: () => Promise<string>
   roleCounts: RoleCount
+  loading: boolean
 }
 
 export type Player = {

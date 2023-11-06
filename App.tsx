@@ -42,7 +42,7 @@ export default function App() {
             <Stack.Screen name="CreateAccount" component={CreateAccount} />
             <Stack.Screen name="Account" component={Account} initialParams={{ loadInEditMode: false }} />
             <Stack.Screen name="Stats" component={Stats} />
-            <Stack.Screen name="Lobby" component={Lobby} />
+            <Stack.Screen name="Lobby" component={Lobby} options={{ headerBackVisible: false }} />
             <Stack.Screen name="Join" component={Join} />
           </Stack.Navigator>
         </GameDataProvider>
