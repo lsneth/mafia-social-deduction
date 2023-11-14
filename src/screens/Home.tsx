@@ -1,8 +1,7 @@
 import React from 'react'
-import { useAuthContext } from '../providers/AuthProvider'
+import { useAuthContext } from '../providers/UserProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../App'
-import { RouteProp } from '@react-navigation/native'
+import { RootStackParamList } from '../App'
 import Text from '../components/Text'
 import Button from '../components/Button'
 import Separator from '../components/Separator'
@@ -10,19 +9,13 @@ import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
 import { useGameContext } from '../providers/GameProvider'
 
-export default function Home({
-  route,
-  navigation,
-}: {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>
-  route: RouteProp<RootStackParamList, 'Home'>
-}) {
+export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
   const { signedIn } = useAuthContext()
   const { joinGame, createGame } = useGameContext()
 
   return (
     <ParentView
-      backgroundImage={require('../../assets/images/mafia.png')}
+      backgroundImage={require('../../assets/images/mafiaM.png')}
       gradientValues={['#000000', 'transparent', '#000000']}
     >
       <Text size="lg">MAFIA</Text>

@@ -10,7 +10,7 @@ export default function PlayerGrid() {
 
   return (
     <View style={styles.grid}>
-      {players.map((player) => (
+      {players?.map((player) => (
         <PlayerCard name={player.first_name} key={player.player_id} />
       ))}
     </View>

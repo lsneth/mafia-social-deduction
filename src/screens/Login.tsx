@@ -2,14 +2,13 @@ import React, { useState } from 'react'
 import { Alert } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { RouteProp } from '@react-navigation/core'
-import { RootStackParamList } from '../../App'
+import { RootStackParamList } from '../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Button from '../components/Button'
 import Separator from '../components/Separator'
 import TextInput from '../components/TextInput'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
-import { useAuthContext } from '../providers/AuthProvider'
 
 export default function Login({
   route,

@@ -50,7 +50,7 @@ export async function getUserProfile(userId: string): Promise<UserProfile> {
 }
 
 export async function addPlayerToGame(gameId: string, userId: string): Promise<void> {
-  const { data, error } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
+  const { data } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   await supabase
     .schema('game_sessions')
     .from(gameId)
