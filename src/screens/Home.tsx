@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAuthContext } from '../providers/UserProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../App'
+import { RootStackParamList } from '../../App'
 import Text from '../components/Text'
 import Button from '../components/Button'
 import Separator from '../components/Separator'

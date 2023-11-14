@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Alert } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { RootStackParamList } from '../App'
+import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import Button from '../components/Button'
 import Separator from '../components/Separator'
