@@ -9,7 +9,6 @@ import Separator from '../components/Separator'
 import TextInput from '../components/TextInput'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
-import { useAuthContext } from '../providers/AuthProvider'
 
 export default function Login({
   route,

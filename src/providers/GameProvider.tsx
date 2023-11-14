@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useReducer, useState } from 'react'
-import { useAuthContext } from './AuthProvider'
+import { createContext, useContext, useReducer, useState } from 'react'
+import { useAuthContext } from './UserProvider'
 import {
   addPlayerToGame,
   getGameData,
@@ -86,28 +86,19 @@ function getRoleCounts(playerCount: number): RoleCount {
   }
 }
 
-const GameContext = createContext<GameContextType>({
+const defaultGameContextValue: GameContextType = {
   gameId: '',
-  player: {
-    player_id: '',
-    first_name: '',
-    last_name: '',
-    join_time: '',
-    is_alive: true,
-    votes_for: {},
-    votes_against: {},
-    investigated: false,
-    role: 'commonfolk',
-    cause_of_death: null,
-  },
-  players: [],
+  player: undefined,
+  players: undefined,
   joinGame: () => {},
   mutatePlayers: () => {},
   deleteGame: () => {},
   createGame: async () => '',
-  roleCounts: { mafia: 0, detective: 0, commonfolk: 0, total: 0 },
-  loading: false,
-})
+  roleCounts: getRoleCounts(0),
+  loading: true,
+}
+
+const GameContext = createContext<GameContextType>(defaultGameContextValue)
 
 export const useGameContext = () => {
   return useContext(GameContext)
@@ -117,12 +108,12 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   const [gameId, setGameId] = useState<string>('258530')
   const [players, dispatch] = useReducer(playersReducer, [])
   const { userProfile } = useAuthContext()
-  const player: Player = players.find((player) => player.player_id === userProfile.id)
+  const player: Player | undefined = players.find((player) => player.player_id === userProfile.id)
   const { session } = useAuthContext()
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
 
-  function handleChange(change: Change): void {
+  function handleChange(change: Change) {
     dispatch({
       type: change.eventType,
       new: change.new,

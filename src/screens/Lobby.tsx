@@ -1,9 +1,8 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
 import { RootStackParamList } from '../../App'
-import { RouteProp } from '@react-navigation/native'
 import Separator from '../components/Separator'
 import BottomView from '../components/BottomView'
 import Button from '../components/Button'
@@ -13,14 +12,12 @@ import PlayerGrid from '../components/PlayerGrid'
 import { BackHandler } from 'react-native'
 
 export default function Lobby({
-  route,
   navigation,
 }: {
-  route: RouteProp<RootStackParamList, 'Lobby'>
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, mutatePlayers, deleteGame, loading } = useGameContext()
-  const formattedGameId = gameId.substring(3).toUpperCase()
+  const { gameId, deleteGame, loading } = useGameContext()
+  const formattedGameId = gameId?.substring(3).toUpperCase()
 
   // this useEffect is to add functionality to the native OS back functionality: delete the game in supabase
   useEffect(() => {

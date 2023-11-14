@@ -47,10 +47,13 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
-
-    // TODO: figure out how to do this better
-    getUserProfile(session.user.id).then((profile) => setUserProfile(profile))
   }, [])
+
+  useEffect(() => {
+    if (session?.user?.id) {
+      getUserProfile(session.user.id).then((profile) => setUserProfile(profile))
+    }
+  }, [session?.user?.id])
 
   return <UserContext.Provider value={{ signedIn: !!session, session, userProfile }}>{children}</UserContext.Provider>
 }

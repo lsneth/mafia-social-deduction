@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { StyleSheet, View, Alert } from 'react-native'
-import { useAuthContext } from '../providers/AuthProvider'
+import { Alert } from 'react-native'
+import { useAuthContext } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -91,7 +91,7 @@ export default function Account({
     <ParentView>
       <Text size="md">Account</Text>
       <Separator size={10} />
-      <Text size="sm">{session?.user?.email}</Text>
+      <Text size="sm">{session?.user?.email as string}</Text>
       <Separator size={30} />
 
       <TextInput

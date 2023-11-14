@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { View, TextInput as BaseTextInput, StyleSheet } from 'react-native'
 import colors from '../styles/colors'
 import Text from './Text'
-import Separator from './Separator'
 
 export default function TextInput({
   value,

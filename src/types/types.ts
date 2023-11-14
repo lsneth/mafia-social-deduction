@@ -1,7 +1,7 @@
 export type GameContext = {
   gameId: string
-  player: Player
-  players: Player[]
+  player: Player | undefined
+  players: Player[] | undefined
   joinGame: (gameId: string) => void
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
