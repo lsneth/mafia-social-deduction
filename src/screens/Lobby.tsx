@@ -48,10 +48,13 @@ export default function Lobby({
         {/* TODO: remove refresh button. for testing only. */}
         <Button
           onPress={() => {
-            mutatePlayers(gameId)
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Role' }],
+            })
           }}
         >
-          REFRESH GAME
+          START GAME
         </Button>
         <Button
           onPress={async () => {

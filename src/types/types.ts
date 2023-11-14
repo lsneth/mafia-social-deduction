@@ -1,5 +1,6 @@
 export type GameContext = {
   gameId: string
+  player: Player
   players: Player[]
   joinGame: (gameId: string) => void
   mutatePlayers: (gameId: string) => void
@@ -44,8 +45,8 @@ export type PlayersReducerAction =
     }
 
 export type UserProfile = {
-  first_name: string
   id: string
+  first_name: string
   last_name: string
   stats_id: string
   updated_at: string

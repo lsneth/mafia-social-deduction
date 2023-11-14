@@ -88,6 +88,18 @@ function getRoleCounts(playerCount: number): RoleCount {
 
 const GameContext = createContext<GameContextType>({
   gameId: '',
+  player: {
+    player_id: '',
+    first_name: '',
+    last_name: '',
+    join_time: '',
+    is_alive: true,
+    votes_for: {},
+    votes_against: {},
+    investigated: false,
+    role: 'commonfolk',
+    cause_of_death: null,
+  },
   players: [],
   joinGame: () => {},
   mutatePlayers: () => {},
@@ -104,6 +116,8 @@ export const useGameContext = () => {
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [gameId, setGameId] = useState<string>('258530')
   const [players, dispatch] = useReducer(playersReducer, [])
+  const { userProfile } = useAuthContext()
+  const player: Player = players.find((player) => player.player_id === userProfile.id)
   const { session } = useAuthContext()
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
@@ -153,7 +167,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
 
   return (
     <GameContext.Provider
-      value={{ gameId, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts, loading }}
+      value={{ gameId, player, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts, loading }}
     >
       {children}
     </GameContext.Provider>

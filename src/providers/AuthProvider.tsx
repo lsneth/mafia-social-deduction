@@ -49,7 +49,7 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     })
 
     // TODO: figure out how to do this better
-    session && getUserProfile(session.user.id).then((profile) => setUserProfile(profile))
+    getUserProfile(session.user.id).then((profile) => setUserProfile(profile))
   }, [])
 
   return <UserContext.Provider value={{ signedIn: !!session, session, userProfile }}>{children}</UserContext.Provider>
