@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { Alert } from 'react-native'
-import { useAuthContext } from '../providers/UserProvider'
+import { useUserContext } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -25,7 +25,7 @@ export default function Account({
   const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
-  const { signedIn, session } = useAuthContext()
+  const { signedIn, session } = useUserContext()
 
   const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
 

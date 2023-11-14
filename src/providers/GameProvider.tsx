@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useState } from 'react'
-import { useAuthContext } from './UserProvider'
+import { useUserContext } from './UserProvider'
 import {
   addPlayerToGame,
   getGameData,
@@ -107,9 +107,9 @@ export const useGameContext = () => {
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [gameId, setGameId] = useState<string>('258530')
   const [players, dispatch] = useReducer(playersReducer, [])
-  const { userProfile } = useAuthContext()
+  const { userProfile } = useUserContext()
   const player: Player | undefined = players.find((player) => player.player_id === userProfile.id)
-  const { session } = useAuthContext()
+  const { session } = useUserContext()
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
 

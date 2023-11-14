@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAuthContext } from '../providers/UserProvider'
+import { useUserContext } from '../providers/UserProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 import Text from '../components/Text'
@@ -8,9 +8,10 @@ import Separator from '../components/Separator'
 import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
 import { useGameContext } from '../providers/GameProvider'
+import { Alert } from 'react-native'
 
 export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
-  const { signedIn } = useAuthContext()
+  const { signedIn, userProfile } = useUserContext()
   const { joinGame, createGame } = useGameContext()
 
   return (
@@ -25,12 +26,19 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
           <>
             <Button onPress={() => navigation.navigate('Join')}>JOIN GAME</Button>
             <Button
-              onPress={() => {
-                createGame().then((gameId) => {
-                  joinGame(gameId)
-                  navigation.navigate('Lobby')
-                })
-              }}
+              onPress={
+                userProfile.first_name && userProfile.last_name
+                  ? () => {
+                      createGame().then((gameId) => {
+                        joinGame(gameId)
+                        navigation.navigate('Lobby')
+                      })
+                    }
+                  : () => {
+                      navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })
+                      Alert.alert('You must add a first and last name before joining a game.')
+                    }
+              }
             >
               HOST GAME
             </Button>

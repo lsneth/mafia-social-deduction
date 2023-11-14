@@ -14,7 +14,7 @@ function getUserProfile(userId: string) {
   return sGetUserProfile(userId)
 }
 
-const UserContext = createContext<UserContextType>({
+const defaultUserContext = createContext<UserContextType>({
   signedIn: false,
   session: null,
   userProfile: {
@@ -25,8 +25,9 @@ const UserContext = createContext<UserContextType>({
     updated_at: '',
   },
 })
-export const useAuthContext = () => {
-  return useContext(UserContext)
+
+export const useUserContext = (): UserContextType => {
+  return useContext(defaultUserContext)
 }
 
 export default function UserProvider({ children }: { children: JSX.Element }): JSX.Element {
@@ -55,5 +56,9 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     }
   }, [session?.user?.id])
 
-  return <UserContext.Provider value={{ signedIn: !!session, session, userProfile }}>{children}</UserContext.Provider>
+  return (
+    <defaultUserContext.Provider value={{ signedIn: !!session, session, userProfile }}>
+      {children}
+    </defaultUserContext.Provider>
+  )
 }
