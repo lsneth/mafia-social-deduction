@@ -4,25 +4,46 @@ import Separator from '../components/Separator'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
 import { useGameContext } from '../providers/GameProvider'
-
-const roleImages = {
-  commonfolk: require('../../assets/images/commonfolkM.png'),
-  mafia: require('../../assets/images/mafiaM.png'),
-  detective: require('../../assets/images/detectiveM.png'),
-}
+import Button from '../components/Button'
 
 export default function Role() {
   const { player } = useGameContext()
 
+  let role
+  switch (player?.role) {
+    case 'commonfolk':
+      role = {
+        image: require('../../assets/images/commonfolkM.png'),
+        winCondition: 'You win when all the mafia players are dead.',
+      }
+      break
+    case 'mafia':
+      role = {
+        image: require('../../assets/images/mafiaM.png'),
+        winCondition: 'You win when all non-mafia players are dead.',
+        detail: 'The mafia team may kill a player every night.',
+      }
+      break
+    case 'detective':
+      role = {
+        image: require('../../assets/images/detectiveM.png'),
+        winCondition: 'You win when all the mafia players are dead.',
+        detail: 'The detective team can investigate a player every night.',
+      }
+      break
+
+    default:
+      break
+  }
+
   return (
-    <ParentView
-      backgroundImage={player?.role && roleImages[player.role]}
-      gradientValues={['transparent', 'transparent', '#000000']}
-    >
+    <ParentView backgroundImage={role?.image} gradientValues={['transparent', 'transparent', '#000000']}>
+      <Text size="md">Your role is</Text>
+      <Text size="lg">{player?.role.toUpperCase()}</Text>
+      <Text size="md">{role?.winCondition}</Text>
+      {role?.detail ? <Text size="md">{role.detail}</Text> : <></>}
       <BottomView>
-        <Text size="lg">{player?.role.toUpperCase()}</Text>
-        <Text size="md">You win when all the mafia are dead.</Text>
-        <Separator size={40} />
+        <Button onPress={() => {}}>OKAY</Button>
       </BottomView>
     </ParentView>
   )

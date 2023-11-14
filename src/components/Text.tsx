@@ -21,6 +21,8 @@ export default function Text({
 const styles = StyleSheet.create({
   text: {
     color: colors.white,
+    marginLeft: 25,
+    marginRight: 25,
   },
   sm: {
     fontSize: 16,
