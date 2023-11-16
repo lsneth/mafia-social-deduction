@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { Alert, View } from 'react-native'
+import { Alert } from 'react-native'
 import { useUserContext } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
@@ -12,7 +12,6 @@ import TextInput from '../components/TextInput'
 import Separator from '../components/Separator'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
-import colors from '../styles/colors'
 import Switch from '../components/Switch'
 
 export default function Account({
@@ -69,11 +68,11 @@ export default function Account({
   async function updateProfile({
     first_name,
     last_name,
-    isMale,
+    sex,
   }: {
     first_name: string
     last_name: string
-    isMale: boolean
+    sex: 'male' | 'female'
   }) {
     try {
       setLoading(true)
@@ -84,10 +83,10 @@ export default function Account({
         first_name,
         last_name,
         updated_at: new Date(),
-        sex: isMale ? 'male' : 'female',
+        sex,
       }
 
-      let { error } = await supabase.from('profiles').upsert(updates)
+      let { error } = await supabase.schema('public').from('profiles').upsert(updates)
 
       if (error) {
         throw error
@@ -122,11 +121,10 @@ export default function Account({
         editable={editMode}
         label="Last Name"
       />
+      <Separator size={20} />
       <Switch
         value={editMode ? tempIsMale : isMale}
         onChange={() => setTempIsMale(!tempIsMale)}
-        state={tempIsMale}
-        setState={setTempIsMale}
         stateLabel="Male"
         notStateLabel="Female"
         editable={editMode}
@@ -138,7 +136,7 @@ export default function Account({
         <>
           <Button
             onPress={() => {
-              updateProfile({ first_name: tempFirstName, last_name: tempLastName, isMale: tempIsMale })
+              updateProfile({ first_name: tempFirstName, last_name: tempLastName, sex: tempIsMale ? 'male' : 'female' })
               setFirstName(tempFirstName)
               setLastName(tempLastName)
               setIsMale(tempIsMale)
@@ -162,6 +160,7 @@ export default function Account({
             setEditMode(true)
             setTempFirstName(firstName)
             setTempLastName(lastName)
+            setTempIsMale(isMale)
           }}
         >
           EDIT PROFILE

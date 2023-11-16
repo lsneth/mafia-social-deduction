@@ -19,7 +19,7 @@ export default function Switch({
   return (
     <View style={styles.switch}>
       <View style={styles.spacer} />
-      <Text>{stateLabel}</Text>
+      <Text>{notStateLabel}</Text>
       <BaseSwitch
         trackColor={
           editable ? { false: colors.lightGray, true: colors.lightGray } : { false: colors.gray, true: colors.gray }
@@ -29,7 +29,7 @@ export default function Switch({
         onChange={() => onChange()}
         disabled={!editable}
       />
-      <Text>{notStateLabel}</Text>
+      <Text>{stateLabel}</Text>
       <View style={styles.spacer} />
     </View>
   )
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    alignItems: 'center',
   },
   spacer: {
     flexGrow: 1,
