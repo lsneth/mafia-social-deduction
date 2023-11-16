@@ -6,13 +6,15 @@ export default function Text({
   children = 'loading',
   align = 'center',
   size = 'sm',
+  style,
 }: {
   children?: string
   align?: 'left' | 'center'
   size?: 'sm' | 'md' | 'lg'
+  style?: {}
 }) {
   return (
-    <View>
+    <View style={{ ...style }}>
       <BaseText style={[{ textAlign: align }, styles.text, styles[size]]}>{children}</BaseText>
     </View>
   )

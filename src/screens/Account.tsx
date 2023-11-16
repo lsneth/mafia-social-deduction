@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
-import { Alert } from 'react-native'
+import { Alert, View } from 'react-native'
 import { useUserContext } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
@@ -12,6 +12,8 @@ import TextInput from '../components/TextInput'
 import Separator from '../components/Separator'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
+import colors from '../styles/colors'
+import Switch from '../components/Switch'
 
 export default function Account({
   route,
@@ -26,6 +28,8 @@ export default function Account({
   const [firstName, setFirstName] = useState<string>('')
   const [lastName, setLastName] = useState<string>('')
   const { signedIn, session } = useUserContext()
+  const [isMale, setIsMale] = useState<boolean>(true)
+  const [tempIsMale, setTempIsMale] = useState<boolean>(true)
 
   const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
 
@@ -41,7 +45,7 @@ export default function Account({
       let { data, error, status } = await supabase
         .schema('public')
         .from('profiles')
-        .select(`first_name, last_name`)
+        .select(`first_name, last_name, sex`)
         .eq('id', session?.user.id)
         .single()
       if (error && status !== 406) {
@@ -51,6 +55,7 @@ export default function Account({
       if (data) {
         setFirstName(data.first_name)
         setLastName(data.last_name)
+        setIsMale(data.sex === 'male')
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -61,7 +66,15 @@ export default function Account({
     }
   }
 
-  async function updateProfile({ first_name, last_name }: { first_name: string; last_name: string }) {
+  async function updateProfile({
+    first_name,
+    last_name,
+    isMale,
+  }: {
+    first_name: string
+    last_name: string
+    isMale: boolean
+  }) {
     try {
       setLoading(true)
       if (!session?.user) throw new Error('No user on the session!')
@@ -71,6 +84,7 @@ export default function Account({
         first_name,
         last_name,
         updated_at: new Date(),
+        sex: isMale ? 'male' : 'female',
       }
 
       let { error } = await supabase.from('profiles').upsert(updates)
@@ -108,6 +122,15 @@ export default function Account({
         editable={editMode}
         label="Last Name"
       />
+      <Switch
+        value={editMode ? tempIsMale : isMale}
+        onChange={() => setTempIsMale(!tempIsMale)}
+        state={tempIsMale}
+        setState={setTempIsMale}
+        stateLabel="Male"
+        notStateLabel="Female"
+        editable={editMode}
+      />
 
       <Separator size={40} />
 
@@ -115,9 +138,10 @@ export default function Account({
         <>
           <Button
             onPress={() => {
-              updateProfile({ first_name: tempFirstName, last_name: tempLastName })
+              updateProfile({ first_name: tempFirstName, last_name: tempLastName, isMale: tempIsMale })
               setFirstName(tempFirstName)
               setLastName(tempLastName)
+              setIsMale(tempIsMale)
               setEditMode(false)
             }}
             disabled={loading}
