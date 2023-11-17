@@ -1,14 +1,14 @@
 import React from 'react'
-import { StyleSheet, Text as BaseText, View } from 'react-native'
+import { StyleSheet, Text as BaseText, View, ActivityIndicator } from 'react-native'
 import colors from '../styles/colors'
 
 export default function Text({
-  children = 'loading',
+  children = <ActivityIndicator />,
   align = 'center',
   size = 'sm',
   style,
 }: {
-  children?: string
+  children?: string | JSX.Element
   align?: 'left' | 'center'
   size?: 'sm' | 'md' | 'lg'
   style?: {}

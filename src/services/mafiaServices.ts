@@ -108,3 +108,7 @@ export async function updateUserProfile({
     }
   }
 }
+
+export function signOut() {
+  supabase.auth.signOut()
+}

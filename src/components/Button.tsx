@@ -11,7 +11,7 @@ export default function Button({
 }: {
   disabled?: boolean
   onPress: () => void
-  children: string
+  children: string | JSX.Element
   backgroundColor?: 'red' | 'gray'
 }) {
   return (

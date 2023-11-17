@@ -1,4 +1,4 @@
-import { updateUserProfile } from '../services/mafiaServices'
+import { signOut, updateUserProfile } from '../services/mafiaServices'
 
 export type GameContext = {
   gameId: string
@@ -59,6 +59,7 @@ export type User = {
 export type UserContext = {
   user: User
   updateUserProfile: typeof updateUserProfile
+  signOut: typeof signOut
   loading: boolean
 }
 

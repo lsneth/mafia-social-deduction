@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState } from 'react'
-import { supabase } from '../lib/supabase'
 import { useUserContext } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
@@ -12,6 +11,7 @@ import Separator from '../components/Separator'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
 import Switch from '../components/Switch'
+import { ActivityIndicator } from 'react-native'
 
 export default function Account({
   route,
@@ -24,16 +24,14 @@ export default function Account({
     user: { email, id, firstName: dbFirstName, lastName: dbLastName, sex },
 
     updateUserProfile,
-    loading,
+    signOut,
+    loading: userLoading,
   } = useUserContext()
   const [tempFirstName, setTempFirstName] = useState<string>('') // state the user changes during edit mode
   const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode
   const [firstName, setFirstName] = useState<string>(dbFirstName)
   const [lastName, setLastName] = useState<string>(dbLastName)
   const [isMale, setIsMale] = useState<boolean>(sex === 'male')
-
-  console.log('file: Account.tsx:35 ~ isMale:', isMale)
-
   const [tempIsMale, setTempIsMale] = useState<boolean>(true)
   const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
 
@@ -84,9 +82,9 @@ export default function Account({
               setIsMale(tempIsMale)
               setEditMode(false)
             }}
-            disabled={loading}
+            disabled={userLoading}
           >
-            {loading ? 'Loading ...' : 'SAVE'}
+            {userLoading ? <ActivityIndicator /> : 'SAVE'}
           </Button>
           <Button
             onPress={() => {
@@ -114,7 +112,7 @@ export default function Account({
         <Button
           backgroundColor="gray"
           onPress={() => {
-            supabase.auth.signOut()
+            signOut()
             navigation.navigate('Home')
           }}
         >

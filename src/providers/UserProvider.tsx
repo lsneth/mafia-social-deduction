@@ -2,7 +2,11 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { Session } from '@supabase/supabase-js'
 import { User, UserContext } from '../types/types'
-import { getUserProfile as sGetUserProfile, updateUserProfile as sUpdateUserProfile } from '../services/mafiaServices'
+import {
+  getUserProfile as sGetUserProfile,
+  updateUserProfile as sUpdateUserProfile,
+  signOut as sSignOut,
+} from '../services/mafiaServices'
 
 function getUserProfile(userId: string) {
   return sGetUserProfile(userId)
@@ -19,6 +23,7 @@ const defaultUserContext = createContext<UserContext>({
     email: '',
   },
   updateUserProfile: (() => {}) as unknown as typeof sUpdateUserProfile,
+  signOut: (() => {}) as unknown as typeof sSignOut,
   loading: true,
 })
 
@@ -56,9 +61,21 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
   useEffect(() => {
     setLoading(true)
     if (session?.user?.id) {
-      getUserProfile(session.user.id).then((profile) => setUser({ ...profile, email: session.user.email ?? '' }))
+      getUserProfile(session.user.id)
+        .then((profile) => setUser({ ...profile, email: session.user.email ?? '' }))
+        .then(() => setLoading(false))
+    } else {
+      setUser({
+        firstName: '',
+        id: '',
+        lastName: '',
+        statsId: '',
+        updatedAt: '',
+        sex: 'male',
+        email: '',
+      })
+      setLoading(false)
     }
-    setLoading(false)
   }, [session])
 
   async function updateUserProfile({
@@ -81,7 +98,15 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     setLoading(false)
   }
 
+  function signOut() {
+    setLoading(true)
+    sSignOut()
+    setLoading(true)
+  }
+
   return (
-    <defaultUserContext.Provider value={{ user, updateUserProfile, loading }}>{children}</defaultUserContext.Provider>
+    <defaultUserContext.Provider value={{ user, updateUserProfile, signOut, loading }}>
+      {children}
+    </defaultUserContext.Provider>
   )
 }
