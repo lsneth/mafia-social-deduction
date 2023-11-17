@@ -10,46 +10,56 @@ export default function ParentView({
   paddingTop = 80,
   backgroundImage,
   gradientValues,
+  resizeMode = 'cover',
 }: {
   children: JSX.Element | JSX.Element[]
   paddingTop?: SeparatorSize
   backgroundImage?: ImageSourcePropType
   gradientValues?: string[]
+  resizeMode?: 'cover' | 'contain'
 }) {
   if (backgroundImage && gradientValues)
     return (
-      <ImageBackground source={backgroundImage}>
+      <View style={{ backgroundColor: 'black' }}>
+        <ImageBackground source={backgroundImage} resizeMode={resizeMode}>
+          <LinearGradient colors={gradientValues}>
+            <View style={styles.viewHeightOnly}>
+              <Separator size={paddingTop} />
+              {children}
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+      </View>
+    )
+  else if (backgroundImage && !gradientValues)
+    return (
+      <View style={{ backgroundColor: 'black' }}>
+        <ImageBackground source={backgroundImage} resizeMode={resizeMode}>
+          <View style={styles.view}>
+            <Separator size={paddingTop} />
+            {children}
+          </View>
+        </ImageBackground>
+      </View>
+    )
+  else if (!backgroundImage && gradientValues)
+    return (
+      <View style={{ backgroundColor: 'black' }}>
         <LinearGradient colors={gradientValues}>
-          <View style={styles.viewHeightOnly}>
+          <View style={styles.view}>
             <Separator size={paddingTop} />
             {children}
           </View>
         </LinearGradient>
-      </ImageBackground>
-    )
-  else if (backgroundImage && !gradientValues)
-    return (
-      <ImageBackground source={backgroundImage}>
-        <View style={styles.view}>
-          <Separator size={paddingTop} />
-          {children}
-        </View>
-      </ImageBackground>
-    )
-  else if (!backgroundImage && gradientValues)
-    return (
-      <LinearGradient colors={gradientValues}>
-        <View style={styles.view}>
-          <Separator size={paddingTop} />
-          {children}
-        </View>
-      </LinearGradient>
+      </View>
     )
   else
     return (
-      <View style={styles.view}>
-        <Separator size={paddingTop} />
-        {children}
+      <View style={{ backgroundColor: 'black' }}>
+        <View style={styles.view}>
+          <Separator size={paddingTop} />
+          {children}
+        </View>
       </View>
     )
 }

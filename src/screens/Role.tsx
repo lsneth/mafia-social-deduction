@@ -48,7 +48,12 @@ export default function Role({ navigation }: { navigation: NativeStackNavigation
   }
 
   return (
-    <ParentView backgroundImage={role?.image} gradientValues={['transparent', 'transparent', '#000000']}>
+    <ParentView
+      backgroundImage={role?.image}
+      gradientValues={['#000000', 'transparent', 'transparent', 'transparent', '#000000']}
+      resizeMode="contain"
+      paddingTop={50}
+    >
       <Text size="md">Your role is</Text>
       <Text size="lg">{player?.role.toUpperCase()}</Text>
       <Text size="md">{role?.winCondition}</Text>
