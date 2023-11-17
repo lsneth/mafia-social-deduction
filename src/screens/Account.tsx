@@ -1,7 +1,6 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { Alert } from 'react-native'
 import { useUserContext } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
@@ -21,90 +20,28 @@ export default function Account({
   route: RouteProp<RootStackParamList, 'Account'>
   navigation: NativeStackNavigationProp<RootStackParamList, 'Account'>
 }) {
-  const [loading, setLoading] = useState(true)
+  const {
+    user: { email, id, firstName: dbFirstName, lastName: dbLastName, sex },
+
+    updateUserProfile,
+    loading,
+  } = useUserContext()
   const [tempFirstName, setTempFirstName] = useState<string>('') // state the user changes during edit mode
   const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode
-  const [firstName, setFirstName] = useState<string>('')
-  const [lastName, setLastName] = useState<string>('')
-  const { signedIn, session } = useUserContext()
-  const [isMale, setIsMale] = useState<boolean>(true)
+  const [firstName, setFirstName] = useState<string>(dbFirstName)
+  const [lastName, setLastName] = useState<string>(dbLastName)
+  const [isMale, setIsMale] = useState<boolean>(sex === 'male')
+
+  console.log('file: Account.tsx:35 ~ isMale:', isMale)
+
   const [tempIsMale, setTempIsMale] = useState<boolean>(true)
-
   const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
-
-  useEffect(() => {
-    if (signedIn) getProfile()
-  }, [signedIn])
-
-  async function getProfile() {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      let { data, error, status } = await supabase
-        .schema('public')
-        .from('profiles')
-        .select(`first_name, last_name, sex`)
-        .eq('id', session?.user.id)
-        .single()
-      if (error && status !== 406) {
-        throw error
-      }
-
-      if (data) {
-        setFirstName(data.first_name)
-        setLastName(data.last_name)
-        setIsMale(data.sex === 'male')
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function updateProfile({
-    first_name,
-    last_name,
-    sex,
-  }: {
-    first_name: string
-    last_name: string
-    sex: 'male' | 'female'
-  }) {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const updates = {
-        id: session?.user.id,
-        first_name,
-        last_name,
-        updated_at: new Date(),
-        sex,
-      }
-
-      let { error } = await supabase.schema('public').from('profiles').upsert(updates)
-
-      if (error) {
-        throw error
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return (
     <ParentView>
       <Text size="md">Account</Text>
       <Separator size={10} />
-      <Text size="sm">{session?.user?.email as string}</Text>
+      <Text size="sm">{email}</Text>
       <Separator size={30} />
 
       <TextInput
@@ -136,7 +73,12 @@ export default function Account({
         <>
           <Button
             onPress={() => {
-              updateProfile({ first_name: tempFirstName, last_name: tempLastName, sex: tempIsMale ? 'male' : 'female' })
+              updateUserProfile({
+                id,
+                firstName: tempFirstName,
+                lastName: tempLastName,
+                sex: tempIsMale ? 'male' : 'female',
+              })
               setFirstName(tempFirstName)
               setLastName(tempLastName)
               setIsMale(tempIsMale)

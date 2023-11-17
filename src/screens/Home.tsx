@@ -11,7 +11,9 @@ import { useGameContext } from '../providers/GameProvider'
 import { Alert } from 'react-native'
 
 export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
-  const { signedIn, userProfile } = useUserContext()
+  const {
+    user: { id, firstName, lastName },
+  } = useUserContext()
   const { joinGame, createGame } = useGameContext()
 
   return (
@@ -22,12 +24,12 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
       <Text size="lg">MAFIA</Text>
       <Text size="md">Social Deduction</Text>
       <BottomView>
-        {signedIn ? (
+        {id ? (
           <>
             <Button onPress={() => navigation.navigate('Join')}>JOIN GAME</Button>
             <Button
               onPress={
-                userProfile.first_name && userProfile.last_name
+                firstName && lastName
                   ? () => {
                       createGame().then((gameId) => {
                         joinGame(gameId)

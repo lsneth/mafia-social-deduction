@@ -105,11 +105,12 @@ export const useGameContext = () => {
 }
 
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
-  const [gameId, setGameId] = useState<string>('258530')
+  const [gameId, setGameId] = useState<string>('')
   const [players, dispatch] = useReducer(playersReducer, [])
-  const { userProfile } = useUserContext()
-  const player: Player | undefined = players.find((player) => player.player_id === userProfile.id)
-  const { session } = useUserContext()
+  const {
+    user: { id },
+  } = useUserContext()
+  const player: Player | undefined = players.find((player) => player.player_id === id)
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -142,7 +143,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
     setLoading(true)
 
     // add player to game
-    await addPlayerToGame(gameId, session?.user.id || '')
+    await addPlayerToGame(gameId, id || '')
 
     // get up to date with current game state
     await mutatePlayers(gameId)

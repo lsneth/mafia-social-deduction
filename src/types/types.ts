@@ -1,3 +1,5 @@
+import { updateUserProfile } from '../services/mafiaServices'
+
 export type GameContext = {
   gameId: string
   player: Player | undefined
@@ -44,12 +46,20 @@ export type PlayersReducerAction =
       mutation: Player[]
     }
 
-export type UserProfile = {
+export type User = {
   id: string
-  first_name: string
-  last_name: string
-  stats_id: string
-  updated_at: string
+  updatedAt: string
+  firstName: string
+  lastName: string
+  statsId: string
+  sex: 'male' | 'female'
+  email: string
+}
+
+export type UserContext = {
+  user: User
+  updateUserProfile: typeof updateUserProfile
+  loading: boolean
 }
 
 export type RoleCount = {
