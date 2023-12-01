@@ -12,6 +12,7 @@ import Join from './src/screens/Join'
 import GameDataProvider from './src/providers/GameProvider'
 import CreateAccount from './src/screens/CreateAccount'
 import Role from './src/screens/Role'
+import Night from './src/screens/Night'
 
 export type RootStackParamList = {
   Home: undefined
@@ -22,6 +23,7 @@ export type RootStackParamList = {
   Lobby: undefined
   Join: undefined
   Role: undefined
+  Night: undefined
 }
 
 export default function App() {
@@ -47,6 +49,7 @@ export default function App() {
             <Stack.Screen name="Lobby" component={Lobby} options={{ headerBackVisible: false }} />
             <Stack.Screen name="Join" component={Join} />
             <Stack.Screen name="Role" component={Role} />
+            <Stack.Screen name="Night" component={Night} />
           </Stack.Navigator>
         </GameDataProvider>
       </UserProvider>

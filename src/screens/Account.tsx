@@ -108,7 +108,9 @@ export default function Account({
       )}
 
       <BottomView>
-        <Button onPress={() => navigation.navigate('Stats')}>STATS</Button>
+        <Button onPress={() => navigation.navigate('Stats')} disabled>
+          STATS (COMING SOON)
+        </Button>
         <Button
           backgroundColor="gray"
           onPress={() => {

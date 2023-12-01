@@ -2,7 +2,6 @@ import React from 'react'
 import { StyleSheet, View, ImageBackground } from 'react-native'
 import { ImageSourcePropType } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import colors from '../styles/colors'
 import Separator, { SeparatorSize } from './Separator'
 
 export default function ParentView({
@@ -67,7 +66,7 @@ export default function ParentView({
 const styles = StyleSheet.create({
   view: {
     height: '100%',
-    backgroundColor: colors.black,
+    // backgroundColor: colors.black,
   },
   viewHeightOnly: {
     height: '100%',
