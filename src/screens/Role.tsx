@@ -1,18 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
 import { useGameContext } from '../providers/GameProvider'
-import Button from '../components/Button'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useUserContext } from '../providers/UserProvider'
+import Separator from '../components/Separator'
 
 export default function Role({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Role'> }) {
-  const { player, deleteGame, gameId } = useGameContext()
+  const { player } = useGameContext()
   const {
     user: { sex },
   } = useUserContext()
+  const [seconds, setSeconds] = useState<number>(10)
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setSeconds((prev) => prev - 1)
+    }, 1000)
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(intervalId)
+  }, [])
+
+  useEffect(() => {
+    if (seconds <= 0) {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Night' }],
+      })
+    }
+  })
 
   let role
   switch (player?.role) {
@@ -52,24 +71,13 @@ export default function Role({ navigation }: { navigation: NativeStackNavigation
       backgroundImage={role?.image}
       gradientValues={['#000000', 'transparent', 'transparent', 'transparent', '#000000']}
       resizeMode="contain"
-      paddingTop={50}
+      paddingTop={30}
     >
-      <Text size="md">Your role is</Text>
-      <Text size="lg">{player?.role.toUpperCase()}</Text>
-      <Text size="md">{role?.winCondition}</Text>
-      {role?.detail ? <Text size="md">{role.detail}</Text> : <></>}
+      <Text size="lg">{seconds.toString()}</Text>
       <BottomView>
-        <Button
-          onPress={() => {
-            deleteGame(gameId)
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Night' }],
-            })
-          }}
-        >
-          OKAY
-        </Button>
+        <Text size="lg">{player?.role.toUpperCase()}</Text>
+        <Text size="md">{role?.winCondition}</Text>
+        {role?.detail ? <Text size="md">{role.detail}</Text> : <></>}
       </BottomView>
     </ParentView>
   )
