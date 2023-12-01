@@ -112,3 +112,12 @@ export async function updateUserProfile({
 export function signOut() {
   supabase.auth.signOut()
 }
+
+export async function assignRoles(gameId: string): Promise<void> {
+  const { error } = await supabase.schema('public').rpc('assign_roles', { table_name: gameId })
+
+  if (error) {
+    Alert.alert('assignRoles', error.message)
+    console.log('assignRoles', error.message)
+  }
+}
