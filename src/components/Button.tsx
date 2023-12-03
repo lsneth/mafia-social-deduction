@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray,
   },
   disabled: {
-    backgroundColor: colors.gray,
+    backgroundColor: colors.lightGray,
   },
 })

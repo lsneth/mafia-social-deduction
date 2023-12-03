@@ -10,14 +10,19 @@ import SummaryTable from '../components/SummaryTable'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 import { BackHandler } from 'react-native'
+// import { assignRoles } from '../services/mafiaServices'
 
 export default function Lobby({
   navigation,
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading } = useGameContext()
+  const { gameId, deleteGame, loading, players } = useGameContext()
   const formattedGameId = gameId?.substring(3).toUpperCase()
+
+  const tooManyPlayers = (players?.length ?? 0) > 15
+  const notEnoughPlayers = (players?.length ?? 0) < 5
+  const validPlayerCount = !notEnoughPlayers && !tooManyPlayers
 
   // this useEffect is to add functionality to the native OS back functionality: delete the game in supabase
   useEffect(() => {
@@ -42,16 +47,23 @@ export default function Lobby({
       <BottomView>
         <SummaryTable />
         <Separator size={20} />
-        {/* TODO: remove refresh button. for testing only. */}
         <Button
+          disabled={!validPlayerCount}
           onPress={() => {
+            // assignRoles(gameId)
             navigation.reset({
               index: 0,
               routes: [{ name: 'Role' }],
             })
           }}
         >
-          START GAME
+          {notEnoughPlayers ? (
+            <Text>5 PLAYERS MINIMUM</Text>
+          ) : tooManyPlayers ? (
+            <Text>15 PLAYERS MAXIMUM</Text>
+          ) : (
+            <Text>START GAME</Text>
+          )}
         </Button>
         <Button
           onPress={async () => {
