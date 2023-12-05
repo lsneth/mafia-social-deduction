@@ -7,15 +7,19 @@ export default function Text({
   align = 'center',
   size = 'sm',
   style,
+  noMargin,
 }: {
   children?: string | JSX.Element
   align?: 'left' | 'center'
   size?: 'sm' | 'md' | 'lg'
   style?: {}
+  noMargin?: boolean
 }) {
   return (
     <View style={{ ...style }}>
-      <BaseText style={[{ textAlign: align }, styles.text, styles[size]]}>{children}</BaseText>
+      <BaseText style={[{ textAlign: align }, styles.text, !noMargin && styles.margin, styles[size]]}>
+        {children}
+      </BaseText>
     </View>
   )
 }
@@ -23,6 +27,8 @@ export default function Text({
 const styles = StyleSheet.create({
   text: {
     color: colors.white,
+  },
+  margin: {
     marginLeft: 25,
     marginRight: 25,
   },
