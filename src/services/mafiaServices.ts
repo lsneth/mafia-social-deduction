@@ -69,6 +69,19 @@ export async function addPlayerToGame(gameId: string, userId: string): Promise<v
     })
 }
 
+export async function makePlayerHost(gameId: string, userId: string): Promise<void> {
+  console.log(gameId)
+  console.log(
+    await supabase
+      .schema('game_sessions')
+      .from(gameId)
+      .update({
+        is_host: true,
+      })
+      .eq('player_id', userId)
+  )
+}
+
 export async function deleteGame(gameId: string): Promise<void> {
   const { error } = await supabase.schema('public').rpc('delete_gs_table', { table_name: gameId })
   if (error) {

@@ -10,6 +10,7 @@ import SummaryTable from '../components/SummaryTable'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 import { BackHandler } from 'react-native'
+import { makePlayerHost } from '../services/mafiaServices'
 // import { assignRoles } from '../services/mafiaServices'
 
 export default function Lobby({
@@ -17,7 +18,7 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading, players } = useGameContext()
+  const { gameId, deleteGame, loading, players, player } = useGameContext()
   const formattedGameId = gameId?.substring(3).toUpperCase()
 
   const tooManyPlayers = (players?.length ?? 0) > 15
@@ -47,32 +48,36 @@ export default function Lobby({
       <BottomView>
         <SummaryTable />
         <Separator size={20} />
-        <Button
-          disabled={!validPlayerCount}
-          onPress={() => {
-            // assignRoles(gameId)
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Role' }],
-            })
-          }}
-        >
-          {notEnoughPlayers ? (
-            <Text>5 PLAYERS MINIMUM</Text>
-          ) : tooManyPlayers ? (
-            <Text>15 PLAYERS MAXIMUM</Text>
-          ) : (
-            <Text>START GAME</Text>
-          )}
-        </Button>
+        {player?.is_host ? (
+          <Button
+            disabled={!validPlayerCount}
+            onPress={() => {
+              // assignRoles(gameId)
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Role' }],
+              })
+            }}
+          >
+            {notEnoughPlayers ? (
+              <Text>5 PLAYERS MINIMUM</Text>
+            ) : tooManyPlayers ? (
+              <Text>15 PLAYERS MAXIMUM</Text>
+            ) : (
+              <Text>START GAME</Text>
+            )}
+          </Button>
+        ) : (
+          <></>
+        )}
         <Button
           onPress={async () => {
-            await deleteGame(gameId)
+            if (player?.is_host) await deleteGame(gameId)
             navigation.goBack()
           }}
           backgroundColor="gray"
         >
-          CANCEL
+          {player?.is_host ? 'Delete Game' : 'Leave Game'}
         </Button>
       </BottomView>
     </ParentView>

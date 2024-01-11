@@ -6,6 +6,7 @@ import {
   subscribeToGame,
   deleteGame as sDeleteGame,
   createGame as sCreateGame,
+  makePlayerHost,
 } from '../services/mafiaServices'
 import { Player, PlayersReducerAction, GameContext as GameContextType, Change, RoleCount } from '../types/types'
 
@@ -136,7 +137,10 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   async function createGame(): Promise<string> {
-    return sCreateGame()
+    const newGameId = await sCreateGame()
+    await makePlayerHost(newGameId, id) // TODO: this is not working
+
+    return newGameId
   }
 
   async function joinGame(gameId: string): Promise<void> {

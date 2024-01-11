@@ -14,13 +14,16 @@ export default function SummaryTable() {
       </View>
       <View style={{ display: 'flex', flexDirection: 'row' }}>
         <View style={[styles.cell, styles.mafiaCell]}>
-          <Text>{`${roleCounts.mafia} Mafia`}</Text>
+          <Text size="md">{roleCounts.mafia.toString()}</Text>
+          <Text margin={0}>Mafia</Text>
         </View>
         <View style={[styles.cell, styles.detectiveCell]}>
-          <Text>{`${roleCounts.detective} Detectives`}</Text>
+          <Text size="md">{roleCounts.detective.toString()}</Text>
+          <Text margin={0}>{`Detective${roleCounts.detective !== 1 ? 's' : ''}`}</Text>
         </View>
         <View style={[styles.cell, styles.commonfolkCell]}>
-          <Text>{`${roleCounts.commonfolk} Commonfolk`}</Text>
+          <Text size="md">{roleCounts.commonfolk.toString()}</Text>
+          <Text margin={0}>Commonfolk</Text>
         </View>
       </View>
     </View>

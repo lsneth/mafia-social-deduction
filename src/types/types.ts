@@ -23,6 +23,7 @@ export type Player = {
   investigated: boolean
   role: 'commonfolk' | 'detective' | 'mafia'
   cause_of_death: 'murder' | 'execution' | null
+  is_host: boolean
 }
 
 export type Change = {

@@ -26,7 +26,7 @@ export default function TextInput({
     <View style={styles.container}>
       {label && (
         <View style={{ paddingLeft: 5 }}>
-          <Text align="left" noMargin>
+          <Text align="left" margin={0}>
             {label}
           </Text>
         </View>
