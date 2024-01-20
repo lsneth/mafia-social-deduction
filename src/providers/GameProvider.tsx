@@ -163,7 +163,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
 
   return (
     <GameContext.Provider
-      value={{ gameId, player, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts, loading }}
+      value={{ gameId, player, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts, loading }} // add isNight/isDay
     >
       {children}
     </GameContext.Provider>

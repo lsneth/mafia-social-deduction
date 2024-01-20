@@ -13,6 +13,7 @@ import GameDataProvider from './src/providers/GameProvider'
 import CreateAccount from './src/screens/CreateAccount'
 import Role from './src/screens/Role'
 import Night from './src/screens/Night'
+import Event from './src/screens/Event'
 
 export type RootStackParamList = {
   Home: undefined
@@ -24,6 +25,7 @@ export type RootStackParamList = {
   Join: undefined
   Role: undefined
   Night: undefined
+  Event: { eventText: string }
 }
 
 export default function App() {
@@ -34,7 +36,7 @@ export default function App() {
       <UserProvider>
         <GameDataProvider>
           <Stack.Navigator
-            initialRouteName="Home"
+            initialRouteName="Event"
             screenOptions={{
               headerTintColor: colors.white,
               headerTitle: () => <></>,
@@ -50,6 +52,7 @@ export default function App() {
             <Stack.Screen name="Join" component={Join} />
             <Stack.Screen name="Role" component={Role} />
             <Stack.Screen name="Night" component={Night} />
+            <Stack.Screen name="Event" component={Event} initialParams={{ eventText: 'Event text placeholder' }} />
           </Stack.Navigator>
         </GameDataProvider>
       </UserProvider>

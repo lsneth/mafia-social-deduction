@@ -6,7 +6,6 @@ import { useGameContext } from '../providers/GameProvider'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useUserContext } from '../providers/UserProvider'
-import Separator from '../components/Separator'
 
 export default function Role({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Role'> }) {
   const { player } = useGameContext()
