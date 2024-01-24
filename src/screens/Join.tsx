@@ -27,7 +27,7 @@ export default function Join({ navigation }: { navigation: NativeStackNavigation
       />
       <Button
         onPress={() => {
-          joinGame(`gs_${gameId.toLowerCase()}`)
+          joinGame(gameId.toLowerCase())
           navigation.navigate('Lobby')
         }}
       >

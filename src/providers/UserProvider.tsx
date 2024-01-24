@@ -6,7 +6,7 @@ import {
   getUserProfile as sGetUserProfile,
   updateUserProfile as sUpdateUserProfile,
   signOut as sSignOut,
-} from '../services/mafiaServices'
+} from '../services/userServices'
 
 function getUserProfile(userId: string) {
   return sGetUserProfile(userId)

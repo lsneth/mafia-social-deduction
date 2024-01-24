@@ -15,7 +15,7 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
     user: { id, firstName, lastName },
     loading: userLoading,
   } = useUserContext()
-  const { joinGame, createGame } = useGameContext()
+  const { joinGame, newGame } = useGameContext()
 
   return (
     <ParentView
@@ -33,13 +33,23 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
         <BottomView>
           {id ? (
             <>
-              <Button onPress={() => navigation.navigate('Join')}>JOIN GAME</Button>
+              <Button
+                onPress={
+                  firstName && lastName
+                    ? () => navigation.navigate('Join')
+                    : () => {
+                        navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })
+                        Alert.alert('You must add a first and last name before joining a game.')
+                      }
+                }
+              >
+                JOIN GAME
+              </Button>
               <Button
                 onPress={
                   firstName && lastName
                     ? () => {
-                        createGame().then((gameId) => {
-                          joinGame(gameId)
+                        newGame().then(() => {
                           navigation.navigate('Lobby')
                         })
                       }

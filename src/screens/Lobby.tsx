@@ -10,7 +10,7 @@ import SummaryTable from '../components/SummaryTable'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 import { BackHandler } from 'react-native'
-import { makePlayerHost } from '../services/mafiaServices'
+import { makePlayerHost } from '../services/userServices'
 // import { assignRoles } from '../services/mafiaServices'
 
 export default function Lobby({

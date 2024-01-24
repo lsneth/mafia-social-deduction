@@ -9,7 +9,7 @@ import Stats from './src/screens/Stats'
 import colors from './src/styles/colors'
 import Lobby from './src/screens/Lobby'
 import Join from './src/screens/Join'
-import GameDataProvider from './src/providers/GameProvider'
+import GameProvider from './src/providers/GameProvider'
 import CreateAccount from './src/screens/CreateAccount'
 import Role from './src/screens/Role'
 import Night from './src/screens/Night'
@@ -34,9 +34,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <UserProvider>
-        <GameDataProvider>
+        <GameProvider>
           <Stack.Navigator
-            initialRouteName="Event"
+            initialRouteName="Home"
             screenOptions={{
               headerTintColor: colors.white,
               headerTitle: () => <></>,
@@ -54,7 +54,7 @@ export default function App() {
             <Stack.Screen name="Night" component={Night} />
             <Stack.Screen name="Event" component={Event} initialParams={{ eventText: 'Event text placeholder' }} />
           </Stack.Navigator>
-        </GameDataProvider>
+        </GameProvider>
       </UserProvider>
     </NavigationContainer>
   )

@@ -1,14 +1,28 @@
 import { createContext, useContext, useReducer, useState } from 'react'
+import { Change, GameContext as GameContextType, Player, PlayersReducerAction, RoleCount } from '../types/types'
 import { useUserContext } from './UserProvider'
 import {
+  getCurrentGameData,
+  deleteGame as deleteGameService,
+  createGame,
   addPlayerToGame,
-  getGameData,
-  subscribeToGame,
-  deleteGame as sDeleteGame,
-  createGame as sCreateGame,
-  makePlayerHost,
-} from '../services/mafiaServices'
-import { Player, PlayersReducerAction, GameContext as GameContextType, Change, RoleCount } from '../types/types'
+  subscribeToGameChanges,
+} from '../services/gameServices'
+
+const defaultGameContextValue: GameContextType = {
+  gameId: undefined,
+  setGameId: () => {},
+  players: undefined,
+  player: undefined,
+  roleCounts: undefined,
+  newGame: async () => {},
+  joinGame: async () => {},
+  mutatePlayers: () => {},
+  deleteGame: () => {},
+  loading: true,
+}
+
+const GameContext = createContext<GameContextType>(defaultGameContextValue)
 
 const UPDATE = 'UPDATE'
 const INSERT = 'INSERT'
@@ -33,7 +47,7 @@ function playersReducer(players: Player[], action: PlayersReducerAction): Player
       return players.filter((player) => player.player_id !== action.old.player_id)
 
     case MUTATE:
-      return [...action.mutation]
+      return [...action.players]
 
     default:
       return players
@@ -87,34 +101,21 @@ function getRoleCounts(playerCount: number): RoleCount {
   }
 }
 
-const defaultGameContextValue: GameContextType = {
-  gameId: '',
-  player: undefined,
-  players: undefined,
-  joinGame: () => {},
-  mutatePlayers: () => {},
-  deleteGame: () => {},
-  createGame: async () => '',
-  roleCounts: getRoleCounts(0),
-  loading: true,
-}
-
-const GameContext = createContext<GameContextType>(defaultGameContextValue)
-
 export const useGameContext = () => {
   return useContext(GameContext)
 }
 
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
-  const [gameId, setGameId] = useState<string>('')
+  const [gameId, setGameId] = useState<string | undefined>(undefined)
   const [players, dispatch] = useReducer(playersReducer, [])
   const {
-    user: { id },
+    user: { id: userId },
   } = useUserContext()
-  const player: Player | undefined = players.find((player) => player.player_id === id)
+  const player: Player | undefined = players.find((player) => player.player_id === userId)
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
 
+  // updates game state
   function handleChange(change: Change) {
     dispatch({
       type: change.eventType,
@@ -123,49 +124,87 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
     })
   }
 
-  async function mutatePlayers(gameId: string): Promise<void> {
+  // refreshes game data and updates state
+  async function mutatePlayers(): Promise<void> {
     setLoading(true)
     dispatch({
       type: MUTATE,
-      mutation: await getGameData(gameId),
+      players: (await getCurrentGameData(gameId!)) ?? [],
     })
     setLoading(false)
   }
 
-  async function deleteGame(gameId: string): Promise<void> {
-    await sDeleteGame(gameId)
-  }
-
-  async function createGame(): Promise<string> {
-    const newGameId = await sCreateGame()
-    await makePlayerHost(newGameId, id) // TODO: this is not working
-
-    return newGameId
-  }
-
-  async function joinGame(gameId: string): Promise<void> {
+  // adds the user to the game table and gets state up to date
+  async function joinGame({ isHost = false }: { isHost?: boolean }): Promise<void> {
     setLoading(true)
 
     // add player to game
-    await addPlayerToGame(gameId, id || '')
+    await addPlayerToGame(gameId!, userId, isHost)
 
     // get up to date with current game state
-    await mutatePlayers(gameId)
+    await mutatePlayers()
 
     // subscribe to further changes in game
-    await subscribeToGame(gameId, handleChange)
-
-    // save game id to state
-    setGameId(gameId)
+    await subscribeToGameChanges(gameId!, handleChange)
 
     setLoading(false)
   }
 
+  // creates a new game and then calls joinGame
+  async function newGame(): Promise<void> {
+    setLoading(true)
+    createGame().then(() => {
+      joinGame({ isHost: true })
+    })
+    setLoading(false)
+  }
+
+  async function deleteGame(): Promise<void> {
+    await deleteGameService(gameId!)
+  }
   return (
-    <GameContext.Provider
-      value={{ gameId, player, players, joinGame, mutatePlayers, deleteGame, createGame, roleCounts, loading }} // add isNight/isDay
-    >
-      {children}
-    </GameContext.Provider>
+    <GameProviderBase
+      children={children}
+      gameId={gameId}
+      setGameId={setGameId}
+      players={players}
+      player={player}
+      roleCounts={roleCounts}
+      newGame={newGame}
+      joinGame={joinGame}
+      mutatePlayers={mutatePlayers}
+      deleteGame={deleteGame}
+      loading={loading}
+    />
   )
+}
+
+// TODO: add isNight/isDay
+function GameProviderBase({
+  children,
+  gameId,
+  setGameId,
+  players,
+  player,
+  roleCounts,
+  newGame,
+  joinGame,
+  mutatePlayers,
+  deleteGame,
+  loading,
+}: { children: JSX.Element } & GameContextType): JSX.Element {
+  const value = {
+    // TODO: need useMemo here?
+    gameId,
+    setGameId,
+    players,
+    player,
+    roleCounts,
+    newGame,
+    joinGame,
+    mutatePlayers,
+    deleteGame,
+    loading,
+  }
+  return <GameContext.Provider value={value}>{children}</GameContext.Provider>
 }

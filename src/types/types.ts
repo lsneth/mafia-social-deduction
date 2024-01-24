@@ -1,14 +1,15 @@
-import { signOut, updateUserProfile } from '../services/mafiaServices'
+import { signOut, updateUserProfile } from '../services/userServices'
 
 export type GameContext = {
-  gameId: string
-  player: Player | undefined
+  gameId: string | undefined
+  setGameId: React.Dispatch<React.SetStateAction<string | undefined>>
   players: Player[] | undefined
-  joinGame: (gameId: string) => void
+  player: Player | undefined
+  roleCounts: RoleCount | undefined
+  newGame: () => Promise<void>
+  joinGame: ({ gameId, isHost }: { gameId: string; isHost: boolean }) => Promise<void>
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
-  createGame: () => Promise<string>
-  roleCounts: RoleCount
   loading: boolean
 }
 
@@ -33,7 +34,7 @@ export type Change = {
   new: Player
   old: Player
   schema: 'game_sessions'
-  table: `gs_${string}` & { length: 9 }
+  table: string & { length: 6 }
 }
 
 export type PlayersReducerAction =
@@ -44,7 +45,7 @@ export type PlayersReducerAction =
     }
   | {
       type: 'mutate'
-      mutation: Player[]
+      players: Player[]
     }
 
 export type User = {
@@ -53,7 +54,7 @@ export type User = {
   firstName: string
   lastName: string
   statsId: string
-  sex: 'male' | 'female'
+  sex: 'male' | 'female' | 'undefined'
   email: string
 }
 
