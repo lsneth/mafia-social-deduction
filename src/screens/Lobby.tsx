@@ -9,8 +9,7 @@ import Button from '../components/Button'
 import SummaryTable from '../components/SummaryTable'
 import { useGameContext } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
-import { BackHandler } from 'react-native'
-import { makePlayerHost } from '../services/userServices'
+import { ActivityIndicator, BackHandler } from 'react-native'
 // import { assignRoles } from '../services/mafiaServices'
 
 export default function Lobby({
@@ -19,7 +18,6 @@ export default function Lobby({
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
   const { gameId, deleteGame, loading, players, player } = useGameContext()
-  const formattedGameId = gameId?.substring(3).toUpperCase()
 
   const tooManyPlayers = (players?.length ?? 0) > 15
   const notEnoughPlayers = (players?.length ?? 0) < 5
@@ -28,7 +26,7 @@ export default function Lobby({
   // this useEffect is to add functionality to the native OS back functionality: delete the game in supabase
   useEffect(() => {
     const backAction = () => {
-      deleteGame(gameId)
+      deleteGame(gameId!)
       return undefined // don't override default behavior (going back)
     }
 
@@ -39,7 +37,7 @@ export default function Lobby({
 
   return (
     <ParentView>
-      {!loading ? <Text size="lg">{formattedGameId}</Text> : <></>}
+      {!loading && gameId ? <Text size="lg">{gameId.toUpperCase()}</Text> : <ActivityIndicator size="large" />}
       <Separator />
       <Text>Share this game ID for others to join your session.</Text>
       <Separator size={40} />
@@ -72,7 +70,7 @@ export default function Lobby({
         )}
         <Button
           onPress={async () => {
-            if (player?.is_host) await deleteGame(gameId)
+            if (player?.is_host) await deleteGame(gameId!)
             navigation.goBack()
           }}
           backgroundColor="gray"

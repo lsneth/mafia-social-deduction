@@ -13,7 +13,7 @@ export async function createGame(): Promise<string> {
     return 'error creating game session'
   }
 
-  return gameId
+  return gameId ?? ''
 }
 
 // adds a row to the game table

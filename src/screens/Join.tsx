@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import ParentView from '../components/ParentView'
 import TextInput from '../components/TextInput'
 import Button from '../components/Button'
@@ -9,8 +9,7 @@ import Separator from '../components/Separator'
 import Text from '../components/Text'
 
 export default function Join({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Join'> }) {
-  const [gameId, setGameId] = useState('')
-  const { joinGame } = useGameContext()
+  const { gameId, setGameId, joinGame } = useGameContext()
 
   return (
     <ParentView>
@@ -20,14 +19,14 @@ export default function Join({ navigation }: { navigation: NativeStackNavigation
       <Separator size={20} />
       <TextInput
         placeholder="XXXXXX"
-        value={gameId}
+        value={gameId?.toUpperCase()}
         onChangeText={(text) => {
-          setGameId(text.toUpperCase())
+          setGameId(text)
         }}
       />
       <Button
         onPress={() => {
-          joinGame(gameId.toLowerCase())
+          joinGame()
           navigation.navigate('Lobby')
         }}
       >

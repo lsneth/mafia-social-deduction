@@ -7,7 +7,7 @@ export type GameContext = {
   player: Player | undefined
   roleCounts: RoleCount | undefined
   newGame: () => Promise<void>
-  joinGame: ({ gameId, isHost }: { gameId: string; isHost: boolean }) => Promise<void>
+  joinGame: (isHost?: boolean) => Promise<void>
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
   loading: boolean
@@ -48,13 +48,22 @@ export type PlayersReducerAction =
       players: Player[]
     }
 
+export type BackendUser = {
+  id: string
+  updated_at: string
+  first_name: string
+  last_name: string
+  stats_id: string
+  sex: 'male' | 'female'
+}
+
 export type User = {
   id: string
   updatedAt: string
   firstName: string
   lastName: string
   statsId: string
-  sex: 'male' | 'female' | 'undefined'
+  sex: 'male' | 'female'
   email: string
 }
 

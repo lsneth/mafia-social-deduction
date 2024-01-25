@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useState } from 'react'
+import { createContext, useContext, useEffect, useReducer, useState } from 'react'
 import { Change, GameContext as GameContextType, Player, PlayersReducerAction, RoleCount } from '../types/types'
 import { useUserContext } from './UserProvider'
 import {
@@ -135,7 +135,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   // adds the user to the game table and gets state up to date
-  async function joinGame({ isHost = false }: { isHost?: boolean }): Promise<void> {
+  async function joinGame(isHost: boolean = false): Promise<void> {
     setLoading(true)
 
     // add player to game
@@ -153,10 +153,9 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   // creates a new game and then calls joinGame
   async function newGame(): Promise<void> {
     setLoading(true)
-    createGame().then(() => {
-      joinGame({ isHost: true })
+    createGame().then((gameId) => {
+      setGameId(gameId)
     })
-    setLoading(false)
   }
 
   async function deleteGame(): Promise<void> {

@@ -1,49 +1,40 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { Session } from '@supabase/supabase-js'
-import { User, UserContext } from '../types/types'
+import { User, UserContext as UserContextType } from '../types/types'
 import {
-  getUserProfile as sGetUserProfile,
-  updateUserProfile as sUpdateUserProfile,
-  signOut as sSignOut,
+  getUserProfile,
+  updateUserProfile as updateUserProfileService,
+  signOut as signOutService,
 } from '../services/userServices'
 
-function getUserProfile(userId: string) {
-  return sGetUserProfile(userId)
+const defaultUser = {
+  id: '',
+  updatedAt: '',
+  firstName: '',
+  lastName: '',
+  statsId: '',
+  sex: 'male' as 'male',
+  email: '',
 }
 
-const defaultUserContext = createContext<UserContext>({
-  user: {
-    firstName: '',
-    id: '',
-    lastName: '',
-    statsId: '',
-    updatedAt: '',
-    sex: 'male',
-    email: '',
-  },
-  updateUserProfile: (() => {}) as unknown as typeof sUpdateUserProfile,
-  signOut: (() => {}) as unknown as typeof sSignOut,
+const UserContext = createContext<UserContextType>({
+  user: defaultUser,
+  updateUserProfile: async () => {},
+  signOut: () => {},
   loading: true,
 })
 
-export const useUserContext = (): UserContext => {
-  return useContext(defaultUserContext)
+export const useUserContext = (): UserContextType => {
+  return useContext(UserContext)
 }
 
 export default function UserProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const [user, setUser] = useState<User>({
-    firstName: '',
-    id: '',
-    lastName: '',
-    statsId: '',
-    updatedAt: '',
-    sex: 'male',
-    email: '',
-  })
+  const [user, setUser] = useState<User>(defaultUser)
 
+  // get session
   useEffect(() => {
     setLoading(true)
 
@@ -58,26 +49,39 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     setLoading(false)
   }, [])
 
+  // get user data
   useEffect(() => {
     setLoading(true)
-    if (session?.user?.id) {
+    if (session) {
       getUserProfile(session.user.id)
-        .then((profile) => setUser({ ...profile, email: session.user.email ?? '' }))
+        .then((profile) => {
+          const {
+            id,
+            updated_at: updatedAt,
+            first_name: firstName,
+            last_name: lastName,
+            stats_id: statsId,
+            sex,
+          } = profile ?? {}
+
+          setUser({
+            id: id ?? '',
+            updatedAt: updatedAt ?? '',
+            firstName: firstName ?? '',
+            lastName: lastName ?? '',
+            statsId: statsId ?? '',
+            sex: sex ?? 'male',
+            email: session.user.email ?? '',
+          })
+        })
         .then(() => setLoading(false))
     } else {
-      setUser({
-        firstName: '',
-        id: '',
-        lastName: '',
-        statsId: '',
-        updatedAt: '',
-        sex: 'male',
-        email: '',
-      })
+      setUser(defaultUser)
       setLoading(false)
     }
   }, [session])
 
+  // update user data
   async function updateUserProfile({
     id,
     firstName,
@@ -90,9 +94,28 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     sex: 'male' | 'female'
   }) {
     setLoading(true)
-    await sUpdateUserProfile({ id, firstName, lastName, sex }).then(() => {
+    await updateUserProfileService({ id, firstName, lastName, sex }).then(() => {
       if (session?.user?.id) {
-        getUserProfile(session.user.id).then((profile) => setUser({ ...profile, email: session.user.email ?? '' }))
+        getUserProfile(session.user.id).then((profile) => {
+          const {
+            id,
+            updated_at: updatedAt,
+            first_name: firstName,
+            last_name: lastName,
+            stats_id: statsId,
+            sex,
+          } = profile ?? {}
+
+          setUser({
+            id: id ?? '',
+            updatedAt: updatedAt ?? '',
+            firstName: firstName ?? '',
+            lastName: lastName ?? '',
+            statsId: statsId ?? '',
+            sex: sex ?? 'male',
+            email: session.user.email ?? '',
+          })
+        })
       }
     })
     setLoading(false)
@@ -100,13 +123,43 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
 
   function signOut() {
     setLoading(true)
-    sSignOut()
+    signOutService()
     setLoading(true)
   }
 
   return (
-    <defaultUserContext.Provider value={{ user, updateUserProfile, signOut, loading }}>
-      {children}
-    </defaultUserContext.Provider>
+    <UserProviderBase
+      children={children}
+      user={user}
+      signOut={signOut}
+      updateUserProfile={updateUserProfile}
+      loading={loading}
+    />
   )
+}
+
+function UserProviderBase({
+  children,
+  user,
+  signOut,
+  updateUserProfile,
+  loading,
+}: {
+  children: JSX.Element
+  user: User
+  signOut: () => void
+  updateUserProfile: ({
+    id,
+    firstName,
+    lastName,
+    sex,
+  }: {
+    id: string
+    firstName: string
+    lastName: string
+    sex: 'male' | 'female'
+  }) => Promise<void>
+  loading: boolean
+}) {
+  return <UserContext.Provider value={{ user, updateUserProfile, signOut, loading }}>{children}</UserContext.Provider>
 }

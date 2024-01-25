@@ -12,10 +12,10 @@ import { ActivityIndicator, Alert } from 'react-native'
 
 export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
   const {
-    user: { id, firstName, lastName },
+    user: { id: userId, firstName, lastName },
     loading: userLoading,
   } = useUserContext()
-  const { joinGame, newGame } = useGameContext()
+  const { newGame } = useGameContext()
 
   return (
     <ParentView
@@ -31,7 +31,7 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
         </BottomView>
       ) : (
         <BottomView>
-          {id ? (
+          {userId ? (
             <>
               <Button
                 onPress={

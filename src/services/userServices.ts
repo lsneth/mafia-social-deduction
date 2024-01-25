@@ -1,9 +1,9 @@
 import { supabase } from '../lib/supabase'
 import { Alert } from 'react-native'
-import { User } from '../types/types'
+import { BackendUser } from '../types/types'
 
 // gets user data
-export async function getUserProfile(userId: string): Promise<Omit<User, 'email'> | null> {
+export async function getUserProfile(userId: string): Promise<BackendUser | null> {
   const { data, error } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
 
   // TODO: error message
@@ -12,7 +12,9 @@ export async function getUserProfile(userId: string): Promise<Omit<User, 'email'
     console.log('getGameData', error.message)
   }
 
-  return data
+  const [user] = data ?? []
+
+  return user
 }
 
 // updates a user profile
