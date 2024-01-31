@@ -25,7 +25,7 @@ const UserContext = createContext<UserContextType>({
   loading: true,
 })
 
-export const useUserContext = (): UserContextType => {
+export const useUser = (): UserContextType => {
   return useContext(UserContext)
 }
 

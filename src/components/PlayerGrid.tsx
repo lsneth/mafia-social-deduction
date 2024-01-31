@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { useGameContext } from '../providers/GameProvider'
+import { useGame } from '../providers/GameProvider'
 import PlayerCard from './PlayerCard'
 
 export default function PlayerGrid() {
-  const { players } = useGameContext()
+  const { players } = useGame()
 
   // TODO: show last initial for duplicate names. if last initial is the same, figure out another way to differentiate them.
 

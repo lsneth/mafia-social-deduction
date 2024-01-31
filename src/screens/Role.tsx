@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
-import { useGameContext } from '../providers/GameProvider'
+import { useGame } from '../providers/GameProvider'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { useUserContext } from '../providers/UserProvider'
+import { useUser } from '../providers/UserProvider'
 
 export default function Role({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Role'> }) {
-  const { player } = useGameContext()
+  const { player } = useGame()
   const {
     user: { sex },
-  } = useUserContext()
+  } = useUser()
   const [seconds, setSeconds] = useState<number>(10)
 
   useEffect(() => {

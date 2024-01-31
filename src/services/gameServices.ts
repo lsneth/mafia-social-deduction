@@ -18,14 +18,19 @@ export async function createGame(): Promise<string> {
 
 // adds a row to the game table
 export async function addPlayerToGame(gameId: string, userId: string, isHost: boolean): Promise<void> {
-  const { data: user } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
+  const {
+    data: [user],
+  } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
 
-  await supabase.schema('game_sessions').from(gameId).insert({
-    player_id: userId,
-    first_name: user.first_name,
-    last_name: user.last_name,
-    is_host: isHost,
-  })
+  console.log(gameId)
+  console.log(
+    await supabase.schema('game_sessions').from(gameId).insert({
+      player_id: userId,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      is_host: isHost,
+    })
+  )
 }
 
 // gets all rows (players) from game

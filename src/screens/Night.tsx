@@ -4,11 +4,11 @@ import Text from '../components/Text'
 import BottomView from '../components/BottomView'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
-import { useGameContext } from '../providers/GameProvider'
+import { useGame } from '../providers/GameProvider'
 import Button from '../components/Button'
 export default function Night({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Night'> }) {
   const [dotCount, setDotCount] = useState<1 | 2 | 3>(1)
-  const { deleteGame, gameId } = useGameContext()
+  const { deleteGame, gameId } = useGame()
 
   useEffect(() => {
     const intervalId = setInterval(() => {

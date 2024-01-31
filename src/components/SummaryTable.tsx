@@ -2,10 +2,10 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import Text from './Text'
 import colors from '../styles/colors'
-import { useGameContext } from '../providers/GameProvider'
+import { useGame } from '../providers/GameProvider'
 
 export default function SummaryTable() {
-  const { roleCounts } = useGameContext()
+  const { roleCounts } = useGame()
 
   return (
     <View style={styles.table}>

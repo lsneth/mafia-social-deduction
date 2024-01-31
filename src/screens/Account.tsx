@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { useUserContext } from '../providers/UserProvider'
+import { useUser } from '../providers/UserProvider'
 import { RouteProp } from '@react-navigation/native'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -26,7 +26,7 @@ export default function Account({
     updateUserProfile,
     signOut,
     loading: userLoading,
-  } = useUserContext()
+  } = useUser()
   console.log('firstName:', dbFirstName)
   const [tempFirstName, setTempFirstName] = useState<string>('') // state the user changes during edit mode
   const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode

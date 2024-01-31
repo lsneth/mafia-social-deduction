@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUserContext } from '../providers/UserProvider'
+import { useUser } from '../providers/UserProvider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 import Text from '../components/Text'
@@ -7,15 +7,15 @@ import Button from '../components/Button'
 import Separator from '../components/Separator'
 import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
-import { useGameContext } from '../providers/GameProvider'
+import { useGame } from '../providers/GameProvider'
 import { ActivityIndicator, Alert } from 'react-native'
 
 export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
   const {
     user: { id: userId, firstName, lastName },
     loading: userLoading,
-  } = useUserContext()
-  const { newGame } = useGameContext()
+  } = useUser()
+  const { newGame } = useGame()
 
   return (
     <ParentView

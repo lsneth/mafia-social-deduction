@@ -7,7 +7,7 @@ import Separator from '../components/Separator'
 import BottomView from '../components/BottomView'
 import Button from '../components/Button'
 import SummaryTable from '../components/SummaryTable'
-import { useGameContext } from '../providers/GameProvider'
+import { useGame } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 import { ActivityIndicator, BackHandler } from 'react-native'
 // import { assignRoles } from '../services/mafiaServices'
@@ -17,7 +17,7 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading, players, player } = useGameContext()
+  const { gameId, deleteGame, loading, players, player } = useGame()
 
   const tooManyPlayers = (players?.length ?? 0) > 15
   const notEnoughPlayers = (players?.length ?? 0) < 5

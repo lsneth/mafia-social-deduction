@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useReducer, useState } from 'react'
 import { Change, GameContext as GameContextType, Player, PlayersReducerAction, RoleCount } from '../types/types'
-import { useUserContext } from './UserProvider'
+import { useUser } from './UserProvider'
 import {
   getCurrentGameData,
   deleteGame as deleteGameService,
@@ -101,7 +101,7 @@ function getRoleCounts(playerCount: number): RoleCount {
   }
 }
 
-export const useGameContext = () => {
+export const useGame = () => {
   return useContext(GameContext)
 }
 
@@ -110,7 +110,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   const [players, dispatch] = useReducer(playersReducer, [])
   const {
     user: { id: userId },
-  } = useUserContext()
+  } = useUser()
   const player: Player | undefined = players.find((player) => player.player_id === userId)
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
