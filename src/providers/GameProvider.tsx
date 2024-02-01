@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useState } from 'react'
+import { createContext, useContext, useReducer, useState } from 'react'
 import { Change, GameContext as GameContextType, Player, PlayersReducerAction, RoleCount } from '../types/types'
 import { useUser } from './UserProvider'
 import {
@@ -125,27 +125,27 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   // refreshes game data and updates state
-  async function mutatePlayers(): Promise<void> {
+  async function mutatePlayers(gameId: string): Promise<void> {
     setLoading(true)
     dispatch({
       type: MUTATE,
-      players: (await getCurrentGameData(gameId!)) ?? [],
+      players: (await getCurrentGameData(gameId)) ?? [],
     })
     setLoading(false)
   }
 
   // adds the user to the game table and gets state up to date
-  async function joinGame(isHost: boolean = false): Promise<void> {
+  async function joinGame({ gameId, isHost = false }: { gameId: string; isHost: boolean }): Promise<void> {
     setLoading(true)
 
     // add player to game
-    await addPlayerToGame(gameId!, userId, isHost)
-
-    // get up to date with current game state
-    await mutatePlayers()
-
-    // subscribe to further changes in game
-    await subscribeToGameChanges(gameId!, handleChange)
+    addPlayerToGame(gameId, userId, isHost).then(() =>
+      // get up to date with current game state
+      mutatePlayers(gameId).then(() =>
+        // subscribe to further changes in game
+        subscribeToGameChanges(gameId, handleChange)
+      )
+    )
 
     setLoading(false)
   }
@@ -153,8 +153,9 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   // creates a new game and then calls joinGame
   async function newGame(): Promise<void> {
     setLoading(true)
-    createGame().then((gameId) => {
+    await createGame().then((gameId) => {
       setGameId(gameId)
+      joinGame({ gameId, isHost: true })
     })
   }
 
