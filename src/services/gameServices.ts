@@ -21,7 +21,7 @@ export async function addPlayerToGame(gameId: string, userId: string, isHost: bo
   // TODO: do not add to game if game_state is 'playing' or 'done'
   const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   const user = users?.[0] ?? {}
-
+  // TODO: replace row in game table if it already exists
   await supabase
     .schema('game_sessions')
     .from(gameId)
@@ -84,6 +84,17 @@ export async function startGame(gameId: string): Promise<void> {
   if (error) {
     Alert.alert('startGame', error.message)
     console.log('startGame', error.message)
+  }
+}
+
+// removes a player from a game table
+export async function leaveGame(gameId: string, userId: string): Promise<void> {
+  const { error } = await supabase.schema('game_sessions').from(gameId).delete().eq('player_id', userId)
+
+  // TODO: error message
+  if (error) {
+    Alert.alert('leaveGame', error.message)
+    console.log('leaveGame', error.message)
   }
 }
 

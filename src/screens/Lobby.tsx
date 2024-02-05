@@ -10,7 +10,8 @@ import SummaryTable from '../components/SummaryTable'
 import { useGame } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 import { ActivityIndicator, BackHandler } from 'react-native'
-import { startGame } from '../services/gameServices'
+import { leaveGame, startGame } from '../services/gameServices'
+import { useUser } from '../providers/UserProvider'
 
 export default function Lobby({
   navigation,
@@ -18,6 +19,10 @@ export default function Lobby({
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
   const { gameId, deleteGame, loading, players, player, gameState } = useGame()
+  const {
+    user: { id: userId },
+  } = useUser()
+
   const tooManyPlayers = (players?.length ?? 0) > 15
   const notEnoughPlayers = (players?.length ?? 0) < 5
   const validPlayerCount = !notEnoughPlayers && !tooManyPlayers
@@ -33,6 +38,10 @@ export default function Lobby({
 
     return () => backHandler.remove() // Clean up the event listener on component unmount
   }, [gameId])
+
+  useEffect(() => {
+    console.log(gameState)
+  }, [gameState])
 
   useEffect(() => {
     if (gameState === 'playing') {
@@ -74,7 +83,9 @@ export default function Lobby({
         )}
         <Button
           onPress={async () => {
-            if (player?.is_host) await deleteGame(gameId!)
+            if (player?.is_host) {
+              deleteGame(gameId!)
+            } else leaveGame(gameId!, userId)
             navigation.goBack()
           }}
           backgroundColor="gray"

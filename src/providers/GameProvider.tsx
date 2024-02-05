@@ -116,7 +116,9 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   const player: Player | undefined = players.find((player) => player.player_id === userId)
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
-  const gameState = players.find((player) => (player.is_host = true))?.game_state ?? 'waiting'
+  const gameState =
+    players.filter((player) => player.is_host === true).find((player) => player.game_state !== null)?.game_state ??
+    'waiting'
 
   // updates game state
   function handleChange(change: Change) {
