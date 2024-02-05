@@ -19,14 +19,14 @@ export default function Join({ navigation }: { navigation: NativeStackNavigation
       <Separator size={20} />
       <TextInput
         placeholder="XXXXXX"
-        value={gameId?.toUpperCase()}
+        value={gameId}
         onChangeText={(text) => {
           setGameId(text)
         }}
       />
       <Button
         onPress={() => {
-          joinGame()
+          joinGame({ gameId: gameId! })
           navigation.navigate('Lobby')
         }}
       >

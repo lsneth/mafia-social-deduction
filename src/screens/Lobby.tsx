@@ -37,7 +37,7 @@ export default function Lobby({
 
   return (
     <ParentView>
-      {!loading && gameId ? <Text size="lg">{gameId.toUpperCase()}</Text> : <ActivityIndicator size="large" />}
+      {!loading && gameId ? <Text size="lg">{gameId}</Text> : <ActivityIndicator size="large" />}
       <Separator />
       <Text>Share this game ID for others to join your session.</Text>
       <Separator size={40} />

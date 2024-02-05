@@ -7,7 +7,7 @@ export type GameContext = {
   player: Player | undefined
   roleCounts: RoleCount | undefined
   newGame: () => Promise<void>
-  joinGame: (isHost?: boolean) => Promise<void>
+  joinGame: ({ gameId, isHost }: { gameId: string; isHost?: boolean }) => Promise<void>
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
   loading: boolean

@@ -135,7 +135,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   // adds the user to the game table and gets state up to date
-  async function joinGame({ gameId, isHost = false }: { gameId: string; isHost: boolean }): Promise<void> {
+  async function joinGame({ gameId, isHost = false }: { gameId: string; isHost?: boolean }): Promise<void> {
     setLoading(true)
 
     // add player to game
@@ -153,7 +153,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   // creates a new game and then calls joinGame
   async function newGame(): Promise<void> {
     setLoading(true)
-    await createGame().then((gameId) => {
+    createGame().then((gameId) => {
       setGameId(gameId)
       joinGame({ gameId, isHost: true })
     })
