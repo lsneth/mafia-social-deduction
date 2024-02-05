@@ -10,15 +10,14 @@ import SummaryTable from '../components/SummaryTable'
 import { useGame } from '../providers/GameProvider'
 import PlayerGrid from '../components/PlayerGrid'
 import { ActivityIndicator, BackHandler } from 'react-native'
-// import { assignRoles } from '../services/mafiaServices'
+import { startGame } from '../services/gameServices'
 
 export default function Lobby({
   navigation,
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading, players, player } = useGame()
-
+  const { gameId, deleteGame, loading, players, player, gameState } = useGame()
   const tooManyPlayers = (players?.length ?? 0) > 15
   const notEnoughPlayers = (players?.length ?? 0) < 5
   const validPlayerCount = !notEnoughPlayers && !tooManyPlayers
@@ -35,6 +34,15 @@ export default function Lobby({
     return () => backHandler.remove() // Clean up the event listener on component unmount
   }, [gameId])
 
+  useEffect(() => {
+    if (gameState === 'playing') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Role' }],
+      })
+    }
+  }, [gameState])
+
   return (
     <ParentView>
       {!loading && gameId ? <Text size="lg">{gameId}</Text> : <ActivityIndicator size="large" />}
@@ -50,11 +58,7 @@ export default function Lobby({
           <Button
             disabled={!validPlayerCount}
             onPress={() => {
-              // assignRoles(gameId)
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Role' }],
-              })
+              startGame(gameId!)
             }}
           >
             {notEnoughPlayers ? (

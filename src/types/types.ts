@@ -11,6 +11,7 @@ export type GameContext = {
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
   loading: boolean
+  gameState: 'waiting' | 'playing' | 'done'
 }
 
 export type Player = {
@@ -25,6 +26,7 @@ export type Player = {
   role: 'commonfolk' | 'detective' | 'mafia'
   cause_of_death: 'murder' | 'execution' | null
   is_host: boolean
+  game_state: 'waiting' | 'playing' | 'done'
 }
 
 export type Change = {

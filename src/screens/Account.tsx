@@ -27,7 +27,7 @@ export default function Account({
     signOut,
     loading: userLoading,
   } = useUser()
-  console.log('firstName:', dbFirstName)
+
   const [tempFirstName, setTempFirstName] = useState<string>('') // state the user changes during edit mode
   const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode
   const [firstName, setFirstName] = useState<string>(dbFirstName)

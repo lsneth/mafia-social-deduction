@@ -18,19 +18,20 @@ export async function createGame(): Promise<string> {
 
 // adds a row to the game table
 export async function addPlayerToGame(gameId: string, userId: string, isHost: boolean): Promise<void> {
-  const {
-    data: [user],
-  } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
+  // TODO: do not add to game if game_state is 'playing' or 'done'
+  const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
+  const user = users?.[0] ?? {}
 
-  console.log(gameId)
-  console.log(
-    await supabase.schema('game_sessions').from(gameId).insert({
+  await supabase
+    .schema('game_sessions')
+    .from(gameId)
+    .insert({
       player_id: userId,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      first_name: user?.first_name,
+      last_name: user?.last_name,
       is_host: isHost,
+      game_state: isHost ? 'waiting' : null,
     })
-  )
 }
 
 // gets all rows (players) from game
@@ -75,14 +76,14 @@ export async function setHost(gameId: string, userId: string): Promise<void> {
     .eq('player_id', userId)
 }
 
-// assigns roles proportionately according to player count
-export async function assignRoles(gameId: string): Promise<void> {
-  const { error } = await supabase.schema('public').rpc('assign_roles', { table_name: gameId })
+// assigns roles proportionately according to player count and sets game_state to 'playing'
+export async function startGame(gameId: string): Promise<void> {
+  const { error } = await supabase.schema('public').rpc('start_game', { table_name: gameId })
 
   // TODO: error message
   if (error) {
-    Alert.alert('assignRoles', error.message)
-    console.log('assignRoles', error.message)
+    Alert.alert('startGame', error.message)
+    console.log('startGame', error.message)
   }
 }
 

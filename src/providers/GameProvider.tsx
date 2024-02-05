@@ -20,6 +20,7 @@ const defaultGameContextValue: GameContextType = {
   mutatePlayers: () => {},
   deleteGame: () => {},
   loading: true,
+  gameState: 'waiting',
 }
 
 const GameContext = createContext<GameContextType>(defaultGameContextValue)
@@ -108,12 +109,14 @@ export const useGame = () => {
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [gameId, setGameId] = useState<string | undefined>(undefined)
   const [players, dispatch] = useReducer(playersReducer, [])
+
   const {
     user: { id: userId },
   } = useUser()
   const player: Player | undefined = players.find((player) => player.player_id === userId)
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
+  const gameState = players.find((player) => (player.is_host = true))?.game_state ?? 'waiting'
 
   // updates game state
   function handleChange(change: Change) {
@@ -175,6 +178,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
       mutatePlayers={mutatePlayers}
       deleteGame={deleteGame}
       loading={loading}
+      gameState={gameState}
     />
   )
 }
@@ -192,6 +196,7 @@ function GameProviderBase({
   mutatePlayers,
   deleteGame,
   loading,
+  gameState,
 }: { children: JSX.Element } & GameContextType): JSX.Element {
   const value = {
     // TODO: need useMemo here?
@@ -205,6 +210,7 @@ function GameProviderBase({
     mutatePlayers,
     deleteGame,
     loading,
+    gameState,
   }
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
 }
