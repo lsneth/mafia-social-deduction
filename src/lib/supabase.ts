@@ -14,6 +14,7 @@ const ExpoSecureStoreAdapter = {
   },
 }
 
+// These variables are safe to expose in your Expo app since Supabase unless Row Level Security is disabled on your Database. https://supabase.com/docs/guides/getting-started/tutorials/with-expo-react-native
 const supabaseUrl = 'https://jintzfwoapwwpskedtbz.supabase.co'
 const supabaseAnonKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppbnR6ZndvYXB3d3Bza2VkdGJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTY4NjQ1MTUsImV4cCI6MjAxMjQ0MDUxNX0.0St_ftkB_PSuc0BNvqYvIK5HRvuM3njvWdFDn5eoIJY'
