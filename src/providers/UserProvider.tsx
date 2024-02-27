@@ -7,23 +7,9 @@ import {
   updateUserProfile as updateUserProfileService,
   signOut as signOutService,
 } from '../services/userServices'
+import { defaultUser, defaultUserContextValue } from '../helpers/defaultValues'
 
-const defaultUser = {
-  id: '',
-  updatedAt: '',
-  firstName: '',
-  lastName: '',
-  statsId: '',
-  sex: 'male' as 'male',
-  email: '',
-}
-
-const UserContext = createContext<UserContextType>({
-  user: defaultUser,
-  updateUserProfile: async () => {},
-  signOut: () => {},
-  loading: true,
-})
+const UserContext = createContext<UserContextType>(defaultUserContextValue)
 
 export const useUser = (): UserContextType => {
   return useContext(UserContext)
@@ -32,7 +18,7 @@ export const useUser = (): UserContextType => {
 export default function UserProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const [user, setUser] = useState<User>(defaultUser)
+  const [user, setUser] = useState<User & { email: string }>(defaultUser)
 
   // get session
   useEffect(() => {
@@ -55,22 +41,15 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     if (session) {
       getUserProfile(session.user.id)
         .then((profile) => {
-          const {
-            id,
-            updated_at: updatedAt,
-            first_name: firstName,
-            last_name: lastName,
-            stats_id: statsId,
-            sex,
-          } = profile ?? {}
+          const { id, updatedAt, firstName, lastName, statsId, sex } = profile ?? {}
 
           setUser({
-            id: id ?? '',
-            updatedAt: updatedAt ?? '',
-            firstName: firstName ?? '',
-            lastName: lastName ?? '',
-            statsId: statsId ?? '',
-            sex: sex ?? 'male',
+            id,
+            updatedAt,
+            firstName,
+            lastName,
+            statsId,
+            sex,
             email: session.user.email ?? '',
           })
         })

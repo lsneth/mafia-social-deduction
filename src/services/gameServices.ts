@@ -53,22 +53,29 @@ export async function createGame(): Promise<string> {
 }
 
 // adds a row to the game table
-export async function addUserToGame(gameId: GameContext['gameId'], userId: User['id'], isHost: boolean): Promise<void> {
+export async function addUserToGame({
+  gameId,
+  userId,
+  isHost,
+}: {
+  gameId: GameContext['gameId']
+  userId: User['id']
+  isHost: boolean
+}): Promise<void> {
   // TODO: do not add to game if gameState is 'playing' or 'done'
   const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   const user = users?.[0] ?? {}
   // TODO: replace row in game table if it already exists
-  updatePlayer({
-    gameId,
-    playerId: userId,
-    change: {
+  await supabase
+    .schema('game_sessions')
+    .from(gameId)
+    .insert({
       playerId: userId,
-      firstName: user?.first_name,
-      lastName: user?.last_name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       isHost: isHost,
       gameState: isHost ? 'waiting' : null,
-    },
-  })
+    })
 }
 
 // gets all rows (players) from game

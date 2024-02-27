@@ -143,7 +143,11 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
     setLoading(true)
 
     // add player to game
-    addUserToGame(gameId, userId, isHost).then(() =>
+    addUserToGame({
+      gameId,
+      userId,
+      isHost,
+    }).then(() =>
       // get up to date with current game state
       mutatePlayers(gameId).then(() =>
         // subscribe to further changes in game
