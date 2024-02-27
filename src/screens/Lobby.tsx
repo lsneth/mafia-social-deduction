@@ -18,7 +18,7 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading, players, player, gameState } = useGame()
+  const { gameId, deleteGame, loading: gameLoading, players, player, gameState } = useGame()
   const {
     user: { id: userId },
   } = useUser()
@@ -40,10 +40,6 @@ export default function Lobby({
   }, [gameId])
 
   useEffect(() => {
-    console.log(gameState)
-  }, [gameState])
-
-  useEffect(() => {
     if (gameState === 'playing') {
       navigation.reset({
         index: 0,
@@ -54,16 +50,18 @@ export default function Lobby({
 
   return (
     <ParentView>
-      {!loading && gameId ? <Text size="lg">{gameId}</Text> : <ActivityIndicator size="large" />}
+      {!gameLoading && gameId ? <Text size="lg">{gameId}</Text> : <ActivityIndicator size="large" />}
       <Separator />
       <Text>Share this game ID for others to join your session.</Text>
       <Separator size={40} />
-      {!loading ? <PlayerGrid /> : <></>}
+      {!gameLoading ? <PlayerGrid /> : <></>}
 
       <BottomView>
+        <Button onPress={() => navigation.navigate('Day')}>Test</Button>
+
         <SummaryTable />
         <Separator size={20} />
-        {player?.is_host ? (
+        {player?.isHost ? (
           <Button
             disabled={!validPlayerCount}
             onPress={() => {
@@ -83,14 +81,14 @@ export default function Lobby({
         )}
         <Button
           onPress={async () => {
-            if (player?.is_host) {
+            if (player?.isHost) {
               deleteGame(gameId!)
             } else leaveGame(gameId!, userId)
             navigation.goBack()
           }}
           backgroundColor="gray"
         >
-          {player?.is_host ? 'Delete Game' : 'Leave Game'}
+          {player?.isHost ? 'Delete Game' : 'Leave Game'}
         </Button>
       </BottomView>
     </ParentView>

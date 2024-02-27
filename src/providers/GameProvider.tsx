@@ -1,27 +1,25 @@
 import { createContext, useContext, useReducer, useState } from 'react'
-import { Change, GameContext as GameContextType, Player, PlayersReducerAction, RoleCount } from '../types/types'
+import { Change, ChangeType, GameContext as GameContextType, Player, RoleCount } from '../types/types'
 import { useUser } from './UserProvider'
 import {
   getCurrentGameData,
   deleteGame as deleteGameService,
   createGame,
-  addPlayerToGame,
+  addUserToGame,
   subscribeToGameChanges,
 } from '../services/gameServices'
+import { defaultGameContextValue, defaultPlayer } from '../helpers/defaultValues'
 
-const defaultGameContextValue: GameContextType = {
-  gameId: undefined,
-  setGameId: () => {},
-  players: undefined,
-  player: undefined,
-  roleCounts: undefined,
-  newGame: async () => {},
-  joinGame: async () => {},
-  mutatePlayers: () => {},
-  deleteGame: () => {},
-  loading: true,
-  gameState: 'waiting',
-}
+type PlayersReducerAction =
+  | {
+      type: ChangeType
+      new: Player
+      old: Player
+    }
+  | {
+      type: 'mutate'
+      players: Player[]
+    }
 
 const GameContext = createContext<GameContextType>(defaultGameContextValue)
 
@@ -34,7 +32,7 @@ function playersReducer(players: Player[], action: PlayersReducerAction): Player
   switch (action.type) {
     case UPDATE:
       return players.map((player) => {
-        if (player.player_id === action.new.player_id) {
+        if (player.playerId === action.new.playerId) {
           return action.new
         } else {
           return player
@@ -45,7 +43,7 @@ function playersReducer(players: Player[], action: PlayersReducerAction): Player
       return [...players, action.new]
 
     case DELETE:
-      return players.filter((player) => player.player_id !== action.old.player_id)
+      return players.filter((player) => player.playerId !== action.old.playerId)
 
     case MUTATE:
       return [...action.players]
@@ -107,17 +105,18 @@ export const useGame = () => {
 }
 
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
-  const [gameId, setGameId] = useState<string | undefined>(undefined)
+  const [gameId, setGameId] = useState<string>('')
   const [players, dispatch] = useReducer(playersReducer, [])
+  const host: Player | undefined = players.find((player) => player.isHost)
 
   const {
     user: { id: userId },
   } = useUser()
-  const player: Player | undefined = players.find((player) => player.player_id === userId)
+  const player: Player = players.find((player) => player.playerId === userId) ?? defaultPlayer
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
   const gameState =
-    players.filter((player) => player.is_host === true).find((player) => player.game_state !== null)?.game_state ??
+    players.filter((player) => player.isHost === true).find((player) => player.gameState !== null)?.gameState ??
     'waiting'
 
   // updates game state
@@ -144,7 +143,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
     setLoading(true)
 
     // add player to game
-    addPlayerToGame(gameId, userId, isHost).then(() =>
+    addUserToGame(gameId, userId, isHost).then(() =>
       // get up to date with current game state
       mutatePlayers(gameId).then(() =>
         // subscribe to further changes in game
@@ -165,7 +164,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   }
 
   async function deleteGame(): Promise<void> {
-    await deleteGameService(gameId!)
+    await deleteGameService(gameId)
   }
   return (
     <GameProviderBase
@@ -181,6 +180,8 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
       deleteGame={deleteGame}
       loading={loading}
       gameState={gameState}
+      roundCount={host?.roundCount ?? 0}
+      hostId={host?.playerId ?? ''}
     />
   )
 }
@@ -199,6 +200,8 @@ function GameProviderBase({
   deleteGame,
   loading,
   gameState,
+  roundCount,
+  hostId,
 }: { children: JSX.Element } & GameContextType): JSX.Element {
   const value = {
     // TODO: need useMemo here?
@@ -213,6 +216,8 @@ function GameProviderBase({
     deleteGame,
     loading,
     gameState,
+    roundCount,
+    hostId,
   }
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
 }

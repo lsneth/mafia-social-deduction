@@ -14,6 +14,7 @@ import CreateAccount from './src/screens/CreateAccount'
 import Role from './src/screens/Role'
 import Night from './src/screens/Night'
 import Event from './src/screens/Event'
+import Day from './src/screens/Day'
 
 export type RootStackParamList = {
   Home: undefined
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   Join: undefined
   Role: undefined
   Night: undefined
+  Day: undefined
   Event: { eventText: string }
 }
 
@@ -52,6 +54,7 @@ export default function App() {
             <Stack.Screen name="Join" component={Join} />
             <Stack.Screen name="Role" component={Role} />
             <Stack.Screen name="Night" component={Night} />
+            <Stack.Screen name="Day" component={Day} />
             <Stack.Screen name="Event" component={Event} initialParams={{ eventText: 'Event text placeholder' }} />
           </Stack.Navigator>
         </GameProvider>

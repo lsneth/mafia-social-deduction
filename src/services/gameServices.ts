@@ -1,6 +1,42 @@
 import { supabase } from '../lib/supabase'
 import { Alert } from 'react-native'
-import { Change, Player } from '../types/types'
+import { Change, GameContext, Player, User } from '../types/types'
+
+export async function updatePlayer({
+  gameId,
+  playerId,
+  change,
+}: {
+  gameId: GameContext['gameId']
+  playerId: Player['playerId']
+  change: Record<string, string | boolean | null>
+}): Promise<void> {
+  await supabase
+    .schema('game_sessions')
+    .from(gameId)
+    .update({
+      ...change,
+    })
+    .eq('playerId', playerId)
+}
+
+export async function updateGame({
+  gameId,
+  hostId,
+  change,
+}: {
+  gameId: GameContext['gameId']
+  hostId: Player['playerId']
+  change: Record<string, string>
+}): Promise<void> {
+  await supabase
+    .schema('game_sessions')
+    .from(gameId)
+    .update({
+      ...change,
+    })
+    .eq('playerId', hostId)
+}
 
 // creates a new game_session table in supabase and returns it's table name (gameId)
 export async function createGame(): Promise<string> {
@@ -13,25 +49,26 @@ export async function createGame(): Promise<string> {
     return 'error creating game session'
   }
 
-  return gameId ?? ''
+  return gameId
 }
 
 // adds a row to the game table
-export async function addPlayerToGame(gameId: string, userId: string, isHost: boolean): Promise<void> {
-  // TODO: do not add to game if game_state is 'playing' or 'done'
+export async function addUserToGame(gameId: GameContext['gameId'], userId: User['id'], isHost: boolean): Promise<void> {
+  // TODO: do not add to game if gameState is 'playing' or 'done'
   const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   const user = users?.[0] ?? {}
   // TODO: replace row in game table if it already exists
-  await supabase
-    .schema('game_sessions')
-    .from(gameId)
-    .insert({
-      player_id: userId,
-      first_name: user?.first_name,
-      last_name: user?.last_name,
-      is_host: isHost,
-      game_state: isHost ? 'waiting' : null,
-    })
+  updatePlayer({
+    gameId,
+    playerId: userId,
+    change: {
+      playerId: userId,
+      firstName: user?.first_name,
+      lastName: user?.last_name,
+      isHost: isHost,
+      gameState: isHost ? 'waiting' : null,
+    },
+  })
 }
 
 // gets all rows (players) from game
@@ -65,18 +102,7 @@ export async function subscribeToGameChanges(gameId: string, handleChange: (chan
     .subscribe()
 }
 
-// sets is_host to true for the given user
-export async function setHost(gameId: string, userId: string): Promise<void> {
-  await supabase
-    .schema('game_sessions')
-    .from(gameId)
-    .update({
-      is_host: true,
-    })
-    .eq('player_id', userId)
-}
-
-// assigns roles proportionately according to player count and sets game_state to 'playing'
+// assigns roles proportionately according to player count and sets gameState to 'playing'
 export async function startGame(gameId: string): Promise<void> {
   const { error } = await supabase.schema('public').rpc('start_game', { table_name: gameId })
 
@@ -88,8 +114,8 @@ export async function startGame(gameId: string): Promise<void> {
 }
 
 // removes a player from a game table
-export async function leaveGame(gameId: string, userId: string): Promise<void> {
-  const { error } = await supabase.schema('game_sessions').from(gameId).delete().eq('player_id', userId)
+export async function leaveGame(gameId: string, playerId: string): Promise<void> {
+  const { error } = await supabase.schema('game_sessions').from(gameId).delete().eq('playerId', playerId)
 
   // TODO: error message
   if (error) {
