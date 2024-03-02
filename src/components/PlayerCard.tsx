@@ -9,10 +9,12 @@ export default function PlayerCard({
   name,
   selected = false,
   onSelect,
+  voteCount,
 }: {
   name: string
   selected?: boolean
   onSelect?: (() => void) | undefined
+  voteCount?: number
 }) {
   return (
     <View style={[styles.card, selected ? styles.selected : styles.unselected]}>
@@ -26,6 +28,7 @@ export default function PlayerCard({
           <Separator />
         </View>
         <Text>{name}</Text>
+        {!!voteCount && <Text>{voteCount}</Text>}
       </Pressable>
     </View>
   )

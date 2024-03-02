@@ -18,7 +18,14 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading: gameLoading, players, player, gameState } = useGame()
+  const {
+    gameId,
+    deleteGame,
+    loading: gameLoading,
+    players,
+    player,
+    gameState,
+  } = useGame()
   const {
     user: { id: userId },
   } = useUser()
@@ -34,10 +41,13 @@ export default function Lobby({
       return undefined // don't override default behavior (going back)
     }
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    )
 
     return () => backHandler.remove() // Clean up the event listener on component unmount
-  }, [gameId])
+  }, [deleteGame, gameId])
 
   useEffect(() => {
     if (gameState === 'playing') {
@@ -46,15 +56,19 @@ export default function Lobby({
         routes: [{ name: 'Role' }],
       })
     }
-  }, [gameState])
+  }, [gameState, navigation])
 
   return (
     <ParentView>
-      {!gameLoading && gameId ? <Text size="lg">{gameId}</Text> : <ActivityIndicator size="large" />}
+      {!gameLoading && gameId ? (
+        <Text size="lg">{gameId}</Text>
+      ) : (
+        <ActivityIndicator size="large" />
+      )}
       <Separator />
       <Text>Share this game ID for others to join your session.</Text>
       <Separator size={40} />
-      {!gameLoading ? <PlayerGrid /> : <></>}
+      {!gameLoading ? <PlayerGrid selectable={false} /> : <></>}
 
       <BottomView>
         <Button onPress={() => navigation.navigate('Day')}>Test</Button>
