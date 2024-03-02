@@ -7,6 +7,8 @@ import Separator from '../components/Separator'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { updatePlayer } from '../services/gameServices'
+import en from '../locales/en.json'
+
 export default function Day({
   navigation,
 }: {
@@ -50,7 +52,7 @@ export default function Day({
         {
           name: 'Event',
           params: {
-            eventText: `${players.find((player) => player.playerId === playerIdWithMostVotes)!.firstName} died!`,
+            eventText: `${players.find((player) => player.playerId === playerIdWithMostVotes)!.firstName} ${en['day.died.description']}`,
           },
         },
       ],
@@ -69,7 +71,7 @@ export default function Day({
       backgroundImage={require('../../assets/images/day.png')}
       gradientValues={['#000000da', '#00000061', '#00000061']}
     >
-      <Text size="sm">Vote for the player you wish to hang.</Text>
+      <Text size="sm">{en['day.vote-for.description']}</Text>
       <Separator size={40} />
       {!gameLoading ? <PlayerGrid voteCounts={voteCounts} /> : <></>}
     </ParentView>

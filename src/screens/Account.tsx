@@ -12,6 +12,7 @@ import Text from '../components/Text'
 import BottomView from '../components/BottomView'
 import Switch from '../components/Switch'
 import { ActivityIndicator } from 'react-native'
+import en from '../locales/en.json'
 
 export default function Account({
   route,
@@ -30,15 +31,17 @@ export default function Account({
 
   const [tempFirstName, setTempFirstName] = useState<string>('') // state the user changes during edit mode
   const [tempLastName, setTempLastName] = useState<string>('') // state the user changes during edit mode
-  const [firstName, setFirstName] = useState<string>(dbFirstName)
-  const [lastName, setLastName] = useState<string>(dbLastName)
+  const [firstName, setFirstName] = useState<string>(dbFirstName ?? '')
+  const [lastName, setLastName] = useState<string>(dbLastName ?? '') // Provide a default value for dbLastName
   const [isMale, setIsMale] = useState<boolean>(sex === 'male')
   const [tempIsMale, setTempIsMale] = useState<boolean>(true)
-  const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
+  const [editMode, setEditMode] = useState<boolean>(
+    route.params.loadInEditMode ? true : false,
+  )
 
   return (
     <ParentView>
-      <Text size="md">Account</Text>
+      <Text size="md">{en['account.account.heading']}</Text>
       <Separator size={10} />
       <Text size="sm">{email}</Text>
       <Separator size={30} />
@@ -48,21 +51,21 @@ export default function Account({
         onChangeText={(text) => setTempFirstName(text)}
         editable={editMode}
         autoFocus
-        label="First Name"
+        label={en['account.first-name.label']}
       />
       <Separator size={20} />
       <TextInput
         value={editMode ? tempLastName : lastName}
         onChangeText={(text) => setTempLastName(text)}
         editable={editMode}
-        label="Last Name"
+        label={en['account.last-name.label']}
       />
       <Separator size={20} />
       <Switch
         value={editMode ? tempIsMale : isMale}
         onChange={() => setTempIsMale(!tempIsMale)}
-        stateLabel="Male"
-        notStateLabel="Female"
+        stateLabel={en['account.male.label']}
+        notStateLabel={en['account.female.label']}
         editable={editMode}
       />
 
@@ -85,14 +88,14 @@ export default function Account({
             }}
             disabled={userLoading}
           >
-            {userLoading ? <ActivityIndicator /> : 'SAVE'}
+            {userLoading ? <ActivityIndicator /> : en['account.save.action']}
           </Button>
           <Button
             onPress={() => {
               setEditMode(false)
             }}
           >
-            CANCEL
+            {en['account.cancel.action']}
           </Button>
         </>
       ) : (
@@ -104,13 +107,13 @@ export default function Account({
             setTempIsMale(isMale)
           }}
         >
-          EDIT PROFILE
+          {en['account.edit-profile.action']}
         </Button>
       )}
 
       <BottomView>
         <Button onPress={() => navigation.navigate('Stats')} disabled>
-          STATS (COMING SOON)
+          {en['account.stats-coming-soon.label']}
         </Button>
         <Button
           backgroundColor="gray"
@@ -119,7 +122,7 @@ export default function Account({
             navigation.navigate('Home')
           }}
         >
-          LOG OUT
+          {en['account.log-out.action']}
         </Button>
       </BottomView>
     </ParentView>

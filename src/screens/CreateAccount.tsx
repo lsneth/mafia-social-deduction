@@ -8,6 +8,7 @@ import Separator from '../components/Separator'
 import TextInput from '../components/TextInput'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
+import en from '../locales/en.json'
 
 export default function CreateAccount({
   navigation,
@@ -34,20 +35,25 @@ export default function CreateAccount({
 
   return (
     <ParentView>
-      <Text size="md">Welcome!</Text>
+      <Text size="md">{en['create-account.welcome.heading']}</Text>
       <Separator size={10} />
-      <Text size="sm">Hours of fun are just around the corner.</Text>
+      <Text size="sm">{en['create-account.catch-phrase.description']}</Text>
       <Separator size={60} />
 
-      <TextInput value={email} onChangeText={(text) => setEmail(text)} placeholder="email@address.com" label="Email" />
+      <TextInput
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+        placeholder="email@address.com"
+        label={en['create-account.email.label']}
+      />
       <Separator size={20} />
 
       <TextInput
         value={password}
         onChangeText={(text) => setPassword(text)}
-        placeholder="password"
+        placeholder={en['create-account.password.label']}
         secureTextEntry
-        label="Password"
+        label={en['create-account.password.label']}
       />
       <Separator size={30} />
 
@@ -57,11 +63,14 @@ export default function CreateAccount({
           signUpWithEmail()
           navigation.reset({
             index: 1,
-            routes: [{ name: 'Home' }, { name: 'Login', params: { firstLogin: true } }],
+            routes: [
+              { name: 'Home' },
+              { name: 'Login', params: { firstLogin: true } },
+            ],
           })
         }}
       >
-        CREATE ACCOUNT
+        {en['create-account.create-account.action']}
       </Button>
     </ParentView>
   )

@@ -9,8 +9,13 @@ import ParentView from '../components/ParentView'
 import BottomView from '../components/BottomView'
 import { useGame } from '../providers/GameProvider'
 import { ActivityIndicator, Alert } from 'react-native'
+import en from '../locales/en.json'
 
-export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
+export default function Home({
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>
+}) {
   const {
     user: { id: userId, firstName, lastName },
     loading: userLoading,
@@ -38,12 +43,15 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
                   firstName && lastName
                     ? () => navigation.navigate('Join')
                     : () => {
-                        navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })
-                        Alert.alert('You must add a first and last name before joining a game.')
+                        navigation.navigate({
+                          name: 'Account',
+                          params: { loadInEditMode: false },
+                        })
+                        Alert.alert(en['home.need-name.error'])
                       }
                 }
               >
-                JOIN GAME
+                {en['home.join-game.action']}
               </Button>
               <Button
                 onPress={
@@ -54,26 +62,45 @@ export default function Home({ navigation }: { navigation: NativeStackNavigation
                         })
                       }
                     : () => {
-                        navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })
-                        Alert.alert('You must add a first and last name before joining a game.')
+                        navigation.navigate({
+                          name: 'Account',
+                          params: { loadInEditMode: false },
+                        })
+                        Alert.alert(
+                          'You must add a first and last name before joining a game.',
+                        )
                       }
                 }
               >
-                HOST GAME
+                {en['home.host-game.action']}
               </Button>
               <Separator size={20} />
               <Button
-                onPress={() => navigation.navigate({ name: 'Account', params: { loadInEditMode: false } })}
+                onPress={() =>
+                  navigation.navigate({
+                    name: 'Account',
+                    params: { loadInEditMode: false },
+                  })
+                }
                 backgroundColor="gray"
               >
-                ACCOUNT
+                {en['home.account.action']}
               </Button>
             </>
           ) : (
             <>
-              <Button onPress={() => navigation.navigate('CreateAccount')}>CREATE ACCOUNT</Button>
-              <Button onPress={() => navigation.navigate({ name: 'Login', params: { firstLogin: false } })}>
-                LOG IN
+              <Button onPress={() => navigation.navigate('CreateAccount')}>
+                {en['create-account.create-account.action']}
+              </Button>
+              <Button
+                onPress={() =>
+                  navigation.navigate({
+                    name: 'Login',
+                    params: { firstLogin: false },
+                  })
+                }
+              >
+                {en['home.log-in.action']}
               </Button>
             </>
           )}

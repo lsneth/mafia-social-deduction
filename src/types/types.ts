@@ -24,7 +24,7 @@ export type User = {
 }
 
 export type UserContext = {
-  user: User
+  user: User & { email: string }
   updateUserProfile: typeof updateUserProfile
   signOut: typeof signOut
   loading: boolean
@@ -42,7 +42,7 @@ export type Player = {
   role: Role
   causeOfDeath: CauseOfDeath
   isHost: boolean
-  selectedPlayerId: UserId
+  selectedPlayerId: UserId | null
   gameState: GameState
   roundCount: number | null
 }

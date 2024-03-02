@@ -1,4 +1,4 @@
-import { GameContext, Player, UserContext } from '../types/types'
+import { GameContext, Player, User, UserContext } from '../types/types'
 
 export const defaultPlayer: Player = {
   playerId: '',
@@ -12,6 +12,7 @@ export const defaultPlayer: Player = {
   role: null,
   causeOfDeath: null,
   isHost: false,
+  selectedPlayerId: null,
   gameState: null,
   roundCount: null,
 }
@@ -32,7 +33,7 @@ export const defaultGameContextValue: GameContext = {
   gameState: null,
 }
 
-export const defaultUser = {
+export const defaultUser: User & { email: string } = {
   id: '',
   updatedAt: '',
   firstName: '',
@@ -43,7 +44,7 @@ export const defaultUser = {
 }
 
 export const defaultUserContextValue: UserContext = {
-  user: defaultUser,
+  user: { ...defaultUser, email: '' },
   updateUserProfile: async () => {},
   signOut: () => {},
   loading: true,
