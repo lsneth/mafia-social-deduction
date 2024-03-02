@@ -5,7 +5,7 @@ type GameState = 'waiting' | 'playing' | 'done' | null
 type CauseOfDeath = 'murder' | 'execution' | null
 type Sex = 'male' | 'female'
 export type ChangeType = 'INSERT' | 'UPDATE' | 'DELETE'
-type UserId = string // todo
+export type UserId = string // todo
 
 export type RoleCount = {
   mafia: number
@@ -42,6 +42,7 @@ export type Player = {
   role: Role
   causeOfDeath: CauseOfDeath
   isHost: boolean
+  selectedPlayerId: UserId
   gameState: GameState
   roundCount: number | null
 }
@@ -53,7 +54,13 @@ export type GameContext = {
   player: Player
   roleCounts: RoleCount
   newGame: () => Promise<void>
-  joinGame: ({ gameId, isHost }: { gameId: string; isHost?: boolean }) => Promise<void>
+  joinGame: ({
+    gameId,
+    isHost,
+  }: {
+    gameId: string
+    isHost?: boolean
+  }) => Promise<void>
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
   loading: boolean

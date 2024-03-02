@@ -16,7 +16,11 @@ export default function PlayerCard({
 }) {
   return (
     <View style={[styles.card, selected ? styles.selected : styles.unselected]}>
-      <Pressable onPress={() => (onSelect ? onSelect() : undefined)} disabled={!onSelect} android_disableSound>
+      <Pressable
+        onPress={onSelect ? () => onSelect() : undefined}
+        disabled={!onSelect}
+        android_disableSound
+      >
         <View style={styles.center}>
           <Icon name="user-o" />
           <Separator />
