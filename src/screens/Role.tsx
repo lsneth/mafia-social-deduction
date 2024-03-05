@@ -7,6 +7,7 @@ import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useUser } from '../providers/UserProvider'
 import en from '../locales/en.json'
+import navigate from '../helpers/navigate'
 
 export default function Role({
   navigation,
@@ -30,10 +31,7 @@ export default function Role({
 
   useEffect(() => {
     if (seconds <= 0) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Night' }],
-      })
+      navigate({ navigation, nextRoute: 'Night' })
     }
   })
 

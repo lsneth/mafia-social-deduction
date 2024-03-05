@@ -13,6 +13,7 @@ import { ActivityIndicator, BackHandler } from 'react-native'
 import { leaveGame, startGame } from '../services/gameServices'
 import { useUser } from '../providers/UserProvider'
 import en from '../locales/en.json'
+import navigate from '../helpers/navigate'
 
 export default function Lobby({
   navigation,
@@ -52,10 +53,7 @@ export default function Lobby({
 
   useEffect(() => {
     if (gameState === 'playing') {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Role' }],
-      })
+      navigate({ navigation, nextRoute: 'Role' })
     }
   }, [gameState, navigation])
 

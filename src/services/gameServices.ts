@@ -11,15 +11,13 @@ export async function updatePlayer({
   playerId: Player['playerId']
   change: Record<string, string | boolean | null>
 }): Promise<void> {
-  console.log(
-    await supabase
-      .schema('game_sessions')
-      .from(gameId)
-      .update({
-        ...change,
-      })
-      .eq('playerId', playerId),
-  )
+  await supabase
+    .schema('game_sessions')
+    .from(gameId)
+    .update({
+      ...change,
+    })
+    .eq('playerId', playerId)
 }
 
 export async function updateGame({
