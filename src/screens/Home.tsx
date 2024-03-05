@@ -27,8 +27,8 @@ export default function Home({
       backgroundImage={require('../../assets/images/mafiaM.png')}
       gradientValues={['#000000', 'transparent', '#000000']}
     >
-      <Text size="lg">MAFIA</Text>
-      <Text size="md">Social Deduction</Text>
+      <Text size="lg">{en['home.mafia.heading']}</Text>
+      <Text size="md">{en['home.social-deduction.heading']}</Text>
       {userLoading ? (
         <BottomView>
           <ActivityIndicator size="large" />
@@ -66,9 +66,7 @@ export default function Home({
                           name: 'Account',
                           params: { loadInEditMode: false },
                         })
-                        Alert.alert(
-                          'You must add a first and last name before joining a game.',
-                        )
+                        Alert.alert(en['home.need-name.error'])
                       }
                 }
               >

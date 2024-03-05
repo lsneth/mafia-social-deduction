@@ -12,6 +12,7 @@ import PlayerGrid from '../components/PlayerGrid'
 import { ActivityIndicator, BackHandler } from 'react-native'
 import { leaveGame, startGame } from '../services/gameServices'
 import { useUser } from '../providers/UserProvider'
+import en from '../locales/en.json'
 
 export default function Lobby({
   navigation,
@@ -66,11 +67,12 @@ export default function Lobby({
         <ActivityIndicator size="large" />
       )}
       <Separator />
-      <Text>Share this game ID for others to join your session.</Text>
+      <Text>{en['lobby.share-id.description']}</Text>
       <Separator size={40} />
       {!gameLoading ? <PlayerGrid selectable={false} /> : <></>}
 
       <BottomView>
+        {/* TODO: remove this button */}
         <Button onPress={() => navigation.navigate('Day')}>Test</Button>
 
         <SummaryTable />
@@ -83,11 +85,11 @@ export default function Lobby({
             }}
           >
             {notEnoughPlayers ? (
-              <Text>5 PLAYERS MINIMUM</Text>
+              <Text>{en['lobby.min-players.label']}</Text>
             ) : tooManyPlayers ? (
-              <Text>15 PLAYERS MAXIMUM</Text>
+              <Text>{en['lobby.max-players.label']}</Text>
             ) : (
-              <Text>START GAME</Text>
+              <Text>{en['lobby.start-game.action']}</Text>
             )}
           </Button>
         ) : (
@@ -102,7 +104,9 @@ export default function Lobby({
           }}
           backgroundColor="gray"
         >
-          {player?.isHost ? 'Delete Game' : 'Leave Game'}
+          {player?.isHost
+            ? en['lobby.delete-game.action']
+            : en['lobby.leave-game.action']}
         </Button>
       </BottomView>
     </ParentView>

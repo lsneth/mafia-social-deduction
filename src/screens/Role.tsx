@@ -6,8 +6,13 @@ import { useGame } from '../providers/GameProvider'
 import { RootStackParamList } from '../../App'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useUser } from '../providers/UserProvider'
+import en from '../locales/en.json'
 
-export default function Role({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Role'> }) {
+export default function Role({
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Role'>
+}) {
   const { player } = useGame()
   const {
     user: { sex },
@@ -40,14 +45,17 @@ export default function Role({ navigation }: { navigation: NativeStackNavigation
           sex === 'male'
             ? require('../../assets/images/commonfolkM.png')
             : require('../../assets/images/commonfolkF.png'),
-        winCondition: 'You win when all the mafia players are dead.',
+        winCondition: en['role.commonfolk-win-condition.description'],
       }
       break
     case 'mafia':
       role = {
-        image: sex === 'male' ? require('../../assets/images/mafiaM.png') : require('../../assets/images/mafiaF.png'),
-        winCondition: 'You win when all non-mafia players are dead.',
-        detail: 'The mafia team may kill a player every night.',
+        image:
+          sex === 'male'
+            ? require('../../assets/images/mafiaM.png')
+            : require('../../assets/images/mafiaF.png'),
+        winCondition: en['role.mafia-win-condition.description'],
+        detail: en['role.mafia-detail.description'],
       }
       break
     case 'detective':
@@ -56,8 +64,8 @@ export default function Role({ navigation }: { navigation: NativeStackNavigation
           sex === 'male'
             ? require('../../assets/images/detectiveM.png')
             : require('../../assets/images/detectiveF.png'),
-        winCondition: 'You win when all the mafia players are dead.',
-        detail: 'The detective team can investigate a player every night.',
+        winCondition: en['role.detective-win-condition.description'],
+        detail: en['role.detective-detail.description'],
       }
       break
 
@@ -68,13 +76,20 @@ export default function Role({ navigation }: { navigation: NativeStackNavigation
   return (
     <ParentView
       backgroundImage={role?.image}
-      gradientValues={['#000000', 'transparent', 'transparent', 'transparent', '#000000']}
+      gradientValues={[
+        '#000000',
+        'transparent',
+        'transparent',
+        'transparent',
+        '#000000',
+      ]}
       resizeMode="contain"
       paddingTop={30}
     >
       <Text size="lg">{seconds.toString()}</Text>
       <BottomView>
-        <Text size="lg">{player?.role.toUpperCase()}</Text>
+        {/* TODO: get the player role in the strings file */}
+        <Text size="lg">{player?.role?.toUpperCase()}</Text>
         <Text size="md">{role?.winCondition}</Text>
         {role?.detail ? <Text size="md">{role.detail}</Text> : <></>}
       </BottomView>

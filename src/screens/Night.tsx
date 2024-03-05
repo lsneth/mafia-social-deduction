@@ -6,7 +6,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 import { useGame } from '../providers/GameProvider'
 import Button from '../components/Button'
-export default function Night({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Night'> }) {
+import en from '../locales/en.json'
+
+export default function Night({
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Night'>
+}) {
   const [dotCount, setDotCount] = useState<1 | 2 | 3>(1)
   const { deleteGame, gameId } = useGame()
 
@@ -24,8 +30,9 @@ export default function Night({ navigation }: { navigation: NativeStackNavigatio
       backgroundImage={require('../../assets/images/night.png')}
       gradientValues={['#000000', 'transparent', 'transparent']}
     >
-      <Text size="lg">Night</Text>
+      <Text size="lg">{en['night.night.heading']}</Text>
       <BottomView>
+        {/* TODO: remove this delete button */}
         <Button
           onPress={() => {
             deleteGame(gameId)

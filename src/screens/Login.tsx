@@ -9,6 +9,7 @@ import Separator from '../components/Separator'
 import TextInput from '../components/TextInput'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
+import en from '../locales/en.json'
 
 export default function Login({
   route,
@@ -36,16 +37,16 @@ export default function Login({
     <ParentView>
       {route.params.firstLogin ? (
         <>
-          <Text size="md">Welcome!</Text>
+          <Text size="md">{en['create-account.welcome.heading']}</Text>
           <Separator size={10} />
-          <Text size="sm">Hours of fun are just around the corner.</Text>
+          <Text size="sm">{en['create-account.catch-phrase.description']}</Text>
           <Separator size={60} />
         </>
       ) : (
         <>
-          <Text size="md">Welcome Back!</Text>
+          <Text size="md">{en['login.welcome-back.heading']}</Text>
           <Separator size={10} />
-          <Text size="sm">We're excited to see you again!</Text>
+          <Text size="sm">{en['login.catch-phrase.description']}</Text>
           <Separator size={60} />
         </>
       )}
@@ -55,7 +56,7 @@ export default function Login({
         onChangeText={(text) => setEmail(text)}
         placeholder="email@address.com"
         autoFocus
-        label="Email"
+        label={en['create-account.email.label']}
       />
       <Separator size={20} />
 
@@ -64,7 +65,7 @@ export default function Login({
         onChangeText={(text) => setPassword(text)}
         placeholder="password"
         secureTextEntry
-        label="Password"
+        label={en['create-account.password.label']}
       />
       <Separator size={30} />
 
@@ -75,12 +76,15 @@ export default function Login({
           route.params.firstLogin
             ? navigation.reset({
                 index: 0,
-                routes: [{ name: 'Home' }, { name: 'Account', params: { loadInEditMode: true } }],
+                routes: [
+                  { name: 'Home' },
+                  { name: 'Account', params: { loadInEditMode: true } },
+                ],
               })
             : navigation.navigate('Home')
         }}
       >
-        LOG IN
+        {en['home.log-in.action']}
       </Button>
     </ParentView>
   )

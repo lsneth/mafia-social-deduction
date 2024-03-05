@@ -7,15 +7,20 @@ import { RootStackParamList } from '../../App'
 import { useGame } from '../providers/GameProvider'
 import Separator from '../components/Separator'
 import Text from '../components/Text'
+import en from '../locales/en.json'
 
-export default function Join({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Join'> }) {
+export default function Join({
+  navigation,
+}: {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Join'>
+}) {
   const { gameId, setGameId, joinGame } = useGame()
 
   return (
     <ParentView>
       <Separator size={100} />
 
-      <Text>Enter a game ID to join a game</Text>
+      <Text>{en['join.enter-id.description']}</Text>
       <Separator size={20} />
       <TextInput
         placeholder="XXXXXX"
@@ -30,7 +35,7 @@ export default function Join({ navigation }: { navigation: NativeStackNavigation
           navigation.navigate('Lobby')
         }}
       >
-        JOIN
+        {en['join.join.action']}
       </Button>
     </ParentView>
   )
