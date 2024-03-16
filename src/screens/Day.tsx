@@ -24,7 +24,8 @@ export default function Day() {
 
   function getPlayerIdWithMostVotes(): string | undefined {
     // return false if not all players have voted
-    if (!(Object.values(voteCounts).reduce((sum, count) => sum + count, 0) === players.length)) return undefined
+    const livingPlayers = players.filter((player) => player.isAlive)
+    if (!(Object.values(voteCounts).reduce((sum, count) => sum + count, 0) === livingPlayers.length)) return undefined
 
     // return false if there is a tie
     const maxVoteCount = Math.max(...Object.values(voteCounts), 0)

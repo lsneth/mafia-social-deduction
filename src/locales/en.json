@@ -41,6 +41,8 @@
   "night.detective.description": "Choose a player to investigate.",
   "night.multiple-detective.description": "All detective players must agree on a single player.",
   "night.was-killed.description": "was killed!",
+  "night.is-a-mafia.description": "is a mafia!",
+  "night.is-not-a-mafia.description": "is NOT a mafia.",
   "role.commonfolk-win-condition.description": "You win when all the mafia players are dead.",
   "role.mafia-win-condition.description": "You win when all non-mafia players are dead.",
   "role.detective-win-condition.description": "You win when all the mafia players are dead.",

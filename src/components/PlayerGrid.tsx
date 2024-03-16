@@ -35,24 +35,29 @@ export default function PlayerGrid({
   // TODO: show last initial for duplicate names. if last initial is the same, figure out another way to differentiate them.
   return (
     <View style={styles.grid}>
-      {players?.map((player) => (
-        <PlayerCard
-          name={player.firstName}
-          key={player.playerId}
-          selected={
-            selectable && player.playerId !== currentPlayer.playerId ? player.playerId === selectedPlayerId : undefined
-          }
-          onSelect={
-            selectable && player.playerId !== currentPlayer.playerId
-              ? () => {
-                  setSelectedPlayerId(player.playerId) // to update the UI immediately
-                  selectPlayer(player.playerId) // to update the backend, this takes about one second
-                }
-              : undefined
-          }
-          voteCount={voteCounts ? voteCounts[player.playerId as string] ?? 0 : undefined}
-        />
-      ))}
+      {players?.map(
+        (player) =>
+          player.isAlive && (
+            <PlayerCard
+              name={player.firstName}
+              key={player.playerId}
+              selected={
+                selectable && player.playerId !== currentPlayer.playerId
+                  ? player.playerId === selectedPlayerId
+                  : undefined
+              }
+              onSelect={
+                selectable && player.playerId !== currentPlayer.playerId
+                  ? () => {
+                      setSelectedPlayerId(player.playerId) // to update the UI immediately
+                      selectPlayer(player.playerId) // to update the backend, this takes about one second
+                    }
+                  : undefined
+              }
+              voteCount={voteCounts ? voteCounts[player.playerId as string] ?? 0 : undefined}
+            />
+          ),
+      )}
     </View>
   )
 }

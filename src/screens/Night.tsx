@@ -14,7 +14,7 @@ export default function Night() {
   const { player, gamePhase, roleCounts, players, gameId, hostId } = useGame()
 
   // this will be all the mafia during the mafia phase and all the detectives during the detective phase
-  const activePlayers = players?.filter((player) => player.role === gamePhase)
+  const activePlayers = players?.filter((player) => player.role === gamePhase && player.isAlive)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -25,7 +25,8 @@ export default function Night() {
     return () => clearInterval(intervalId)
   }, [])
 
-  const [choosing, setChoosing] = useState(true)
+  const [mafiaChoosing, setMafiaChoosing] = useState(true)
+  const [detectiveChoosing, setDetectiveChoosing] = useState(false)
 
   const choiceCounts: Record<string, number> = activePlayers?.reduce((counts: Record<string, number>, player) => {
     const { selectedPlayerId } = player
@@ -41,11 +42,11 @@ export default function Night() {
 
     // return false if there is a tie
     const maxVoteCount = Math.max(...Object.values(choiceCounts), 0)
-    const playerIdsWithMaxVotes = Object.keys(choiceCounts).filter(
+    const playerIdsWithMaxChoices = Object.keys(choiceCounts).filter(
       (playerId) => choiceCounts[playerId] === maxVoteCount,
     )
-    if (playerIdsWithMaxVotes.length === 1) {
-      return playerIdsWithMaxVotes[0]
+    if (playerIdsWithMaxChoices.length === 1) {
+      return playerIdsWithMaxChoices[0]
     }
     return undefined
   }
@@ -54,33 +55,24 @@ export default function Night() {
   const [murderedPlayerId, setMurderedPlayerId] = useState<string>()
   // this will update many times an is only used to determine when to run the below if statement
   const playerIdWithMostChoices = getPlayerIdWithMostChoices()
+  const chosenPlayer = players.find((player) => player.playerId === playerIdWithMostChoices)
 
-  // when the vote counts are equal to the number of players and there is no tie (and we're in the voting phase), reset the selectedPlayerId for each player, kill the player with the most votes, and setVoting to false to display results (and continue button for host)
-  if (playerIdWithMostChoices && choosing) {
-    if (gamePhase === 'mafia') {
-      setMurderedPlayerId(playerIdWithMostChoices)
-      players.forEach((player) => {
-        updatePlayer({
-          gameId,
-          playerId: player.playerId,
-          change: { selectedPlayerId: null },
-        })
-        updateGame({
-          gameId,
-          hostId: hostId ?? '',
-          change: { gamePhase: 'detective' },
-        })
+  if (gamePhase === 'mafia' && playerIdWithMostChoices && mafiaChoosing) {
+    setMafiaChoosing(false)
+    setMurderedPlayerId(playerIdWithMostChoices)
+    players.forEach((player) => {
+      updatePlayer({
+        gameId,
+        playerId: player.playerId,
+        change: { selectedPlayerId: null },
       })
-    } else if (gamePhase === 'detective') {
-      players.forEach((player) => {
-        updatePlayer({
-          gameId,
-          playerId: player.playerId,
-          change: { selectedPlayerId: null },
-        })
-        setChoosing(false)
-      })
-    }
+    })
+    updateGame({
+      gameId,
+      hostId: hostId ?? '',
+      change: { gamePhase: 'detective' },
+    })
+    setDetectiveChoosing(true)
   }
 
   return (
@@ -90,7 +82,7 @@ export default function Night() {
     >
       <Text size="lg">{en['night.night.heading']}</Text>
 
-      {choosing ? (
+      {mafiaChoosing || detectiveChoosing ? (
         player?.role === 'mafia' && gamePhase === 'mafia' ? (
           <>
             <Text size="sm">{en['night.mafia.description']}</Text>
@@ -103,7 +95,34 @@ export default function Night() {
             <Text size="sm">{en['night.detective.description']}</Text>
             {roleCounts.mafia > 1 && <Text size="sm">{en['night.multiple-detective.description']}</Text>}
             <Separator size={30} />
-            <PlayerGrid />
+            <PlayerGrid selectable={!chosenPlayer} />
+            {gamePhase === 'detective' && playerIdWithMostChoices && detectiveChoosing && (
+              <>
+                <Text size="md">{`${chosenPlayer?.firstName} ${chosenPlayer?.role === 'mafia' ? en['night.is-a-mafia.description'] : en['night.is-not-a-mafia.description']}`}</Text>
+                <Button
+                  onPress={() => {
+                    players.forEach((player) => {
+                      setDetectiveChoosing(false)
+                      if (player.isHost) {
+                        updatePlayer({
+                          gameId,
+                          playerId: player.playerId,
+                          change: { selectedPlayerId: null, gamePhase: 'commonfolk' },
+                        })
+                      } else {
+                        updatePlayer({
+                          gameId,
+                          playerId: player.playerId,
+                          change: { selectedPlayerId: null },
+                        })
+                      }
+                    })
+                  }}
+                >
+                  {en['event.continue.action']}
+                </Button>
+              </>
+            )}
           </>
         ) : (
           <BottomView>
@@ -123,10 +142,16 @@ export default function Night() {
             <BottomView>
               <Button
                 onPress={() => {
+                  console.log('hey')
                   updateGame({
                     gameId,
                     hostId: player.playerId,
                     change: { gamePhase: 'day' },
+                  })
+                  updatePlayer({
+                    gameId,
+                    playerId: murderedPlayerId ?? '',
+                    change: { isAlive: false },
                   })
                 }}
               >
