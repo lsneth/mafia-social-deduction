@@ -7,6 +7,7 @@ import en from '../locales/en.json'
 import PlayerGrid from '../components/PlayerGrid'
 import Separator from '../components/Separator'
 import { updateGame, updatePlayer } from '../services/gameServices'
+import Button from '../components/Button'
 
 export default function Night() {
   const [dotCount, setDotCount] = useState<1 | 2 | 3>(1)
@@ -116,7 +117,24 @@ export default function Night() {
           </BottomView>
         )
       ) : (
-        <Text size="md">{`${players.find((player) => player.playerId === murderedPlayerId)?.firstName} ${en['night.was-killed.description']}`}</Text>
+        <>
+          <Text size="md">{`${players.find((player) => player.playerId === murderedPlayerId)?.firstName} ${en['night.was-killed.description']}`}</Text>
+          {player?.isHost && (
+            <BottomView>
+              <Button
+                onPress={() => {
+                  updateGame({
+                    gameId,
+                    hostId: player.playerId,
+                    change: { gamePhase: 'day' },
+                  })
+                }}
+              >
+                {en['event.continue.action']}
+              </Button>
+            </BottomView>
+          )}
+        </>
       )}
     </ParentView>
   )

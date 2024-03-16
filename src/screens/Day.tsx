@@ -73,25 +73,24 @@ export default function Day() {
           {!gameLoading ? <PlayerGrid voteCounts={voteCounts} /> : <></>}
         </>
       ) : (
-        <Text>{`${players.find((player) => player.playerId === playerIdWithMostVotesState)?.firstName} ${en['day.died.description']}`}</Text>
-      )}
-
-      {!voting && player.isHost ? (
-        <BottomView>
-          <Button
-            onPress={() => {
-              updateGame({
-                gameId,
-                hostId: player.playerId,
-                change: { gamePhase: 'mafia' },
-              })
-            }}
-          >
-            {en['event.continue.action']}
-          </Button>
-        </BottomView>
-      ) : (
-        <></>
+        <>
+          <Text>{`${players.find((player) => player.playerId === playerIdWithMostVotesState)?.firstName} ${en['day.died.description']}`}</Text>
+          {player.isHost && (
+            <BottomView>
+              <Button
+                onPress={() => {
+                  updateGame({
+                    gameId,
+                    hostId: player.playerId,
+                    change: { gamePhase: 'mafia' },
+                  })
+                }}
+              >
+                {en['event.continue.action']}
+              </Button>
+            </BottomView>
+          )}
+        </>
       )}
     </ParentView>
   )
