@@ -32,7 +32,7 @@ export default function Day() {
     if (playerIdsWithMaxVotes.length === 1) {
       return playerIdsWithMaxVotes[0]
     }
-    return undefined
+    return 'tie'
   }
 
   // this is only set once, after the voting is complete. It is used to display who died
@@ -41,7 +41,7 @@ export default function Day() {
   const playerIdWithMostVotes = getPlayerIdWithMostVotes()
 
   // when the vote counts are equal to the number of players and there is no tie (and we're in the voting phase), reset the selectedPlayerId for each player, kill the player with the most votes, and setVoting to false to display results (and continue button for host)
-  if (playerIdWithMostVotes && voting) {
+  if (playerIdWithMostVotes && playerIdWithMostVotes !== 'tie' && voting) {
     setPlayerIdWithMostVotesState(playerIdWithMostVotes)
     players.forEach((player) => {
       if (player.playerId === playerIdWithMostVotes) {
@@ -71,10 +71,11 @@ export default function Day() {
           <Text size="sm">{en['day.vote-for.description']}</Text>
           <Separator size={40} />
           {!gameLoading ? <PlayerGrid voteCounts={voteCounts} /> : <></>}
+          {playerIdWithMostVotes === 'tie' && <Text>{en['day.tie.description']}</Text>}
         </>
       ) : (
         <>
-          <Text>{`${players.find((player) => player.playerId === playerIdWithMostVotesState)?.firstName} ${en['day.died.description']}`}</Text>
+          <Text size="md">{`${players.find((player) => player.playerId === playerIdWithMostVotesState)?.firstName} ${en['day.died.description']}`}</Text>
           {player.isHost && (
             <BottomView>
               <Button

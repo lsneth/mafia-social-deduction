@@ -16,6 +16,7 @@
   "create-account.welcome.heading": "Welcome!",
   "day.vote-for.description": "Vote for the player you wish to hang.",
   "day.died.description": "was lynched!",
+  "day.tie.description": "Resolve the tie!",
   "event.continue.action": "CONTINUE",
   "home.log-in.action": "LOG IN",
   "home.account.action": "ACCOUNT",
