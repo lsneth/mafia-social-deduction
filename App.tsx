@@ -12,9 +12,7 @@ import Join from './src/screens/Join'
 import GameProvider from './src/providers/GameProvider'
 import CreateAccount from './src/screens/CreateAccount'
 import Role from './src/screens/Role'
-import Night from './src/screens/Night'
-import Event from './src/screens/Event'
-import Day from './src/screens/Day'
+import GameManager from './src/screens/GameManager'
 
 export type RootStackParamList = {
   Home: undefined
@@ -25,9 +23,7 @@ export type RootStackParamList = {
   Lobby: undefined
   Join: undefined
   Role: undefined
-  Night: undefined
-  Day: undefined
-  Event: { eventText: string }
+  GameManager: undefined
 }
 
 export default function App() {
@@ -53,9 +49,7 @@ export default function App() {
             <Stack.Screen name="Lobby" component={Lobby} options={{ headerBackVisible: false }} />
             <Stack.Screen name="Join" component={Join} />
             <Stack.Screen name="Role" component={Role} />
-            <Stack.Screen name="Night" component={Night} />
-            <Stack.Screen name="Day" component={Day} />
-            <Stack.Screen name="Event" component={Event} initialParams={{ eventText: 'Event text placeholder' }} />
+            <Stack.Screen name="GameManager" component={GameManager} />
           </Stack.Navigator>
         </GameProvider>
       </UserProvider>

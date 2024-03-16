@@ -107,17 +107,17 @@ export const useGame = () => {
 export default function GameProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [gameId, setGameId] = useState<string>('')
   const [players, dispatch] = useReducer(playersReducer, [])
-  const host: Player | undefined = players.find((player) => player.isHost)
 
   const {
     user: { id: userId },
   } = useUser()
+
+  const host: Player | undefined = players.find((player) => player.isHost)
   const player: Player = players.find((player) => player.playerId === userId) ?? defaultPlayer
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
-  const gameState =
-    players.filter((player) => player.isHost === true).find((player) => player.gameState !== null)?.gameState ??
-    'waiting'
+  const gameState = host?.gameState ?? 'waiting'
+  const gamePhase = host?.gamePhase
 
   // updates game state
   function handleChange(change: Change) {
@@ -151,8 +151,8 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
       // get up to date with current game state
       mutatePlayers(gameId).then(() =>
         // subscribe to further changes in game
-        subscribeToGameChanges(gameId, handleChange)
-      )
+        subscribeToGameChanges(gameId, handleChange),
+      ),
     )
 
     setLoading(false)
@@ -184,6 +184,7 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
       deleteGame={deleteGame}
       loading={loading}
       gameState={gameState}
+      gamePhase={gamePhase}
       roundCount={host?.roundCount ?? 0}
       hostId={host?.playerId ?? ''}
     />
@@ -204,6 +205,7 @@ function GameProviderBase({
   deleteGame,
   loading,
   gameState,
+  gamePhase,
   roundCount,
   hostId,
 }: { children: JSX.Element } & GameContextType): JSX.Element {
@@ -220,6 +222,7 @@ function GameProviderBase({
     deleteGame,
     loading,
     gameState,
+    gamePhase,
     roundCount,
     hostId,
   }

@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Text as BaseText,
-  View,
-  ActivityIndicator,
-} from 'react-native'
+import { StyleSheet, Text as BaseText, View, ActivityIndicator } from 'react-native'
 import colors from '../styles/colors'
 
 export default function Text({
@@ -22,16 +17,7 @@ export default function Text({
 }) {
   return (
     <View style={{ ...style }}>
-      <BaseText
-        style={[
-          { textAlign: align },
-          styles.text,
-          margins[margin],
-          styles[size],
-        ]}
-      >
-        {children}
-      </BaseText>
+      <BaseText style={[{ textAlign: align }, styles.text, margins[margin], styles[size]]}>{children}</BaseText>
     </View>
   )
 }

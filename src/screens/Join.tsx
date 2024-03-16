@@ -9,11 +9,7 @@ import Separator from '../components/Separator'
 import Text from '../components/Text'
 import en from '../locales/en.json'
 
-export default function Join({
-  navigation,
-}: {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Join'>
-}) {
+export default function Join({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Join'> }) {
   const { gameId, setGameId, joinGame } = useGame()
 
   return (
@@ -31,7 +27,7 @@ export default function Join({
       />
       <Button
         onPress={() => {
-          joinGame({ gameId: gameId! })
+          joinGame({ gameId: gameId })
           navigation.navigate('Lobby')
         }}
       >

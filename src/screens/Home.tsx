@@ -11,11 +11,7 @@ import { useGame } from '../providers/GameProvider'
 import { ActivityIndicator, Alert } from 'react-native'
 import en from '../locales/en.json'
 
-export default function Home({
-  navigation,
-}: {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>
-}) {
+export default function Home({ navigation }: { navigation: NativeStackNavigationProp<RootStackParamList, 'Home'> }) {
   const {
     user: { id: userId, firstName, lastName },
     loading: userLoading,

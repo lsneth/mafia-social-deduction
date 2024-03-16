@@ -40,9 +40,7 @@ export async function updateGame({
 
 // creates a new game_session table in supabase and returns it's table name (gameId)
 export async function createGame(): Promise<string> {
-  const { data: gameId, error } = await supabase
-    .schema('public')
-    .rpc('create_gs_table')
+  const { data: gameId, error } = await supabase.schema('public').rpc('create_gs_table')
 
   // TODO: error message
   if (error) {
@@ -65,11 +63,7 @@ export async function addUserToGame({
   isHost: boolean
 }): Promise<void> {
   // TODO: do not add to game if gameState is 'playing' or 'done'
-  const { data: users } = await supabase
-    .schema('public')
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
+  const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   const user = users?.[0] ?? {}
   // TODO: replace row in game table if it already exists
   await supabase
@@ -85,13 +79,8 @@ export async function addUserToGame({
 }
 
 // gets all rows (players) from game
-export async function getCurrentGameData(
-  gameId: string,
-): Promise<Player[] | null> {
-  const { data: players, error } = await supabase
-    .schema('game_sessions')
-    .from(gameId)
-    .select()
+export async function getCurrentGameData(gameId: string): Promise<Player[] | null> {
+  const { data: players, error } = await supabase.schema('game_sessions').from(gameId).select()
 
   // TODO: error message
   if (error) {
@@ -103,10 +92,7 @@ export async function getCurrentGameData(
 }
 
 // opens websocket for two way communication between the client and the db
-export async function subscribeToGameChanges(
-  gameId: string,
-  handleChange: (change: Change) => void,
-): Promise<void> {
+export async function subscribeToGameChanges(gameId: string, handleChange: (change: Change) => void): Promise<void> {
   await supabase
     .channel(gameId)
     .on(
@@ -125,9 +111,7 @@ export async function subscribeToGameChanges(
 
 // assigns roles proportionately according to player count and sets gameState to 'playing'
 export async function startGame(gameId: string): Promise<void> {
-  const { error } = await supabase
-    .schema('public')
-    .rpc('start_game', { table_name: gameId })
+  const { error } = await supabase.schema('public').rpc('start_game', { table_name: gameId })
 
   // TODO: error message
   if (error) {
@@ -137,15 +121,8 @@ export async function startGame(gameId: string): Promise<void> {
 }
 
 // removes a player from a game table
-export async function leaveGame(
-  gameId: string,
-  playerId: string,
-): Promise<void> {
-  const { error } = await supabase
-    .schema('game_sessions')
-    .from(gameId)
-    .delete()
-    .eq('playerId', playerId)
+export async function leaveGame(gameId: string, playerId: string): Promise<void> {
+  const { error } = await supabase.schema('game_sessions').from(gameId).delete().eq('playerId', playerId)
 
   // TODO: error message
   if (error) {
@@ -156,9 +133,7 @@ export async function leaveGame(
 
 // deletes a game table from the db
 export async function deleteGame(gameId: string): Promise<void> {
-  const { error } = await supabase
-    .schema('public')
-    .rpc('delete_gs_table', { table_name: gameId })
+  const { error } = await supabase.schema('public').rpc('delete_gs_table', { table_name: gameId })
 
   // TODO: error message
   if (error) {

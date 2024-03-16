@@ -15,11 +15,7 @@ export const useUser = (): UserContextType => {
   return useContext(UserContext)
 }
 
-export default function UserProvider({
-  children,
-}: {
-  children: JSX.Element
-}): JSX.Element {
+export default function UserProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [user, setUser] = useState<User & { email: string }>(defaultUser)
@@ -45,8 +41,7 @@ export default function UserProvider({
     if (session) {
       getUserProfile(session.user.id)
         .then((profile) => {
-          const { id, updatedAt, firstName, lastName, statsId, sex } =
-            profile ?? {}
+          const { id, updatedAt, firstName, lastName, statsId, sex } = profile ?? {}
 
           setUser({
             id,
@@ -78,32 +73,30 @@ export default function UserProvider({
     sex: 'male' | 'female'
   }) {
     setLoading(true)
-    await updateUserProfileService({ id, firstName, lastName, sex }).then(
-      () => {
-        if (session?.user?.id) {
-          getUserProfile(session.user.id).then((profile) => {
-            const {
-              id,
-              updated_at: updatedAt,
-              first_name: firstName,
-              last_name: lastName,
-              stats_id: statsId,
-              sex,
-            } = profile ?? {}
+    await updateUserProfileService({ id, firstName, lastName, sex }).then(() => {
+      if (session?.user?.id) {
+        getUserProfile(session.user.id).then((profile) => {
+          const {
+            id,
+            updated_at: updatedAt,
+            first_name: firstName,
+            last_name: lastName,
+            stats_id: statsId,
+            sex,
+          } = profile ?? {}
 
-            setUser({
-              id: id ?? '',
-              updatedAt: updatedAt ?? '',
-              firstName: firstName ?? '',
-              lastName: lastName ?? '',
-              statsId: statsId ?? '',
-              sex: sex ?? 'male',
-              email: session.user.email ?? '',
-            })
+          setUser({
+            id: id ?? '',
+            updatedAt: updatedAt ?? '',
+            firstName: firstName ?? '',
+            lastName: lastName ?? '',
+            statsId: statsId ?? '',
+            sex: sex ?? 'male',
+            email: session.user.email ?? '',
           })
-        }
-      },
-    )
+        })
+      }
+    })
     setLoading(false)
   }
 
@@ -147,9 +140,5 @@ function UserProviderBase({
   }) => Promise<void>
   loading: boolean
 }) {
-  return (
-    <UserContext.Provider value={{ user, updateUserProfile, signOut, loading }}>
-      {children}
-    </UserContext.Provider>
-  )
+  return <UserContext.Provider value={{ user, updateUserProfile, signOut, loading }}>{children}</UserContext.Provider>
 }

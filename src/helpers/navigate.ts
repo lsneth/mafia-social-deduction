@@ -1,4 +1,3 @@
-import React from 'react'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../App'
 
@@ -7,10 +6,7 @@ export default function navigate({
   nextRoute,
   params,
 }: {
-  navigation: NativeStackNavigationProp<
-    RootStackParamList,
-    keyof RootStackParamList
-  >
+  navigation: NativeStackNavigationProp<RootStackParamList, keyof RootStackParamList>
   nextRoute: keyof RootStackParamList
   params?: Readonly<object | undefined>
 }): void {

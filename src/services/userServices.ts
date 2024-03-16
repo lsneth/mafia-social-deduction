@@ -1,9 +1,9 @@
 import { supabase } from '../lib/supabase'
 import { Alert } from 'react-native'
-import { BackendUser } from '../types/types'
+import { User } from '../types/types'
 
 // gets user data
-export async function getUserProfile(userId: string): Promise<BackendUser | null> {
+export async function getUserProfile(userId: string): Promise<User | null> {
   const { data, error } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
 
   // TODO: error message

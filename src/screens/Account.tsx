@@ -35,9 +35,7 @@ export default function Account({
   const [lastName, setLastName] = useState<string>(dbLastName ?? '') // Provide a default value for dbLastName
   const [isMale, setIsMale] = useState<boolean>(sex === 'male')
   const [tempIsMale, setTempIsMale] = useState<boolean>(true)
-  const [editMode, setEditMode] = useState<boolean>(
-    route.params.loadInEditMode ? true : false,
-  )
+  const [editMode, setEditMode] = useState<boolean>(route.params.loadInEditMode ? true : false)
 
   return (
     <ParentView>

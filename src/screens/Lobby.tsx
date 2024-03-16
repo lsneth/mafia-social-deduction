@@ -20,14 +20,7 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const {
-    gameId,
-    deleteGame,
-    loading: gameLoading,
-    players,
-    player,
-    gameState,
-  } = useGame()
+  const { gameId, deleteGame, loading: gameLoading, players, player, gameState, hostId } = useGame()
   const {
     user: { id: userId },
   } = useUser()
@@ -39,14 +32,11 @@ export default function Lobby({
   // this useEffect is to add functionality to the native OS back functionality: delete the game in supabase
   useEffect(() => {
     const backAction = () => {
-      deleteGame(gameId!)
+      deleteGame(gameId)
       return undefined // don't override default behavior (going back)
     }
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    )
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction)
 
     return () => backHandler.remove() // Clean up the event listener on component unmount
   }, [deleteGame, gameId])
@@ -59,11 +49,7 @@ export default function Lobby({
 
   return (
     <ParentView>
-      {!gameLoading && gameId ? (
-        <Text size="lg">{gameId}</Text>
-      ) : (
-        <ActivityIndicator size="large" />
-      )}
+      {!gameLoading && gameId ? <Text size="lg">{gameId}</Text> : <ActivityIndicator size="large" />}
       <Separator />
       <Text>{en['lobby.share-id.description']}</Text>
       <Separator size={40} />
@@ -71,7 +57,7 @@ export default function Lobby({
 
       <BottomView>
         {/* TODO: remove this button */}
-        <Button onPress={() => navigation.navigate('Day')}>Test</Button>
+        <Button onPress={() => navigate({ navigation, nextRoute: 'GameManager' })}>Test</Button>
 
         <SummaryTable />
         <Separator size={20} />
@@ -79,7 +65,7 @@ export default function Lobby({
           <Button
             disabled={!validPlayerCount}
             onPress={() => {
-              startGame(gameId!)
+              startGame(gameId)
             }}
           >
             {notEnoughPlayers ? (
@@ -96,15 +82,13 @@ export default function Lobby({
         <Button
           onPress={async () => {
             if (player?.isHost) {
-              deleteGame(gameId!)
-            } else leaveGame(gameId!, userId)
+              deleteGame(gameId)
+            } else leaveGame(gameId, userId)
             navigation.goBack()
           }}
           backgroundColor="gray"
         >
-          {player?.isHost
-            ? en['lobby.delete-game.action']
-            : en['lobby.leave-game.action']}
+          {player?.isHost ? en['lobby.delete-game.action'] : en['lobby.leave-game.action']}
         </Button>
       </BottomView>
     </ParentView>

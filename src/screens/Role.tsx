@@ -3,18 +3,12 @@ import ParentView from '../components/ParentView'
 import Text from '../components/Text'
 import BottomView from '../components/BottomView'
 import { useGame } from '../providers/GameProvider'
-import { RootStackParamList } from '../../App'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { useUser } from '../providers/UserProvider'
 import en from '../locales/en.json'
-import navigate from '../helpers/navigate'
+import { updateGame } from '../services/gameServices'
 
-export default function Role({
-  navigation,
-}: {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Role'>
-}) {
-  const { player } = useGame()
+export default function Role() {
+  const { player, gameId } = useGame()
   const {
     user: { sex },
   } = useUser()
@@ -30,8 +24,12 @@ export default function Role({
   }, [])
 
   useEffect(() => {
-    if (seconds <= 0) {
-      navigate({ navigation, nextRoute: 'Night' })
+    if (seconds <= 0 && player.isHost) {
+      updateGame({
+        gameId,
+        hostId: player.playerId,
+        change: { gamePhase: 'commonfolk' },
+      })
     }
   })
 
@@ -48,10 +46,7 @@ export default function Role({
       break
     case 'mafia':
       role = {
-        image:
-          sex === 'male'
-            ? require('../../assets/images/mafiaM.png')
-            : require('../../assets/images/mafiaF.png'),
+        image: sex === 'male' ? require('../../assets/images/mafiaM.png') : require('../../assets/images/mafiaF.png'),
         winCondition: en['role.mafia-win-condition.description'],
         detail: en['role.mafia-detail.description'],
       }
@@ -74,13 +69,7 @@ export default function Role({
   return (
     <ParentView
       backgroundImage={role?.image}
-      gradientValues={[
-        '#000000',
-        'transparent',
-        'transparent',
-        'transparent',
-        '#000000',
-      ]}
+      gradientValues={['#000000', 'transparent', 'transparent', 'transparent', '#000000']}
       resizeMode="contain"
       paddingTop={30}
     >

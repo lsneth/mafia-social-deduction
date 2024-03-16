@@ -14,6 +14,7 @@ export const defaultPlayer: Player = {
   isHost: false,
   selectedPlayerId: null,
   gameState: null,
+  gamePhase: null,
   roundCount: null,
 }
 
@@ -31,6 +32,7 @@ export const defaultGameContextValue: GameContext = {
   deleteGame: () => {},
   loading: true,
   gameState: null,
+  gamePhase: null,
 }
 
 export const defaultUser: User & { email: string } = {

@@ -44,6 +44,7 @@ export type Player = {
   isHost: boolean
   selectedPlayerId: UserId | null
   gameState: GameState
+  gamePhase: Role | undefined
   roundCount: number | null
 }
 
@@ -54,18 +55,13 @@ export type GameContext = {
   player: Player
   roleCounts: RoleCount
   newGame: () => Promise<void>
-  joinGame: ({
-    gameId,
-    isHost,
-  }: {
-    gameId: string
-    isHost?: boolean
-  }) => Promise<void>
+  joinGame: ({ gameId, isHost }: { gameId: string; isHost?: boolean }) => Promise<void>
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
   loading: boolean
   gameState: GameState
   roundCount: number
+  gamePhase: Role | undefined
   hostId: string | null
 }
 

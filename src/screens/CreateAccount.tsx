@@ -63,10 +63,7 @@ export default function CreateAccount({
           signUpWithEmail()
           navigation.reset({
             index: 1,
-            routes: [
-              { name: 'Home' },
-              { name: 'Login', params: { firstLogin: true } },
-            ],
+            routes: [{ name: 'Home' }, { name: 'Login', params: { firstLogin: true } }],
           })
         }}
       >

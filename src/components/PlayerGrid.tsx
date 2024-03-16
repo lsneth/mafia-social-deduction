@@ -18,7 +18,7 @@ export default function PlayerGrid({
   useEffect(() => {
     // this is to make sure the backend stays king and the UI stays in sync since it is rendered from a different state
     // the reason it is rendered from a different state is because there was about a 1 second delay between the click and the backend update
-    setSelectedPlayerId(currentPlayer.selectedPlayerId)
+    setSelectedPlayerId(currentPlayer.selectedPlayerId ?? '')
   }, [currentPlayer.selectedPlayerId])
 
   const selectPlayer = useCallback(
@@ -40,9 +40,7 @@ export default function PlayerGrid({
           name={player.firstName}
           key={player.playerId}
           selected={
-            selectable && player.playerId !== currentPlayer.playerId
-              ? player.playerId === selectedPlayerId
-              : undefined
+            selectable && player.playerId !== currentPlayer.playerId ? player.playerId === selectedPlayerId : undefined
           }
           onSelect={
             selectable && player.playerId !== currentPlayer.playerId
@@ -52,9 +50,7 @@ export default function PlayerGrid({
                 }
               : undefined
           }
-          voteCount={
-            voteCounts ? voteCounts[player.playerId as string] ?? 0 : undefined
-          }
+          voteCount={voteCounts ? voteCounts[player.playerId as string] ?? 0 : undefined}
         />
       ))}
     </View>
