@@ -5,9 +5,15 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
+    "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "precommit-msg": "echo 'running pre-commit checks...' && exit 0",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
+  "pre-commit": [
+    "precommit-msg",
+    "lint"
+  ],
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@react-native-async-storage/async-storage": "1.18.2",
@@ -32,6 +38,7 @@
     "@types/react": "~18.2.14",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.33.2",
+    "pre-commit": "^1.2.2",
     "prettier": "3.2.5",
     "typescript": "^5.1.3"
   },

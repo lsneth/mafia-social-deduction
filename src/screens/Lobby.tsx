@@ -20,7 +20,7 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading: gameLoading, players, player, gameState, hostId } = useGame()
+  const { gameId, deleteGame, loading: gameLoading, players, player, gameState } = useGame()
   const {
     user: { id: userId },
   } = useUser()
