@@ -20,7 +20,7 @@ export default function Lobby({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Lobby'>
 }): JSX.Element {
-  const { gameId, deleteGame, loading: gameLoading, players, player, gameState } = useGame()
+  const { gameId, deleteGame, loading: gameLoading, players, player, gamePhase } = useGame()
   const {
     user: { id: userId },
   } = useUser()
@@ -41,11 +41,12 @@ export default function Lobby({
     return () => backHandler.remove() // Clean up the event listener on component unmount
   }, [deleteGame, gameId])
 
+  // this will happen when the host starts the game
   useEffect(() => {
-    if (gameState === 'playing') {
-      navigate({ navigation, nextRoute: 'Role' })
+    if (gamePhase === 'role') {
+      navigate({ navigation, nextRoute: 'GameManager' })
     }
-  }, [gameState, navigation])
+  }, [gamePhase, navigation])
 
   return (
     <ParentView>
@@ -56,9 +57,6 @@ export default function Lobby({
       {!gameLoading ? <PlayerGrid selectable={false} /> : <></>}
 
       <BottomView>
-        {/* TODO: remove this button */}
-        <Button onPress={() => navigate({ navigation, nextRoute: 'GameManager' })}>Test</Button>
-
         <SummaryTable />
         <Separator size={20} />
         {player?.isHost ? (

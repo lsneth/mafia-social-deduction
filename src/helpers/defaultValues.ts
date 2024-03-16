@@ -13,7 +13,6 @@ export const defaultPlayer: Player = {
   causeOfDeath: null,
   isHost: false,
   selectedPlayerId: null,
-  gameState: null,
   gamePhase: null,
   roundCount: null,
 }
@@ -31,7 +30,6 @@ export const defaultGameContextValue: GameContext = {
   mutatePlayers: () => {},
   deleteGame: () => {},
   loading: true,
-  gameState: null,
   gamePhase: null,
 }
 

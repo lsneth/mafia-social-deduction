@@ -116,7 +116,6 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
   const player: Player = players.find((player) => player.playerId === userId) ?? defaultPlayer
   const roleCounts = getRoleCounts(players.length)
   const [loading, setLoading] = useState<boolean>(false)
-  const gameState = host?.gameState ?? 'waiting'
   const gamePhase = host?.gamePhase
 
   // updates game state
@@ -183,7 +182,6 @@ export default function GameProvider({ children }: { children: JSX.Element }): J
       mutatePlayers={mutatePlayers}
       deleteGame={deleteGame}
       loading={loading}
-      gameState={gameState}
       gamePhase={gamePhase}
       roundCount={host?.roundCount ?? 0}
       hostId={host?.playerId ?? ''}
@@ -204,7 +202,6 @@ function GameProviderBase({
   mutatePlayers,
   deleteGame,
   loading,
-  gameState,
   gamePhase,
   roundCount,
   hostId,
@@ -221,7 +218,6 @@ function GameProviderBase({
     mutatePlayers,
     deleteGame,
     loading,
-    gameState,
     gamePhase,
     roundCount,
     hostId,

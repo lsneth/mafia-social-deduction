@@ -16,22 +16,20 @@ export default function Role() {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setSeconds((prev) => prev - 1)
+      setSeconds((prev) => (prev - 1 >= 0 ? prev - 1 : 0))
     }, 1000)
 
     // Clear the interval when the component unmounts
     return () => clearInterval(intervalId)
   }, [])
 
-  useEffect(() => {
-    if (seconds <= 0 && player.isHost) {
-      updateGame({
-        gameId,
-        hostId: player.playerId,
-        change: { gamePhase: 'commonfolk' },
-      })
-    }
-  })
+  if (seconds <= 0 && player.isHost) {
+    updateGame({
+      gameId,
+      hostId: player.playerId,
+      change: { gamePhase: 'commonfolk' },
+    })
+  }
 
   let role
   switch (player?.role) {

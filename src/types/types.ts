@@ -1,7 +1,6 @@
 import { signOut, updateUserProfile } from '../services/userServices'
 
 type Role = 'commonfolk' | 'detective' | 'mafia' | null
-type GameState = 'waiting' | 'playing' | 'done' | null
 type CauseOfDeath = 'murder' | 'execution' | null
 type Sex = 'male' | 'female'
 export type ChangeType = 'INSERT' | 'UPDATE' | 'DELETE'
@@ -43,8 +42,7 @@ export type Player = {
   causeOfDeath: CauseOfDeath
   isHost: boolean
   selectedPlayerId: UserId | null
-  gameState: GameState
-  gamePhase: Role | undefined
+  gamePhase: Role | 'role' | undefined
   roundCount: number | null
 }
 
@@ -59,9 +57,8 @@ export type GameContext = {
   mutatePlayers: (gameId: string) => void
   deleteGame: (gameId: string) => void
   loading: boolean
-  gameState: GameState
   roundCount: number
-  gamePhase: Role | undefined
+  gamePhase: Role | 'role' | undefined
   hostId: string | null
 }
 

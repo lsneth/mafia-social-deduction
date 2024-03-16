@@ -62,20 +62,16 @@ export async function addUserToGame({
   userId: User['id']
   isHost: boolean
 }): Promise<void> {
-  // TODO: do not add to game if gameState is 'playing' or 'done'
+  // TODO: do not add to game if gamePhase is set
   const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   const user = users?.[0] ?? {}
   // TODO: replace row in game table if it already exists
-  await supabase
-    .schema('game_sessions')
-    .from(gameId)
-    .insert({
-      playerId: userId,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      isHost: isHost,
-      gameState: isHost ? 'waiting' : null,
-    })
+  await supabase.schema('game_sessions').from(gameId).insert({
+    playerId: userId,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    isHost: isHost,
+  })
 }
 
 // gets all rows (players) from game
@@ -109,7 +105,7 @@ export async function subscribeToGameChanges(gameId: string, handleChange: (chan
     .subscribe()
 }
 
-// assigns roles proportionately according to player count and sets gameState to 'playing'
+// assigns roles proportionately according to player count and sets gamePhase to 'role'
 export async function startGame(gameId: string): Promise<void> {
   const { error } = await supabase.schema('public').rpc('start_game', { table_name: gameId })
 
