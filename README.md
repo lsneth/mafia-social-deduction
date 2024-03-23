@@ -14,9 +14,7 @@ The front-end of _Mafia: Social Deduction_ is written in [TypeScript](https://ww
 
 ### 1. Minimum Viable Product
 
-- Clean up types and refactor
 - Finish the in-game experience
-  - Player selection (voting, investigating, killing)
   - In-game role viewer
   - In-game history viewer
 
