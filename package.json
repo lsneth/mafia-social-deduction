@@ -6,13 +6,12 @@
     "start": "expo start",
     "android": "expo start --android",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx",
-    "precommit-msg": "echo 'running pre-commit checks...' && exit 0",
+    "precommit-lint": "echo 'running pre-commit checks...' && npm run lint || (echo 'Linting failed, aborting commit.' && exit 1)",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
   "pre-commit": [
-    "precommit-msg",
-    "lint"
+    "precommit-lint"
   ],
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
