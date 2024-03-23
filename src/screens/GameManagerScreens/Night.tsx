@@ -46,7 +46,7 @@ export default function Night() {
 
   return (
     <ParentView
-      backgroundImage={require('../../assets/images/night.png')}
+      backgroundImage={require('../../../assets/images/night.png')}
       gradientValues={['#000000', 'transparent', 'transparent']}
     >
       <Text size="lg">{en['night.night.heading']}</Text>
@@ -57,7 +57,7 @@ export default function Night() {
           <Text>{gamePhase === 'mafia' ? en['night.mafia.description'] : en['night.detective.description']}</Text>
           <Separator size={30} />
           <PlayerGrid />
-          {player.role === 'detective' && votedPlayerId.current && (
+          {player.role === 'detective' && !!votedPlayerId.current && (
             <>
               <Text size="md">
                 {`${votedPlayer?.firstName} ${votedPlayer?.role === 'mafia' ? en['night.is-a-mafia.description'] : en['night.is-not-a-mafia.description']}`}

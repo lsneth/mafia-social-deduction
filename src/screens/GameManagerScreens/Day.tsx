@@ -51,7 +51,7 @@ export default function Day() {
         updatePlayer({
           gameId,
           playerId: player.playerId,
-          change: { isAlive: false, selectedPlayerId: null },
+          change: { isAlive: false, causeOfDeath: 'lynching', selectedPlayerId: null },
         })
       } else {
         updatePlayer({
@@ -66,7 +66,7 @@ export default function Day() {
 
   return (
     <ParentView
-      backgroundImage={require('../../assets/images/day.png')}
+      backgroundImage={require('../../../assets/images/day.png')}
       gradientValues={['#000000da', '#00000061', '#00000061']}
     >
       {!!murderedPlayer || !voting ? (

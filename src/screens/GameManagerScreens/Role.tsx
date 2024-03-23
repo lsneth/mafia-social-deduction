@@ -37,14 +37,15 @@ export default function Role() {
       role = {
         image:
           sex === 'male'
-            ? require('../../assets/images/commonfolkM.png')
-            : require('../../assets/images/commonfolkF.png'),
+            ? require('../../../assets/images/commonfolkM.png')
+            : require('../../../assets/images/commonfolkF.png'),
         winCondition: en['role.commonfolk-win-condition.description'],
       }
       break
     case 'mafia':
       role = {
-        image: sex === 'male' ? require('../../assets/images/mafiaM.png') : require('../../assets/images/mafiaF.png'),
+        image:
+          sex === 'male' ? require('../../../assets/images/mafiaM.png') : require('../../../assets/images/mafiaF.png'),
         winCondition: en['role.mafia-win-condition.description'],
         detail: en['role.mafia-detail.description'],
       }
@@ -53,8 +54,8 @@ export default function Role() {
       role = {
         image:
           sex === 'male'
-            ? require('../../assets/images/detectiveM.png')
-            : require('../../assets/images/detectiveF.png'),
+            ? require('../../../assets/images/detectiveM.png')
+            : require('../../../assets/images/detectiveF.png'),
         winCondition: en['role.detective-win-condition.description'],
         detail: en['role.detective-detail.description'],
       }

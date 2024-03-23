@@ -1,6 +1,6 @@
 import { signOut, updateUserProfile } from '../services/userServices'
 
-type Role = 'commonfolk' | 'detective' | 'mafia' | null
+export type Role = 'commonfolk' | 'detective' | 'mafia' | null
 type CauseOfDeath = 'murder' | 'lynching' | null
 type Sex = 'male' | 'female'
 export type ChangeType = 'INSERT' | 'UPDATE' | 'DELETE'
