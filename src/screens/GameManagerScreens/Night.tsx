@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
-import ParentView from '../components/ParentView'
-import Text from '../components/Text'
-import BottomView from '../components/BottomView'
-import { useGame } from '../providers/GameProvider'
-import en from '../locales/en.json'
-import PlayerGrid from '../components/PlayerGrid'
-import Separator from '../components/Separator'
-import { updateGame, updatePlayer } from '../services/gameServices'
-import Button from '../components/Button'
+import ParentView from '../../components/ParentView'
+import Text from '../../components/Text'
+import BottomView from '../../components/BottomView'
+import { useGame } from '../../providers/GameProvider'
+import en from '../../locales/en.json'
+import PlayerGrid from '../../components/PlayerGrid'
+import Separator from '../../components/Separator'
+import { updateGame, updatePlayer } from '../../services/gameServices'
+import Button from '../../components/Button'
 
 export default function Night() {
   const [dotCount, setDotCount] = useState<1 | 2 | 3>(1)
@@ -35,7 +35,7 @@ export default function Night() {
 
   if (votedPlayerId.current) {
     if (gamePhase === 'mafia') {
-      updatePlayer({ gameId, playerId: votedPlayerId.current, change: { murdered: true } })
+      updatePlayer({ gameId, playerId: votedPlayerId.current, change: { causeOfDeath: 'murder' } })
       votedPlayerId.current = undefined
       players?.forEach((player) => {
         updatePlayer({ gameId, playerId: player.playerId, change: { selectedPlayerId: null } })
@@ -50,23 +50,30 @@ export default function Night() {
       gradientValues={['#000000', 'transparent', 'transparent']}
     >
       <Text size="lg">{en['night.night.heading']}</Text>
-      <Separator size={30} />
+      <Separator />
 
       {player.role === gamePhase ? (
         <>
+          <Text>{gamePhase === 'mafia' ? en['night.mafia.description'] : en['night.detective.description']}</Text>
+          <Separator size={30} />
           <PlayerGrid />
           {player.role === 'detective' && votedPlayerId.current && (
             <>
-              <Text size="lg">
+              <Text size="md">
                 {`${votedPlayer?.firstName} ${votedPlayer?.role === 'mafia' ? en['night.is-a-mafia.description'] : en['night.is-not-a-mafia.description']}`}
               </Text>
-              <Button
-                onPress={() => {
-                  updateGame({ gameId, hostId: hostId ?? '', change: { gamePhase: 'commonfolk' } })
-                }}
-              >
-                {en['event.continue.action']}
-              </Button>
+              <BottomView>
+                <Button
+                  onPress={() => {
+                    updateGame({ gameId, hostId: hostId ?? '', change: { gamePhase: 'commonfolk' } })
+                    players?.forEach((player) => {
+                      updatePlayer({ gameId, playerId: player.playerId, change: { selectedPlayerId: null } })
+                    })
+                  }}
+                >
+                  {en['event.continue.action']}
+                </Button>
+              </BottomView>
             </>
           )}
         </>

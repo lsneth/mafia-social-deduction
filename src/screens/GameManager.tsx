@@ -1,9 +1,9 @@
 import React from 'react'
 import { useGame } from '../providers/GameProvider'
-import Day from './Day'
-import Night from './Night'
+import Day from './GameManagerScreens/Day'
+import Night from './GameManagerScreens/Night'
 import Text from '../components/Text'
-import Role from './Role'
+import Role from './GameManagerScreens/Role'
 
 export default function GameManager(): JSX.Element {
   const { gamePhase } = useGame()

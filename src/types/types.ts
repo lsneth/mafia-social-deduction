@@ -1,7 +1,7 @@
 import { signOut, updateUserProfile } from '../services/userServices'
 
 type Role = 'commonfolk' | 'detective' | 'mafia' | null
-type CauseOfDeath = 'murder' | 'execution' | null
+type CauseOfDeath = 'murder' | 'lynching' | null
 type Sex = 'male' | 'female'
 export type ChangeType = 'INSERT' | 'UPDATE' | 'DELETE'
 export type UserId = string // todo

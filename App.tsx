@@ -11,7 +11,7 @@ import Lobby from './src/screens/Lobby'
 import Join from './src/screens/Join'
 import GameProvider from './src/providers/GameProvider'
 import CreateAccount from './src/screens/CreateAccount'
-import Role from './src/screens/Role'
+import Role from './src/screens/GameManagerScreens/Role'
 import GameManager from './src/screens/GameManager'
 
 export type RootStackParamList = {

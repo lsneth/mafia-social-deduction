@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import ParentView from '../components/ParentView'
-import Text from '../components/Text'
-import BottomView from '../components/BottomView'
-import { useGame } from '../providers/GameProvider'
-import { useUser } from '../providers/UserProvider'
-import en from '../locales/en.json'
-import { updateGame } from '../services/gameServices'
+import ParentView from '../../components/ParentView'
+import Text from '../../components/Text'
+import BottomView from '../../components/BottomView'
+import { useGame } from '../../providers/GameProvider'
+import { useUser } from '../../providers/UserProvider'
+import en from '../../locales/en.json'
+import { updateGame } from '../../services/gameServices'
 
 export default function Role() {
   const { player, gameId } = useGame()

@@ -9,7 +9,7 @@ export async function updatePlayer({
 }: {
   gameId: GameContext['gameId']
   playerId: Player['playerId']
-  change: Record<string, string | boolean | null>
+  change: Partial<Player>
 }): Promise<void> {
   await supabase
     .schema('game_sessions')
