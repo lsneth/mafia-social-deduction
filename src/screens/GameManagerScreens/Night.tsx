@@ -56,7 +56,7 @@ export default function Night() {
         <>
           <Text>{gamePhase === 'mafia' ? en['night.mafia.description'] : en['night.detective.description']}</Text>
           <Separator size={30} />
-          <PlayerGrid />
+          <PlayerGrid selectable={player.isAlive} />
           {player.role === 'detective' && !!votedPlayerId.current && (
             <>
               <Text size="md">

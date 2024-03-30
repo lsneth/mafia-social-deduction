@@ -107,7 +107,7 @@ export default function Day() {
         <>
           <Text size="sm">{en['day.vote-for.description']}</Text>
           <Separator size={40} />
-          {!gameLoading ? <PlayerGrid voteCounts={voteCounts} /> : <></>}
+          {!gameLoading ? <PlayerGrid voteCounts={voteCounts} selectable={player.isAlive} /> : <></>}
           {playerIdWithMostVotes === 'tie' && <Text>{en['day.tie.description']}</Text>}
         </>
       )}
