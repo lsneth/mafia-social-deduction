@@ -23,7 +23,6 @@ export default function Account({
 }) {
   const {
     user: { email, id, firstName: dbFirstName, lastName: dbLastName, sex },
-
     updateUserProfile,
     signOut,
     loading: userLoading,

@@ -44,12 +44,12 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
           const { id, updatedAt, firstName, lastName, statsId, sex } = profile ?? {}
 
           setUser({
-            id,
-            updatedAt,
-            firstName,
-            lastName,
-            statsId,
-            sex,
+            id: id ?? '',
+            updatedAt: updatedAt ?? '',
+            firstName: firstName ?? '',
+            lastName: lastName ?? '',
+            statsId: statsId ?? '',
+            sex: sex ?? 'male',
             email: session.user.email ?? '',
           })
         })
@@ -76,14 +76,7 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     await updateUserProfileService({ id, firstName, lastName, sex }).then(() => {
       if (session?.user?.id) {
         getUserProfile(session.user.id).then((profile) => {
-          const {
-            id,
-            updated_at: updatedAt,
-            first_name: firstName,
-            last_name: lastName,
-            stats_id: statsId,
-            sex,
-          } = profile ?? {}
+          const { id, updatedAt, firstName, lastName, statsId, sex } = profile ?? {}
 
           setUser({
             id: id ?? '',

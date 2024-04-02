@@ -32,17 +32,13 @@ export async function updateUserProfile({
   try {
     const updates = {
       id: id,
-      first_name: firstName,
-      last_name: lastName,
-      updated_at: new Date(),
+      firstName: firstName,
+      lastName: lastName,
+      updatedAt: new Date(),
       sex,
     }
 
-    const { error } = await supabase.schema('public').from('profiles').upsert(updates)
-
-    if (error) {
-      throw error
-    }
+    console.log(await supabase.schema('public').from('profiles').upsert(updates))
   } catch (error) {
     if (error instanceof Error) {
       Alert.alert(error.message)
