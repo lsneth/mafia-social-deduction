@@ -2,7 +2,7 @@
 
 ## Purpose
 
-I've always really enjoyed the social deduction genre. Games like [The Resistance](https://boardgamegeek.com/boardgame/41114/resistance), [Salem 1692](https://boardgamegeek.com/boardgame/175549/salem-1692), and [Secret Hitler](https://boardgamegeek.com/boardgame/188834/secret-hitler) just never get old for me. In my opinion, the biggest problem with the genre in general is the logistics. You have to have a moderator, the moderator has to be unbiased and not give anything away, it's easy to accidentally drop a card when passing out the roles and then you have to re-deal, etc.
+I've always really enjoyed the social deduction genre. Games like [The Resistance](https://boardgamegeek.com/boardgame/41114/resistance), [Salem 1692](https://boardgamegeek.com/boardgame/175549/salem-1692), and [Secret Hitler](https://boardgamegeek.com/boardgame/188834/secret-hitler) just never get old for me. In my opinion, the biggest problem with the genre in general is the logistics. You have to have a moderator, the moderator has to be unbiased and not give anything away, cards and movement make noise when reaching across the table at night, it's easy to accidentally drop a card when passing out the roles and then you have to re-deal, etc.
 
 This app will take away all of that and shave the game down as close as possible to a pure social deduction experience. Obviously the most classic social deduction game is mafia (or werewolf). Everyone loves it, but it isn't necessarily the most fun. This app will serve as a template, stepping stool, or first trial at developing an easy, seamless social deduction experience that can be built off of to develop more involved social deduction games in the future.
 
