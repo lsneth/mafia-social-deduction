@@ -33,12 +33,10 @@ export const defaultGameContextValue: GameContext = {
   gamePhase: null,
 }
 
-export const defaultUser: User & { email: string } = {
+export const defaultUser: User = {
   id: '',
-  updatedAt: '',
   firstName: '',
   lastName: '',
-  statsId: '',
   sex: 'male' as 'male',
   email: '',
 }

@@ -18,7 +18,7 @@ export const useUser = (): UserContextType => {
 export default function UserProvider({ children }: { children: JSX.Element }): JSX.Element {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const [user, setUser] = useState<User & { email: string }>(defaultUser)
+  const [user, setUser] = useState<User>(defaultUser)
 
   // get session
   useEffect(() => {
@@ -35,22 +35,19 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
     setLoading(false)
   }, [])
 
-  // get user data
+  // get user data, save it in state
   useEffect(() => {
     setLoading(true)
     if (session) {
       getUserProfile(session.user.id)
         .then((profile) => {
-          const { id, updatedAt, firstName, lastName, statsId, sex } = profile ?? {}
-
+          const { id, first_name: firstName, last_name: lastName, sex, email } = profile ?? {}
           setUser({
-            id: id ?? '',
-            updatedAt: updatedAt ?? '',
-            firstName: firstName ?? '',
-            lastName: lastName ?? '',
-            statsId: statsId ?? '',
-            sex: sex ?? 'male',
-            email: session.user.email ?? '',
+            id,
+            firstName,
+            lastName,
+            sex,
+            email,
           })
         })
         .then(() => setLoading(false))
@@ -61,32 +58,14 @@ export default function UserProvider({ children }: { children: JSX.Element }): J
   }, [session])
 
   // update user data
-  async function updateUserProfile({
-    id,
-    firstName,
-    lastName,
-    sex,
-  }: {
-    id: string
-    firstName: string
-    lastName: string
-    sex: 'male' | 'female'
-  }) {
+  async function updateUserProfile({ id, firstName, lastName, sex, email }: Partial<User>) {
     setLoading(true)
-    await updateUserProfileService({ id, firstName, lastName, sex }).then(() => {
+    await updateUserProfileService({ id, firstName, lastName, sex, email }).then(() => {
       if (session?.user?.id) {
         getUserProfile(session.user.id).then((profile) => {
-          const { id, updatedAt, firstName, lastName, statsId, sex } = profile ?? {}
+          const { id, first_name: firstName, last_name: lastName, sex, email } = profile ?? {}
 
-          setUser({
-            id: id ?? '',
-            updatedAt: updatedAt ?? '',
-            firstName: firstName ?? '',
-            lastName: lastName ?? '',
-            statsId: statsId ?? '',
-            sex: sex ?? 'male',
-            email: session.user.email ?? '',
-          })
+          setUser({ id, firstName, lastName, sex, email })
         })
       }
     })
@@ -118,19 +97,9 @@ function UserProviderBase({
   loading,
 }: {
   children: JSX.Element
-  user: User & { email: string }
+  user: User
   signOut: () => void
-  updateUserProfile: ({
-    id,
-    firstName,
-    lastName,
-    sex,
-  }: {
-    id: string
-    firstName: string
-    lastName: string
-    sex: 'male' | 'female'
-  }) => Promise<void>
+  updateUserProfile: (update: Partial<User>) => Promise<void>
   loading: boolean
 }) {
   return <UserContext.Provider value={{ user, updateUserProfile, signOut, loading }}>{children}</UserContext.Provider>

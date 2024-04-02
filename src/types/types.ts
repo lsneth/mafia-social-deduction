@@ -13,17 +13,24 @@ export type RoleCount = {
   total: number
 }
 
+export type BackendUser = {
+  id: UserId
+  first_name: string | null
+  last_name: string | null
+  sex: Sex
+  email: string
+}
+
 export type User = {
   id: UserId
-  updatedAt: string | null
   firstName: string | null
   lastName: string | null
-  statsId: string
   sex: Sex
+  email: string
 }
 
 export type UserContext = {
-  user: User & { email: string }
+  user: User
   updateUserProfile: typeof updateUserProfile
   signOut: typeof signOut
   loading: boolean

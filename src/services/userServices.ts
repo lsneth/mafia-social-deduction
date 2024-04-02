@@ -1,9 +1,9 @@
 import { supabase } from '../lib/supabase'
 import { Alert } from 'react-native'
-import { User } from '../types/types'
+import { BackendUser, User } from '../types/types'
 
 // gets user data
-export async function getUserProfile(userId: string): Promise<User | null> {
+export async function getUserProfile(userId: string): Promise<BackendUser> {
   const { data, error } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
 
   // TODO: error message
@@ -20,25 +20,18 @@ export async function getUserProfile(userId: string): Promise<User | null> {
 // updates a user profile
 export async function updateUserProfile({
   id,
-  firstName,
-  lastName,
+  firstName: first_name,
+  lastName: last_name,
   sex,
-}: {
-  id: string
-  firstName: string
-  lastName: string
-  sex: 'male' | 'female'
-}) {
+  email,
+}: Partial<User>): Promise<void> {
   try {
-    const updates = {
-      id: id,
-      firstName: firstName,
-      lastName: lastName,
-      updatedAt: new Date(),
-      sex,
-    }
+    // we only want to update the fields that are passed in as props
+    const update = Object.entries({ id, first_name, last_name, sex, email })
+      .filter(([, value]) => value !== undefined)
+      .reduce((obj, [key, value]) => ({ ...obj, [key]: value }), {})
 
-    const { error } = await supabase.schema('public').from('profiles').upsert(updates)
+    const { error } = await supabase.schema('public').from('profiles').upsert(update)
 
     if (error) {
       throw error
