@@ -66,10 +66,11 @@ export async function addUserToGame({
   const { data: users } = await supabase.schema('public').from('profiles').select('*').eq('id', userId)
   const user = users?.[0] ?? {}
   // TODO: replace row in game table if it already exists
+
   await supabase.schema('game_sessions').from(gameId).insert({
     playerId: userId,
-    firstName: user.firstName,
-    lastName: user.lastName,
+    firstName: user.first_name,
+    lastName: user.last_name,
     isHost: isHost,
   })
 }
