@@ -10,7 +10,6 @@ import TextInput from '../components/TextInput'
 import ParentView from '../components/ParentView'
 import Text from '../components/Text'
 import en from '../locales/en.json'
-import navigate from '../helpers/navigate'
 
 export default function Login({
   route,
@@ -75,10 +74,17 @@ export default function Login({
         onPress={async () => {
           await signInWithEmail()
           route.params.firstLogin
-            ? navigate({
-                navigation,
-                nextRoute: 'Account',
-                params: { loadInEditMode: true },
+            ? navigation.reset({
+                index: 1,
+                routes: [
+                  {
+                    name: 'Home',
+                  },
+                  {
+                    name: 'Account',
+                    params: { loadInEditMode: true },
+                  },
+                ],
               })
             : navigation.navigate('Home')
         }}
