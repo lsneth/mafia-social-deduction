@@ -10,7 +10,7 @@ export default function HostScreen() {
         alignItems: 'center',
       }}
     >
-      <Link href="/123456/day" asChild>
+      <Link href="/123456" asChild>
         <Pressable>
           <Text>Host a game</Text>
         </Pressable>

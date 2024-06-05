@@ -4,7 +4,7 @@ export default function RootLayout() {
   return (
     <Stack>
       <Stack.Screen name="[gameId]" />
-      <Stack.Screen name="+not-found.tsx" />
+      <Stack.Screen name="+not-found" />
       <Stack.Screen name="account" />
       <Stack.Screen name="create-account" />
       <Stack.Screen name="host" />
