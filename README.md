@@ -1,40 +1,50 @@
-# Mafia: Social Deduction
+# Welcome to your Expo app 👋
 
-## Purpose
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-I've always really enjoyed the social deduction genre. Games like [The Resistance](https://boardgamegeek.com/boardgame/41114/resistance), [Salem 1692](https://boardgamegeek.com/boardgame/175549/salem-1692), and [Secret Hitler](https://boardgamegeek.com/boardgame/188834/secret-hitler) just never get old for me. In my opinion, the biggest problem with the genre in general is the logistics. You have to have a moderator, the moderator has to be unbiased and not give anything away, cards and movement make noise when reaching across the table at night, it's easy to accidentally drop a card when passing out the roles and then you have to re-deal, etc.
+## Get started
 
-This app will take away all of that and shave the game down as close as possible to a pure social deduction experience. Obviously the most classic social deduction game is mafia (or werewolf). Everyone loves it, but it isn't necessarily the most fun. This app will serve as a template, stepping stool, or first trial at developing an easy, seamless social deduction experience that can be built off of to develop more involved social deduction games in the future.
+1. Install dependencies
 
-## Stack
+   ```bash
+   npm install
+   ```
 
-The front-end of _Mafia: Social Deduction_ is written in [TypeScript](https://www.typescriptlang.org/) using the [React Native](https://reactnative.dev/) framework and the back-end is built in [Supabase](https://supabase.com/). Data such as player stats and user info are stored in Supabase tables, while in-game state is tracked and shared over WebSockets, made simple with Supabase's [realtime](https://supabase.com/docs/guides/realtime) database functionality provided through their [JavaScript Client Library](https://supabase.com/docs/reference/javascript/installing).
+2. Start the app
 
-## Future Plans
+   ```bash
+    npx expo start
+   ```
 
-### 1. Minimum Viable Product
+In the output, you'll find options to open the app in a
 
-- Finish the in-game experience
-  - In-game role viewer
-  - In-game history viewer
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-### 2. App Store and Play Store Deployment
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-### 3. Feature Development
+## Get a fresh project
 
-- Track player stats and provide a way to view them
-  - wins/losses
-  - wins/losses by role
-  - total games played
-  - total games played by role
-  - total votes for/against
-  - number of times you've been murdered
-  - number of times you've been voted to be hung
-  - number of times you've been investigated
-  - number of times you've finished the game alive
-  - etc
-- Create and develop more role options
+When you're ready, run:
 
-### 4. Repeat the Process with Other Games
+```bash
+npm run reset-project
+```
 
-I have some ideas for some really cool (_I_ think) original social deduction games. This app will be a large building block in developing those in the future.
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+
+## Learn more
+
+To learn more about developing your project with Expo, look at the following resources:
+
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+
+## Join the community
+
+Join our community of developers creating universal apps.
+
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
