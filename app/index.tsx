@@ -14,8 +14,8 @@ export default function HomeScreen() {
         alignItems: 'center',
       }}
     >
-      <Text>Mafia</Text>
-      <Text>Social Deduction</Text>
+      <Text style={{ fontFamily: 'Oswald_700Bold', fontSize: 80 }}>MAFIA</Text>
+      <Text style={{ fontFamily: 'CrimsonText_400Regular', fontSize: 25 }}>Social Deduction</Text>
 
       <Link href="/join" asChild>
         <Pressable>

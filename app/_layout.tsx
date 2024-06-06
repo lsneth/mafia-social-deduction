@@ -1,7 +1,20 @@
 import { Stack } from 'expo-router'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { useFonts as useOswald, Oswald_700Bold } from '@expo-google-fonts/oswald'
+import { useFonts as useCrimsonText, CrimsonText_400Regular } from '@expo-google-fonts/crimson-text'
 
 export default function RootLayout() {
+  let [oswaldLoaded, oswaldError] = useOswald({
+    Oswald_700Bold,
+  })
+  let [crimsonTextLoaded, crimsonTextError] = useCrimsonText({
+    CrimsonText_400Regular,
+  })
+
+  if ((!oswaldLoaded && !oswaldError) || (!crimsonTextLoaded && !crimsonTextError)) {
+    return null
+  }
+
   return (
     <SafeAreaProvider>
       <Stack
