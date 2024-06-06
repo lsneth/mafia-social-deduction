@@ -18,7 +18,7 @@ export default function HomeScreen() {
           <Text>Join Game</Text>
         </Pressable>
       </Link>
-      <Link href="/host" asChild>
+      <Link href="/467958" replace asChild>
         <Pressable>
           <Text>Host Game</Text>
         </Pressable>

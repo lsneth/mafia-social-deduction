@@ -2,7 +2,12 @@ import { Stack } from 'expo-router'
 
 export default function DayLayout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerTitle: () => <></>,
+        headerTransparent: true,
+      }}
+    >
       <Stack.Screen name="(tabs)" />
     </Stack>
   )
