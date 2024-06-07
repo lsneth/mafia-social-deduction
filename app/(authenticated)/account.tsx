@@ -2,17 +2,20 @@ import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
 import { StyleSheet, View, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
-import { Session } from '@supabase/supabase-js'
+import { useAuth } from '@/providers/AuthProvider'
 
-export default function Account({ session }: { session: Session }) {
+export default function AccountScreen() {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState('')
   const [website, setWebsite] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const { session } = useAuth()
 
   useEffect(() => {
     if (session) getProfile()
   }, [session])
+
+  console.log('session:', session)
 
   async function getProfile() {
     try {
