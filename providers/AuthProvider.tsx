@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { Alert } from 'react-native'
+import { useRouter, useNavigation } from 'expo-router'
+import resetRouter from '@/helpers/resetRouter'
 
 const AuthContext = React.createContext<{
   signIn: (email: string, password: string) => void
@@ -28,6 +30,8 @@ export function useAuth() {
 }
 
 export function AuthProvider(props: React.PropsWithChildren) {
+  const router = useRouter()
+  const navigation = useNavigation()
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -52,12 +56,18 @@ export function AuthProvider(props: React.PropsWithChildren) {
       value={{
         signIn: async (email: string, password: string) => {
           setLoading(true)
+
           const { error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
           })
 
-          if (error) Alert.alert(error.message)
+          if (error) {
+            Alert.alert(error.message)
+          } else {
+            resetRouter(router, navigation, `/home`)
+          }
+
           setLoading(false)
         },
         signUp: async (email: string, password: string) => {
@@ -70,7 +80,12 @@ export function AuthProvider(props: React.PropsWithChildren) {
             password: password,
           })
 
-          if (error) Alert.alert(error.message)
+          if (error) {
+            Alert.alert(error.message)
+          } else {
+            resetRouter(router, navigation, `/home`)
+          }
+
           if (!session) Alert.alert('Please check your inbox for email verification!')
           setLoading(false)
         },

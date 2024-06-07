@@ -2,7 +2,7 @@ import { Text, View, Pressable } from 'react-native'
 import { Link } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-export default function HomeScreen() {
+export default function AuthenticatedHomeScreen() {
   const insets = useSafeAreaInsets()
   return (
     <View

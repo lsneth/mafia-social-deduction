@@ -40,14 +40,10 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <SafeAreaProvider>
-        <Stack
-          screenOptions={{
-            headerTitle: () => <></>,
-            headerTransparent: true,
-          }}
-        >
-          <Stack.Screen name="(authenticated)" />
-          <Stack.Screen name="index" />
+        <Stack>
+          <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerTitle: 'Sign in or Sign up' }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>
     </AuthProvider>

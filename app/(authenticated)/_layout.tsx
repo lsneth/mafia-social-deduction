@@ -14,17 +14,12 @@ export default function AuthenticatedLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerTitle: () => <></>,
-        headerTransparent: true,
-      }}
-    >
-      <Stack.Screen name="[gameId]" />
-      <Stack.Screen name="+not-found" />
-      <Stack.Screen name="account" />
-      <Stack.Screen name="home" />
-      <Stack.Screen name="join" />
+    <Stack>
+      <Stack.Screen name="[gameId]" options={{ headerShown: false }} />
+      <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+      <Stack.Screen name="account" options={{ headerTitle: 'Account' }} />
+      <Stack.Screen name="home" options={{ headerShown: false }} />
+      <Stack.Screen name="join" options={{ headerTitle: 'Join Game' }} />
     </Stack>
   )
 }
