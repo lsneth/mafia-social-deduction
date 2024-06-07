@@ -19,6 +19,7 @@ export default function AuthScreen() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
+          testID="email-input"
         />
       </ThemedView>
       <ThemedView style={styles.verticallySpaced}>
@@ -30,6 +31,7 @@ export default function AuthScreen() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
+          testID="password-input"
         />
       </ThemedView>
       <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
