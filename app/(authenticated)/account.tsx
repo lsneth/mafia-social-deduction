@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabase'
-import { StyleSheet, View, Alert } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { useAuth } from '@/providers/AuthProvider'
+import { ThemedView } from '@/components/ThemedView'
 
 export default function AccountScreen() {
   const [loading, setLoading] = useState(true)
@@ -14,8 +15,6 @@ export default function AccountScreen() {
   useEffect(() => {
     if (session) getProfile()
   }, [session])
-
-  console.log('session:', session)
 
   async function getProfile() {
     try {
@@ -81,29 +80,29 @@ export default function AccountScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
         <Input label="Email" value={session?.user?.email} disabled />
-      </View>
-      <View style={styles.verticallySpaced}>
+      </ThemedView>
+      <ThemedView style={styles.verticallySpaced}>
         <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
-      </View>
-      <View style={styles.verticallySpaced}>
+      </ThemedView>
+      <ThemedView style={styles.verticallySpaced}>
         <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
-      </View>
+      </ThemedView>
 
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+      <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           title={loading ? 'Loading ...' : 'Update'}
           onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
           disabled={loading}
         />
-      </View>
+      </ThemedView>
 
-      <View style={styles.verticallySpaced}>
+      <ThemedView style={styles.verticallySpaced}>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   )
 }
 

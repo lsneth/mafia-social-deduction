@@ -1,11 +1,12 @@
-import { Text, View } from 'react-native'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedView } from '@/components/ThemedView'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function RoleScreen() {
   const insets = useSafeAreaInsets()
 
   return (
-    <View
+    <ThemedView
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
@@ -14,7 +15,7 @@ export default function RoleScreen() {
         alignItems: 'center',
       }}
     >
-      <Text>Role</Text>
-    </View>
+      <ThemedText>Role</ThemedText>
+    </ThemedView>
   )
 }

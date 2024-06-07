@@ -1,11 +1,12 @@
-import { Text, View } from 'react-native'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedView } from '@/components/ThemedView'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function GameEndScreen() {
   const insets = useSafeAreaInsets()
 
   return (
-    <View
+    <ThemedView
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
@@ -14,7 +15,7 @@ export default function GameEndScreen() {
         alignItems: 'center',
       }}
     >
-      <Text>Game End</Text>
-    </View>
+      <ThemedText>Game End</ThemedText>
+    </ThemedView>
   )
 }

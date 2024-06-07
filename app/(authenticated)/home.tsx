@@ -1,37 +1,37 @@
-import { Text, View, Pressable } from 'react-native'
 import { Link } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedPressable } from '@/components/ThemedPressable'
+import { ThemedView } from '@/components/ThemedView'
 
 export default function AuthenticatedHomeScreen() {
   const insets = useSafeAreaInsets()
   return (
-    <View
+    <ThemedView
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
       }}
+      // className="bg-pink-700"
     >
-      <Text style={{ fontFamily: 'Oswald_700Bold', fontSize: 80 }}>MAFIA</Text>
-      <Text style={{ fontFamily: 'CrimsonText_400Regular', fontSize: 25 }}>Social Deduction</Text>
+      <ThemedText type="title">MAFIA</ThemedText>
+      <ThemedText type="subtitle">Social Deduction</ThemedText>
 
       <Link href="/join" asChild>
-        <Pressable>
-          <Text>Join Game</Text>
-        </Pressable>
+        <ThemedPressable>
+          <ThemedText>Join Game</ThemedText>
+        </ThemedPressable>
       </Link>
       <Link href="/467958" replace asChild>
-        <Pressable>
-          <Text>Host Game</Text>
-        </Pressable>
+        <ThemedPressable>
+          <ThemedText>Host Game</ThemedText>
+        </ThemedPressable>
       </Link>
       <Link href="/account" asChild>
-        <Pressable>
-          <Text>Account</Text>
-        </Pressable>
+        <ThemedPressable>
+          <ThemedText>Account</ThemedText>
+        </ThemedPressable>
       </Link>
-    </View>
+    </ThemedView>
   )
 }

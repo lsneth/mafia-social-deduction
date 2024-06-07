@@ -1,5 +1,7 @@
+import { ThemedPressable } from '@/components/ThemedPressable'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedView } from '@/components/ThemedView'
 import { Link, useLocalSearchParams } from 'expo-router'
-import { Pressable, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function LobbyScreen() {
@@ -7,7 +9,7 @@ export default function LobbyScreen() {
   const insets = useSafeAreaInsets()
 
   return (
-    <View
+    <ThemedView
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
@@ -16,13 +18,13 @@ export default function LobbyScreen() {
         alignItems: 'center',
       }}
     >
-      <Text>Lobby</Text>
-      <Text>Game ID: {gameId} </Text>
+      <ThemedText>Lobby</ThemedText>
+      <ThemedText>Game ID: {gameId} </ThemedText>
       <Link href={`/${gameId}/day`} replace asChild>
-        <Pressable>
-          <Text>Start Game</Text>
-        </Pressable>
+        <ThemedPressable>
+          <ThemedText>Start Game</ThemedText>
+        </ThemedPressable>
       </Link>
-    </View>
+    </ThemedView>
   )
 }

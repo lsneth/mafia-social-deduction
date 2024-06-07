@@ -1,8 +1,11 @@
 import { useNavigation, router } from 'expo-router'
 import { useState } from 'react'
-import { Text, View, TextInput, Pressable } from 'react-native'
+import { TextInput } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import resetRouter from '@/helpers/resetRouter'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedPressable } from '@/components/ThemedPressable'
+import { ThemedView } from '@/components/ThemedView'
 
 export default function JoinScreen() {
   const [gameId, setGameId] = useState<string>('')
@@ -10,7 +13,7 @@ export default function JoinScreen() {
   const insets = useSafeAreaInsets()
 
   return (
-    <View
+    <ThemedView
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
@@ -19,11 +22,11 @@ export default function JoinScreen() {
         alignItems: 'center',
       }}
     >
-      <Text>Enter a room code to join a game.</Text>
+      <ThemedText>Enter a room code to join a game.</ThemedText>
       <TextInput onChangeText={setGameId} value={gameId} />
-      <Pressable onPress={() => resetRouter(router, navigation, `/${gameId}`)}>
-        <Text>Join Game</Text>
-      </Pressable>
-    </View>
+      <ThemedPressable onPress={() => resetRouter(router, navigation, `/${gameId}`)}>
+        <ThemedText>Join Game</ThemedText>
+      </ThemedPressable>
+    </ThemedView>
   )
 }

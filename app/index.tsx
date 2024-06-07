@@ -1,26 +1,27 @@
+import { ThemedPressable } from '@/components/ThemedPressable'
+import { ThemedText } from '@/components/ThemedText'
+import { ThemedView } from '@/components/ThemedView'
 import { Link } from 'expo-router'
-import React from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Pressable } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets()
   return (
-    <View
+    <ThemedView
       style={{
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
       }}
     >
-      <Text>Mafia: Social Deduction</Text>
+      <ThemedText>Mafia: Social Deduction</ThemedText>
       <Link href="/auth" asChild>
-        <Pressable>
-          <Text>Sign in</Text>
-        </Pressable>
+        <ThemedPressable>
+          {/* <Pressable className={`bg-red-800 m-1.5 p-3 rounded-full`}> */}
+          <ThemedText>Sign in</ThemedText>
+          {/* </Pressable> */}
+        </ThemedPressable>
       </Link>
-    </View>
+    </ThemedView>
   )
 }

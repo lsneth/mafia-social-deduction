@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { useAuth } from '@/providers/AuthProvider'
+import { ThemedView } from '@/components/ThemedView'
 
 export default function AuthScreen() {
   const { loading, signIn, signUp } = useAuth()
@@ -9,8 +10,8 @@ export default function AuthScreen() {
   const [password, setPassword] = useState('')
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+    <ThemedView style={styles.container}>
+      <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
         <Input
           label="Email"
           leftIcon={{ type: 'font-awesome', name: 'envelope' }}
@@ -19,8 +20,8 @@ export default function AuthScreen() {
           placeholder="email@address.com"
           autoCapitalize={'none'}
         />
-      </View>
-      <View style={styles.verticallySpaced}>
+      </ThemedView>
+      <ThemedView style={styles.verticallySpaced}>
         <Input
           label="Password"
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
@@ -30,14 +31,14 @@ export default function AuthScreen() {
           placeholder="Password"
           autoCapitalize={'none'}
         />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
+      </ThemedView>
+      <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
         <Button title="Sign in" disabled={loading} onPress={() => signIn(email, password)} />
-      </View>
-      <View style={styles.verticallySpaced}>
+      </ThemedView>
+      <ThemedView style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUp(email, password)} />
-      </View>
-    </View>
+      </ThemedView>
+    </ThemedView>
   )
 }
 

@@ -1,12 +1,12 @@
+import { ThemedText } from '@/components/ThemedText'
 import { useAuth } from '@/providers/AuthProvider'
 import { Redirect, Stack } from 'expo-router'
-import { Text } from 'react-native'
 
 export default function AuthenticatedLayout() {
   const { session, loading } = useAuth()
 
   if (loading) {
-    return <Text>Loading...</Text>
+    return <ThemedText>Loading...</ThemedText>
   }
 
   if (!session) {
