@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "backgroundColor": "#000",
+      },
+    ]
+  }
+>
+  <Text
+    style={
+      [
+        {
+          "color": "#fff",
+        },
+        {
+          "fontSize": 18,
+          "lineHeight": 28,
+        },
+        {
+          "textAlign": "center",
+        },
+        {
+          "fontFamily": "CrimsonText_400Regular",
+        },
+      ]
+    }
+  >
+    This is a unit test for the ThemedView component
+  </Text>
+</View>
+`;
