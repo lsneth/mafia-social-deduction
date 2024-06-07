@@ -2,7 +2,6 @@ import { ThemedPressable } from '@/components/ThemedPressable'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import { Link } from 'expo-router'
-import { Pressable } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function HomeScreen() {

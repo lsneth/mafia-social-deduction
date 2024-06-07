@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Pressable } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { useAuth } from '@/providers/AuthProvider'
 import { ThemedView } from '@/components/ThemedView'
@@ -35,7 +35,7 @@ export default function AuthScreen() {
         />
       </ThemedView>
       <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signIn(email, password)} />
+        <Button title="Sign in" disabled={loading} onPress={() => signIn(email, password)} testID="sign-in" />
       </ThemedView>
       <ThemedView style={styles.verticallySpaced}>
         <Button title="Sign up" disabled={loading} onPress={() => signUp(email, password)} />

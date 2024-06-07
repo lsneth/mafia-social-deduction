@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
 import { StyleSheet, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
@@ -12,11 +12,7 @@ export default function AccountScreen() {
   const [avatarUrl, setAvatarUrl] = useState('')
   const { session } = useAuth()
 
-  useEffect(() => {
-    if (session) getProfile()
-  }, [session])
-
-  async function getProfile() {
+  const getProfile = useCallback(async () => {
     try {
       setLoading(true)
       if (!session?.user) throw new Error('No user on the session!')
@@ -42,7 +38,11 @@ export default function AccountScreen() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [session?.user])
+
+  useEffect(() => {
+    if (session) getProfile()
+  }, [getProfile, session])
 
   async function updateProfile({
     username,
