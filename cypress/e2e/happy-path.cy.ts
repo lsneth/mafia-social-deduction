@@ -2,7 +2,8 @@ describe('happy path', () => {
   it('happy path works', () => {
     // /
     cy.visit('http://localhost:8081/')
-    cy.contains('Mafia: Social Deduction')
+    cy.contains('MAFIA')
+    cy.contains('Social Deduction')
     cy.contains('Sign in').click()
 
     // /auth

@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import resetRouter from '@/helpers/resetRouter'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedPressable } from '@/components/ThemedPressable'
-import { ThemedView } from '@/components/ThemedView'
+import ThemedView from '@/components/ThemedView'
 
 export default function JoinScreen() {
   const [gameId, setGameId] = useState<string>('')

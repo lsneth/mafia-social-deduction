@@ -2,7 +2,7 @@ import { Link } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { ThemedText } from '@/components/ThemedText'
 import { ThemedPressable } from '@/components/ThemedPressable'
-import { ThemedView } from '@/components/ThemedView'
+import ThemedView from '@/components/ThemedView'
 
 export default function AuthenticatedHomeScreen() {
   const insets = useSafeAreaInsets()

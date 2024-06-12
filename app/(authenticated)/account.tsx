@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase'
 import { StyleSheet, Alert } from 'react-native'
 import { Button, Input } from '@rneui/themed'
 import { useAuth } from '@/providers/AuthProvider'
-import { ThemedView } from '@/components/ThemedView'
+import ThemedView from '@/components/ThemedView'
 
 export default function AccountScreen() {
   const [loading, setLoading] = useState(true)

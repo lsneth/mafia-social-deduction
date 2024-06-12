@@ -1,24 +1,25 @@
 import { ThemedPressable } from '@/components/ThemedPressable'
 import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
-import { Link } from 'expo-router'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import ThemedView from '@/components/ThemedView'
+import { Link, Redirect } from 'expo-router'
+import backgroundImage from '../assets/images/mafia-bg.png'
+import { useAuth } from '@/providers/AuthProvider'
+import { View } from 'react-native'
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets()
+  const { session } = useAuth()
+
+  if (session) return <Redirect href="/home" />
+
   return (
-    <ThemedView
-      style={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-      }}
-    >
-      <ThemedText>Mafia: Social Deduction</ThemedText>
+    <ThemedView bgImageSrc={backgroundImage} className="justify-between">
+      <View>
+        <ThemedText type="title">MAFIA</ThemedText>
+        <ThemedText type="subtitle">Social Deduction</ThemedText>
+      </View>
       <Link href="/auth" asChild>
         <ThemedPressable>
-          {/* <Pressable className={`bg-red-800 m-1.5 p-3 rounded-full`}> */}
           <ThemedText>Sign in</ThemedText>
-          {/* </Pressable> */}
         </ThemedPressable>
       </Link>
     </ThemedView>
