@@ -18,7 +18,7 @@ export default function ThemedView({ bgImageSrc, className, ...rest }: ThemedVie
           }}
           className="flex-1"
         >
-          <View className={`flex-1 p-8 ${className}`} {...rest} />
+          <View className={`flex-1 p-8 items-center ${className}`} {...rest} />
         </View>
       </ImageBackground>
     </View>
