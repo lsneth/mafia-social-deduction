@@ -6,6 +6,7 @@ import { NativeWindStyleSheet } from 'nativewind'
 import { AuthProvider } from '@/providers/AuthProvider'
 import { AppState } from 'react-native'
 import { supabase } from '@/lib/supabase'
+import colors from '../constants/colors'
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -42,7 +43,19 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <Stack>
           <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
-          <Stack.Screen name="auth" options={{ headerTitle: 'Sign in or Sign up' }} />
+          <Stack.Screen
+            name="auth"
+            options={{
+              headerTitle: 'Sign in or Sign up',
+              headerTitleStyle: {
+                color: colors.mafiaWhite,
+                fontFamily: 'CrimsonText_400Regular',
+              },
+              headerShadowVisible: false,
+              headerTintColor: colors.mafiaWhite, // back arrow
+              headerStyle: { backgroundColor: colors.mafiaBlack },
+            }}
+          />
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>

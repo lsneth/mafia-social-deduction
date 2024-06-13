@@ -1,7 +1,12 @@
 import { forwardRef } from 'react'
 import { Pressable, type PressableProps } from 'react-native'
 
-export const ThemedPressable = forwardRef(function ThemedPressable(props: PressableProps, ref) {
+export default forwardRef(function ThemedPressable(props: PressableProps, ref): JSX.Element {
   const { className, ...rest } = props
-  return <Pressable className={`bg-red-800 p-3 w-full max-w-sm rounded-full ${className}`} {...rest} />
+  return (
+    <Pressable
+      className={`bg-mafiaAccent p-3 w-full max-w-sm my-1 rounded-full flex items-center ${className}`}
+      {...rest}
+    />
+  )
 })

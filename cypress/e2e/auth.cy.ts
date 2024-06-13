@@ -1,5 +1,5 @@
-describe('happy path', () => {
-  it('happy path works', () => {
+describe('auth', () => {
+  it('sign in works', () => {
     // /
     cy.visit('http://localhost:8081/')
     cy.contains('MAFIA')
@@ -7,8 +7,12 @@ describe('happy path', () => {
     cy.contains('Sign in').click()
 
     // /auth
+    cy.contains('Sign in or Sign up')
+    cy.contains('Email')
     cy.get('[data-testid="email-input"]').type(Cypress.env('automated_testing_email'))
+    cy.contains('Password')
     cy.get('[data-testid="password-input"]').type(Cypress.env('automated_testing_password'))
+    cy.get('[data-testid="sign-up"]')
     cy.get('[data-testid="sign-in"]').click()
 
     // /home

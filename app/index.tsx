@@ -1,10 +1,10 @@
-import { ThemedPressable } from '@/components/ThemedPressable'
+import ThemedPressable from '@/components/ThemedPressable'
 import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
 import { Link, Redirect } from 'expo-router'
 import backgroundImage from '../assets/images/mafia-bg.png'
 import { useAuth } from '@/providers/AuthProvider'
-import { View } from 'react-native'
+import Group from '@/components/Group'
 
 export default function HomeScreen() {
   const { session } = useAuth()
@@ -13,10 +13,10 @@ export default function HomeScreen() {
 
   return (
     <ThemedView bgImageSrc={backgroundImage} className="justify-between">
-      <View>
+      <Group>
         <ThemedText type="title">MAFIA</ThemedText>
         <ThemedText type="subtitle">Social Deduction</ThemedText>
-      </View>
+      </Group>
       <Link href="/auth" asChild>
         <ThemedPressable>
           <ThemedText>Sign in</ThemedText>
