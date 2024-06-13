@@ -7,6 +7,8 @@ import { ThemedText } from '@/components/ThemedText'
 import ThemedTextInput from '@/components/ThemedTextInput'
 import Group from '@/components/Group'
 import Spacer from '@/components/Spacer'
+import { ActivityIndicator } from 'react-native'
+import colors from '@/constants/colors'
 
 export default function AuthScreen() {
   const { loading, signIn, signUp, session } = useAuth()
@@ -17,6 +19,12 @@ export default function AuthScreen() {
   const displayErrorMessage = (message: string): void => setErrorMessage(message)
 
   if (session) return <Redirect href="/home" />
+  if (loading)
+    return (
+      <ThemedView className="justify-center">
+        <ActivityIndicator color={colors.mafiaAccent} size="large" />
+      </ThemedView>
+    )
 
   return (
     <ThemedView className="justify-between">

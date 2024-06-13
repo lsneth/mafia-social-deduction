@@ -4,6 +4,6 @@ describe('unauthenticated home screen', () => {
     cy.contains('MAFIA')
     cy.contains('Social Deduction')
     cy.contains('Sign in').click()
-    cy.url().should('include', '/auth')
+    cy.location('pathname').should('eq', '/auth')
   })
 })

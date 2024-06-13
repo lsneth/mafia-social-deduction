@@ -9,7 +9,7 @@ describe('sign in', () => {
     cy.get('[data-testid="sign-up"]')
     cy.get('[data-testid="sign-in"]').click()
 
-    cy.url().should('include', '/home')
+    cy.location('pathname').should('eq', '/home')
   })
 
   it('displays alert for sign in attempt with invalid credentials', () => {
