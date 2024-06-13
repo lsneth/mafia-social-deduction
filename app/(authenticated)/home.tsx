@@ -25,7 +25,7 @@ export default function AuthenticatedHomeScreen() {
           </ThemedPressable>
         </Link>
         <Link href="/account" asChild>
-          <ThemedPressable>
+          <ThemedPressable secondary>
             <ThemedText>Account</ThemedText>
           </ThemedPressable>
         </Link>

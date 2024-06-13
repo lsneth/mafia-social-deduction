@@ -6,11 +6,15 @@ import ThemedPressable from '@/components/ThemedPressable'
 import { ThemedText } from '@/components/ThemedText'
 import ThemedTextInput from '@/components/ThemedTextInput'
 import Group from '@/components/Group'
+import Spacer from '@/components/Spacer'
 
 export default function AuthScreen() {
   const { loading, signIn, signUp, session } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState<string>('')
+
+  const displayErrorMessage = (message: string): void => setErrorMessage(message)
 
   if (session) return <Redirect href="/home" />
 
@@ -34,12 +38,27 @@ export default function AuthScreen() {
           autoCapitalize={'none'}
           testID="password-input"
         />
+        {errorMessage ? (
+          <>
+            <Spacer />
+            <ThemedText>{errorMessage}</ThemedText>
+          </>
+        ) : null}
       </Group>
       <Group>
-        <ThemedPressable disabled={loading} onPress={() => signIn(email, password)} testID="sign-in">
+        <ThemedPressable
+          disabled={loading}
+          onPress={() => signIn(email, password, displayErrorMessage)}
+          testID="sign-in"
+        >
           <ThemedText>Sign in</ThemedText>
         </ThemedPressable>
-        <ThemedPressable disabled={loading} onPress={() => signUp(email, password)} testID="sign-up">
+        <ThemedPressable
+          secondary
+          disabled={loading}
+          onPress={() => signUp(email, password, displayErrorMessage)}
+          testID="sign-up"
+        >
           <ThemedText>Sign up</ThemedText>
         </ThemedPressable>
       </Group>

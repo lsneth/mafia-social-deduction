@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
-import { Alert } from 'react-native'
 import { useRouter, useNavigation } from 'expo-router'
 import resetRouter from '@/helpers/resetRouter'
 
 const AuthContext = React.createContext<{
-  signIn: (email: string, password: string) => void
-  signUp: (email: string, password: string) => void
+  signIn: (email: string, password: string, displayErrorMessage: (message: string) => void) => void
+  signUp: (email: string, password: string, displayErrorMessage: (message: string) => void) => void
   signOut: () => void
   session?: Session | null
   loading: boolean
@@ -54,7 +53,7 @@ export function AuthProvider(props: React.PropsWithChildren) {
   return (
     <AuthContext.Provider
       value={{
-        signIn: async (email: string, password: string) => {
+        signIn: async (email: string, password: string, displayErrorMessage: (message: string) => void) => {
           setLoading(true)
 
           const { error } = await supabase.auth.signInWithPassword({
@@ -63,14 +62,14 @@ export function AuthProvider(props: React.PropsWithChildren) {
           })
 
           if (error) {
-            Alert.alert(error.message)
+            displayErrorMessage(error.message)
           } else {
             resetRouter(router, navigation, `/home`)
           }
 
           setLoading(false)
         },
-        signUp: async (email: string, password: string) => {
+        signUp: async (email: string, password: string, displayErrorMessage: (message: string) => void) => {
           setLoading(true)
           const {
             data: { session },
@@ -81,12 +80,13 @@ export function AuthProvider(props: React.PropsWithChildren) {
           })
 
           if (error) {
-            Alert.alert(error.message)
+            displayErrorMessage(error.message)
           } else {
-            resetRouter(router, navigation, `/home`)
+            if (!session)
+              displayErrorMessage('Please check your inbox for email verification! Then return here to sign in.')
+            else resetRouter(router, navigation, `/home`)
           }
 
-          if (!session) Alert.alert('Please check your inbox for email verification!')
           setLoading(false)
         },
         signOut: () => {
