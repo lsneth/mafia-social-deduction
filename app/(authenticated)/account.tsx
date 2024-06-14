@@ -1,16 +1,22 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
-import { StyleSheet, Alert } from 'react-native'
-import { Button, Input } from '@rneui/themed'
+import { Alert } from 'react-native'
 import { useAuth } from '@/providers/AuthProvider'
 import ThemedView from '@/components/ThemedView'
+import ThemedPressable from '@/components/ThemedPressable'
+import { ThemedText } from '@/components/ThemedText'
+import ThemedTextInput from '@/components/ThemedTextInput'
+import Group from '@/components/Group'
+import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
+import Toggle from '@/components/Toggle'
 
 export default function AccountScreen() {
+  const { session, loading: sessionLoading } = useAuth()
   const [loading, setLoading] = useState(true)
-  const [username, setUsername] = useState('')
-  const [website, setWebsite] = useState('')
-  const [avatarUrl, setAvatarUrl] = useState('')
-  const { session } = useAuth()
+  const [name, setName] = useState<string>('')
+  const [sex, setSex] = useState<'male' | 'female'>('male')
+
+  const toggleSex = () => setSex((prev) => (prev === 'male' ? 'female' : 'male'))
 
   const getProfile = useCallback(async () => {
     try {
@@ -19,7 +25,7 @@ export default function AccountScreen() {
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select(`username, website, avatar_url`)
+        .select('name, sex')
         .eq('id', session?.user.id)
         .single()
       if (error && status !== 406) {
@@ -27,9 +33,8 @@ export default function AccountScreen() {
       }
 
       if (data) {
-        setUsername(data.username)
-        setWebsite(data.website)
-        setAvatarUrl(data.avatar_url)
+        setName(data.name)
+        setSex(data.sex)
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -44,24 +49,15 @@ export default function AccountScreen() {
     if (session) getProfile()
   }, [getProfile, session])
 
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string
-    website: string
-    avatar_url: string
-  }) {
+  async function updateProfile({ name, sex }: { name: string; sex: 'male' | 'female' }) {
     try {
       setLoading(true)
       if (!session?.user) throw new Error('No user on the session!')
 
       const updates = {
         id: session?.user.id,
-        username,
-        website,
-        avatar_url,
+        name,
+        sex,
         updated_at: new Date(),
       }
 
@@ -79,44 +75,30 @@ export default function AccountScreen() {
     }
   }
 
+  if (sessionLoading || loading) return <ThemedActivityIndicator />
+
   return (
-    <ThemedView style={styles.container}>
-      <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
-      </ThemedView>
-      <ThemedView style={styles.verticallySpaced}>
-        <Input label="Username" value={username || ''} onChangeText={(text) => setUsername(text)} />
-      </ThemedView>
-      <ThemedView style={styles.verticallySpaced}>
-        <Input label="Website" value={website || ''} onChangeText={(text) => setWebsite(text)} />
-      </ThemedView>
-
-      <ThemedView style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? 'Loading ...' : 'Update'}
-          onPress={() => updateProfile({ username, website, avatar_url: avatarUrl })}
-          disabled={loading}
+    <ThemedView className="justify-between">
+      <Group>
+        <ThemedText>{session?.user?.email}</ThemedText>
+        <ThemedTextInput
+          label="Name"
+          value={name || ''}
+          placeholder="John Doe"
+          onChangeText={(text) => setName(text)}
         />
-      </ThemedView>
+        <Toggle onValueChange={toggleSex} value={sex === 'male'} trueDisplayValue="male" falseDisplayValue="female" />
+      </Group>
 
-      <ThemedView style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </ThemedView>
+      <Group>
+        <ThemedPressable onPress={() => updateProfile({ name, sex })} disabled={loading}>
+          <ThemedText>{loading ? 'Loading ...' : 'Update'}</ThemedText>
+        </ThemedPressable>
+
+        <ThemedPressable onPress={() => supabase.auth.signOut()}>
+          <ThemedText>Sign Out</ThemedText>
+        </ThemedPressable>
+      </Group>
     </ThemedView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: 'stretch',
-  },
-  mt20: {
-    marginTop: 20,
-  },
-})
