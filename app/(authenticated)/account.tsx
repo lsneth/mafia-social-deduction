@@ -86,8 +86,15 @@ export default function AccountScreen() {
           value={name || ''}
           placeholder="John Doe"
           onChangeText={(text) => setName(text)}
+          testID="name-input"
         />
-        <Toggle onValueChange={toggleSex} value={sex === 'male'} trueDisplayValue="male" falseDisplayValue="female" />
+        <Toggle
+          onValueChange={toggleSex}
+          value={sex === 'male'}
+          trueDisplayValue="male"
+          falseDisplayValue="female"
+          testID="sex-toggle"
+        />
       </Group>
 
       <Group>
