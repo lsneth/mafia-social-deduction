@@ -3,7 +3,7 @@ import { TextInput, TextInputProps, View } from 'react-native'
 import { ThemedText } from './ThemedText'
 import colors from '../constants/colors'
 
-type ThemedTextInputProps = TextInputProps & { label: string }
+type ThemedTextInputProps = TextInputProps & { label?: string }
 
 export default function ThemedTextInput({ className, label, ...rest }: ThemedTextInputProps): JSX.Element {
   return (

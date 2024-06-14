@@ -16,12 +16,12 @@ export default function AuthenticatedHomeScreen() {
       <Group>
         <Link href="/join" asChild>
           <ThemedPressable>
-            <ThemedText>Join Game</ThemedText>
+            <ThemedText>Join Room</ThemedText>
           </ThemedPressable>
         </Link>
         <Link href="/467958" replace asChild>
           <ThemedPressable>
-            <ThemedText>Host Game</ThemedText>
+            <ThemedText>Host Room</ThemedText>
           </ThemedPressable>
         </Link>
         <Link href="/account" asChild>

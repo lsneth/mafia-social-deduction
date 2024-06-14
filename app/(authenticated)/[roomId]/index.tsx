@@ -5,7 +5,7 @@ import { Link, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function LobbyScreen() {
-  const { gameId } = useLocalSearchParams()
+  const { roomId } = useLocalSearchParams()
   const insets = useSafeAreaInsets()
 
   return (
@@ -19,10 +19,10 @@ export default function LobbyScreen() {
       }}
     >
       <ThemedText>Lobby</ThemedText>
-      <ThemedText>Game ID: {gameId} </ThemedText>
-      <Link href={`/${gameId}/day`} replace asChild>
+      <ThemedText>Room ID: {roomId} </ThemedText>
+      <Link href={`/${roomId}/day`} replace asChild>
         <ThemedPressable>
-          <ThemedText>Start Game</ThemedText>
+          <ThemedText>Create Room</ThemedText>
         </ThemedPressable>
       </Link>
     </ThemedView>

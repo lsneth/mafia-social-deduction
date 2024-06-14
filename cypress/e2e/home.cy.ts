@@ -11,8 +11,8 @@ describe('Home', () => {
 
     cy.contains('MAFIA')
     cy.contains('Social Deduction')
-    cy.contains('Join Game')
-    cy.contains('Host Game')
+    cy.contains('Join Room')
+    cy.contains('Host Room')
     cy.contains('Account')
   })
 
