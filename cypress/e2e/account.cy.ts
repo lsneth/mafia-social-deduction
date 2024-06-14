@@ -1,3 +1,38 @@
+describe('Account', () => {
+  it('should redirect to auth screen if a session does not exist', () => {
+    cy.visit('http://localhost:8081/account')
+
+    cy.location('pathname').should('eq', '/auth')
+  })
+
+  it('should render all elements', () => {
+    cy.signIn()
+    cy.visit('http://localhost:8081/account')
+
+    cy.contains('Account')
+    cy.contains(Cypress.env('AUTOMATED_TESTING_EMAIL'))
+    cy.contains('Name')
+    cy.contains('female')
+    cy.contains('male')
+    cy.contains('Update')
+    cy.contains('Sign Out')
+  })
+
+  // TODO: figure out how to access value of sex toggle, then test it
+
+  it('should update name', () => {
+    cy.signIn()
+    cy.visit('http://localhost:8081/account')
+
+    const randomString = generateRandomString()
+    cy.get('[data-testid="name-input"]').clear()
+    cy.get('[data-testid="name-input"]').type(randomString)
+    cy.contains('Update').click()
+    cy.reload()
+    cy.get('[data-testid="name-input"]').should('have.value', randomString)
+  })
+})
+
 function generateRandomString(): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   let randomString = ''
@@ -7,32 +42,3 @@ function generateRandomString(): string {
   }
   return randomString
 }
-
-describe('Account', () => {
-  it('should render correctly', () => {
-    cy.login()
-    cy.contains('Account').click()
-
-    cy.contains('Account')
-    cy.contains(Cypress.env('automated_testing_email'))
-    cy.contains('Name')
-    cy.contains('female')
-    cy.contains('male')
-    cy.contains('Update')
-    cy.contains('Sign Out')
-  })
-
-  // TODO: figure out how to access value of sex toggle, then test it
-  it.only('should update name', () => {
-    cy.login()
-    cy.contains('Account').click()
-
-    const randomString = generateRandomString()
-    cy.get('[data-testid="name-input"]').clear()
-    cy.get('[data-testid="name-input"]').type(randomString)
-    cy.contains('Update').click()
-    cy.go('back')
-    cy.contains('Account').click()
-    cy.get('[data-testid="name-input"]').should('have.value', randomString)
-  })
-})

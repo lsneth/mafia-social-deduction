@@ -1,18 +1,13 @@
-import { ThemedText } from '@/components/ThemedText'
 import { useAuth } from '@/providers/AuthProvider'
 import { Redirect, Stack } from 'expo-router'
 import colors from '@/constants/colors'
+import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 
 export default function AuthenticatedLayout() {
   const { session, loading } = useAuth()
 
-  if (loading) {
-    return <ThemedText>Loading...</ThemedText>
-  }
-
-  if (!session) {
-    return <Redirect href="/" />
-  }
+  if (loading) return <ThemedActivityIndicator />
+  if (!session) return <Redirect href="/auth" />
 
   return (
     <Stack>

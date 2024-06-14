@@ -102,7 +102,7 @@ export default function AccountScreen() {
           <ThemedText>{loading ? 'Loading ...' : 'Update'}</ThemedText>
         </ThemedPressable>
 
-        <ThemedPressable onPress={() => supabase.auth.signOut()}>
+        <ThemedPressable secondary onPress={() => supabase.auth.signOut()}>
           <ThemedText>Sign Out</ThemedText>
         </ThemedPressable>
       </Group>

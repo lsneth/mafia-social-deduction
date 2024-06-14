@@ -3,12 +3,14 @@ import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
 import { Link, Redirect } from 'expo-router'
 import backgroundImage from '../assets/images/mafia-bg.png'
-import { useAuth } from '@/providers/AuthProvider'
 import Group from '@/components/Group'
+import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
+import { useAuth } from '@/providers/AuthProvider'
 
 export default function HomeScreen() {
-  const { session } = useAuth()
+  const { session, loading } = useAuth()
 
+  if (loading) return <ThemedActivityIndicator />
   if (session) return <Redirect href="/home" />
 
   return (
