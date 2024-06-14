@@ -1,11 +1,9 @@
 import ThemedPressable from '@/components/ThemedPressable'
 import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
-import { Link, useLocalSearchParams } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function LobbyScreen() {
-  const { roomId } = useLocalSearchParams()
   const insets = useSafeAreaInsets()
 
   return (
@@ -19,12 +17,10 @@ export default function LobbyScreen() {
       }}
     >
       <ThemedText>Lobby</ThemedText>
-      <ThemedText>Room ID: {roomId} </ThemedText>
-      <Link href={`/${roomId}/day`} replace asChild>
-        <ThemedPressable>
-          <ThemedText>Start Game</ThemedText>
-        </ThemedPressable>
-      </Link>
+      <ThemedText>Game ID: game-id </ThemedText>
+      <ThemedPressable>
+        <ThemedText>Start Game</ThemedText>
+      </ThemedPressable>
     </ThemedView>
   )
 }

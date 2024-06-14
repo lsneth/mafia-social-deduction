@@ -6,15 +6,15 @@ import ThemedTextInput from '@/components/ThemedTextInput'
 import Spacer from '@/components/Spacer'
 
 export default function JoinScreen() {
-  const [roomId, setRoomId] = useState<string>('')
+  const [gameId, setGameId] = useState<string>('')
 
   return (
     <ThemedView className="justify-center">
-      <ThemedText>Enter a code to join a room.</ThemedText>
+      <ThemedText>Enter a code to join a game.</ThemedText>
       <Spacer />
-      <ThemedTextInput onChangeText={setRoomId} value={roomId} placeholder="XXXXXX" testID="room-id-input" />
-      <ThemedPressable onPress={() => console.log('join room')} testID="join-room-button">
-        <ThemedText>Join Room</ThemedText>
+      <ThemedTextInput onChangeText={setGameId} value={gameId} placeholder="XXXXXX" testID="game-id-input" />
+      <ThemedPressable onPress={() => console.log('join game')} testID="join-game-button">
+        <ThemedText>Join Game</ThemedText>
       </ThemedPressable>
       <Spacer size={20} />
     </ThemedView>

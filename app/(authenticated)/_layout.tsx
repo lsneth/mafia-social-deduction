@@ -13,8 +13,7 @@ export default function AuthenticatedLayout() {
   return (
     <ProfileProvider>
       <Stack>
-        <Stack.Screen name="[roomId]" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+        <Stack.Screen name="game" options={{ headerShown: false }} />
         <Stack.Screen
           name="account"
           options={{
@@ -32,7 +31,7 @@ export default function AuthenticatedLayout() {
         <Stack.Screen
           name="join"
           options={{
-            headerTitle: 'Join Room',
+            headerTitle: 'Join Game',
             headerTitleStyle: {
               color: colors.mafiaWhite,
               fontFamily: 'CrimsonText_400Regular',

@@ -9,9 +9,9 @@ describe('Home', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/join')
 
-    cy.contains('Join Room')
-    cy.contains('Enter a code to join a room.')
-    cy.get('[data-testid="room-id-input"]')
-    cy.get('[data-testid="join-room-button"]')
+    cy.contains('Join Game')
+    cy.contains('Enter a code to join a game.')
+    cy.get('[data-testid="game-id-input"]')
+    cy.get('[data-testid="join-game-button"]')
   })
 })
