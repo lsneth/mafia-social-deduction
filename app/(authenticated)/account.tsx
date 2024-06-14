@@ -1,6 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../lib/supabase'
-import { Alert } from 'react-native'
 import { useAuth } from '@/providers/AuthProvider'
 import ThemedView from '@/components/ThemedView'
 import ThemedPressable from '@/components/ThemedPressable'
@@ -9,71 +7,22 @@ import ThemedTextInput from '@/components/ThemedTextInput'
 import Group from '@/components/Group'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import Toggle from '@/components/Toggle'
+import { useProfile } from '@/providers/ProfileProvider'
+import { useEffect, useState } from 'react'
 
 export default function AccountScreen() {
   const { session, loading: sessionLoading } = useAuth()
-  const [loading, setLoading] = useState(true)
-  const [name, setName] = useState<string>('')
-  const [sex, setSex] = useState<'male' | 'female'>('male')
+  const { name, sex, loading, updateProfile } = useProfile()
 
-  const toggleSex = () => setSex((prev) => (prev === 'male' ? 'female' : 'male'))
+  const [newName, setNewName] = useState<string | null>(null)
+  const [newSex, setNewSex] = useState<'male' | 'female'>('male')
 
-  const getProfile = useCallback(async () => {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const { data, error, status } = await supabase
-        .from('profiles')
-        .select('name, sex')
-        .eq('id', session?.user.id)
-        .single()
-      if (error && status !== 406) {
-        throw error
-      }
-
-      if (data) {
-        setName(data.name)
-        setSex(data.sex)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }, [session?.user])
+  const toggleSex = () => setNewSex((prev) => (prev === 'male' ? 'female' : 'male'))
 
   useEffect(() => {
-    if (session) getProfile()
-  }, [getProfile, session])
-
-  async function updateProfile({ name, sex }: { name: string; sex: 'male' | 'female' }) {
-    try {
-      setLoading(true)
-      if (!session?.user) throw new Error('No user on the session!')
-
-      const updates = {
-        id: session?.user.id,
-        name,
-        sex,
-        updated_at: new Date(),
-      }
-
-      const { error } = await supabase.from('profiles').upsert(updates)
-
-      if (error) {
-        throw error
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
+    setNewName(name)
+    setNewSex(sex)
+  }, [name, sex])
 
   if (sessionLoading || loading) return <ThemedActivityIndicator />
 
@@ -83,14 +32,14 @@ export default function AccountScreen() {
         <ThemedText>{session?.user?.email}</ThemedText>
         <ThemedTextInput
           label="Name"
-          value={name || ''}
+          value={newName || ''}
           placeholder="John Doe"
-          onChangeText={(text) => setName(text)}
+          onChangeText={(text) => setNewName(text)}
           testID="name-input"
         />
         <Toggle
           onValueChange={toggleSex}
-          value={sex === 'male'}
+          value={newSex === 'male'}
           trueDisplayValue="male"
           falseDisplayValue="female"
           testID="sex-toggle"
@@ -98,8 +47,8 @@ export default function AccountScreen() {
       </Group>
 
       <Group>
-        <ThemedPressable onPress={() => updateProfile({ name, sex })} disabled={loading}>
-          <ThemedText>{loading ? 'Loading ...' : 'Update'}</ThemedText>
+        <ThemedPressable onPress={() => updateProfile({ name: newName, sex: newSex })}>
+          <ThemedText>Update</ThemedText>
         </ThemedPressable>
 
         <ThemedPressable secondary onPress={() => supabase.auth.signOut()}>
