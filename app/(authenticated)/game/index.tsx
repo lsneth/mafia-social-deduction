@@ -1,23 +1,18 @@
+import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import ThemedPressable from '@/components/ThemedPressable'
 import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useGame } from '@/providers/GameProvider'
 
 export default function LobbyScreen() {
-  const insets = useSafeAreaInsets()
+  const { gameId, loading } = useGame()
+
+  if (loading) return <ThemedActivityIndicator />
 
   return (
-    <ThemedView
-      style={{
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    <ThemedView>
       <ThemedText>Lobby</ThemedText>
-      <ThemedText>Game ID: game-id </ThemedText>
+      <ThemedText>Game ID: {gameId} </ThemedText>
       <ThemedPressable>
         <ThemedText>Start Game</ThemedText>
       </ThemedPressable>

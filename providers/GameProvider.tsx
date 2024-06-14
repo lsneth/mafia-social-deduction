@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
+import { useLocalSearchParams } from 'expo-router'
 
-const GameContext = React.createContext<{ test: string }>({ test: 'test' })
+const GameContext = createContext<{
+  gameId: string
+  loading: boolean
+}>({
+  gameId: '',
+  loading: false,
+})
 
 export function useGame() {
-  const value = React.useContext(GameContext)
+  const value = useContext(GameContext)
   if (value === undefined) {
     throw new Error('useGame must be wrapped in a <GameProvider />')
   }
@@ -11,6 +18,25 @@ export function useGame() {
   return value
 }
 
-export function GameProvider(props: React.PropsWithChildren) {
-  return <GameContext.Provider value={{ test: 'test' }}>{props.children}</GameContext.Provider>
+export function GameProvider(props: PropsWithChildren) {
+  const [gameId, setGameId] = useState('')
+  const [loading] = useState(false)
+  const { id } = useLocalSearchParams<{ id?: string }>()
+
+  useEffect(() => {
+    if (id) {
+      setGameId(id)
+    }
+  }, [id])
+
+  return (
+    <GameContext.Provider
+      value={{
+        gameId,
+        loading,
+      }}
+    >
+      {props.children}
+    </GameContext.Provider>
+  )
 }

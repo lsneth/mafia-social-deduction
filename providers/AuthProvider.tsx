@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
 import { Session } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useNavigation } from 'expo-router'
 import resetRouter from '@/helpers/resetRouter'
 
-const AuthContext = React.createContext<{
+const AuthContext = createContext<{
   signIn: (email: string, password: string, displayErrorMessage: (message: string) => void) => void
   signUp: (email: string, password: string, displayErrorMessage: (message: string) => void) => void
   signOut: () => void
@@ -20,7 +20,7 @@ const AuthContext = React.createContext<{
 
 // This hook can be used to access the user info.
 export function useAuth() {
-  const value = React.useContext(AuthContext)
+  const value = useContext(AuthContext)
   if (value === undefined) {
     throw new Error('useAuth must be wrapped in a <AuthProvider />')
   }
@@ -28,7 +28,7 @@ export function useAuth() {
   return value
 }
 
-export function AuthProvider(props: React.PropsWithChildren) {
+export function AuthProvider(props: PropsWithChildren) {
   const router = useRouter()
   const navigation = useNavigation()
   const [session, setSession] = useState<Session | null>(null)

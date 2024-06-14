@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { PropsWithChildren, createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useAuth } from './AuthProvider'
 import { supabase } from '@/lib/supabase'
 import { Alert } from 'react-native'
 
-const ProfileContext = React.createContext<{
+const ProfileContext = createContext<{
   name: string | null
   sex: 'male' | 'female'
   loading: boolean
@@ -16,7 +16,7 @@ const ProfileContext = React.createContext<{
 })
 
 export function useProfile() {
-  const value = React.useContext(ProfileContext)
+  const value = useContext(ProfileContext)
   if (value === undefined) {
     throw new Error('useProfile must be wrapped in a <ProfileProvider />')
   }
@@ -24,7 +24,7 @@ export function useProfile() {
   return value
 }
 
-export function ProfileProvider(props: React.PropsWithChildren) {
+export function ProfileProvider(props: PropsWithChildren) {
   const { session } = useAuth()
   const [name, setName] = useState<string | null>(null)
   const [sex, setSex] = useState<'male' | 'female'>('male')

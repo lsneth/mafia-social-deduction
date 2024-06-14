@@ -1,4 +1,4 @@
-import { TailwindSize } from '@/types/TailwindSize'
+import { TailwindSize } from '@/types/tailwind-types'
 import { View } from 'react-native'
 
 export default function Spacer({ size = 1 }: { size?: TailwindSize }) {
