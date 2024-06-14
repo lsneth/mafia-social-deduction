@@ -1,9 +1,6 @@
 describe('Account', () => {
   it('should render correctly', () => {
-    cy.visit('http://localhost:8081/auth')
-    cy.get('[data-testid="email-input"]').type(Cypress.env('automated_testing_email'))
-    cy.get('[data-testid="password-input"]').type(Cypress.env('automated_testing_password'))
-    cy.get('[data-testid="sign-in"]').click()
+    cy.login()
     cy.contains('Account').click()
 
     cy.contains('Account')
