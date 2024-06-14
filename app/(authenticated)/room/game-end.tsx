@@ -16,6 +16,7 @@ export default function GameEndScreen() {
       }}
     >
       <ThemedText>Game End</ThemedText>
+      <ThemedText>Play Again?</ThemedText>
     </ThemedView>
   )
 }

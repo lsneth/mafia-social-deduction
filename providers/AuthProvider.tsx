@@ -21,7 +21,7 @@ const AuthContext = React.createContext<{
 // This hook can be used to access the user info.
 export function useAuth() {
   const value = React.useContext(AuthContext)
-  if (!value) {
+  if (value === undefined) {
     throw new Error('useAuth must be wrapped in a <AuthProvider />')
   }
 

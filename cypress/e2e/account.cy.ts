@@ -24,7 +24,7 @@ describe('Account', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/account')
 
-    cy.get('[data-testid="name-input"]').clear()
+    cy.get('[data-testid="name-input"]').clear() // TODO: fix the flakiness
     const randomString = generateRandomString()
     cy.get('[data-testid="name-input"]').type(randomString)
     cy.contains('Update').click()

@@ -22,7 +22,7 @@ export default function LobbyScreen() {
       <ThemedText>Room ID: {roomId} </ThemedText>
       <Link href={`/${roomId}/day`} replace asChild>
         <ThemedPressable>
-          <ThemedText>Create Room</ThemedText>
+          <ThemedText>Start Game</ThemedText>
         </ThemedPressable>
       </Link>
     </ThemedView>
