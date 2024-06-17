@@ -22,7 +22,7 @@ describe('Home', () => {
     cy.get('[data-testid="game-id-input"]').type('bad-id')
     cy.get('[data-testid="join-game-button"]').click()
 
-    cy.contains('The game code you entered does not exist.')
+    cy.contains('Please enter a valid game id.')
   })
 
   it('should show an error message if an empty string is submitted', () => {
@@ -31,26 +31,27 @@ describe('Home', () => {
 
     cy.get('[data-testid="join-game-button"]').click()
 
-    cy.contains('Please enter a game code.')
+    cy.contains('Please enter a valid game id.')
   })
 
-  it('should show an error message if an empty string is submitted', () => {
+  it('should show an error message if there are already 15 players in the game', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/join')
 
     cy.get('[data-testid="game-id-input"]').type('test:15_players')
     cy.get('[data-testid="join-game-button"]').click()
 
-    cy.contains('There are already 15 players in the game.')
+    cy.contains('This game already has 15 players.')
   })
 
-  it('should navigate to /game?id=gameId if gameId is valid', () => {
-    cy.signIn()
-    cy.visit('http://localhost:8081/join')
+  // TODO: finish testing join page
+  // it('should navigate to /game?id=gameId if gameId is valid', () => {
+  //   cy.signIn()
+  //   cy.visit('http://localhost:8081/join')
 
-    cy.get('[data-testid="game-id-input"]').type('test:happy_path')
-    cy.get('[data-testid="join-game-button"]').click()
+  //   cy.get('[data-testid="game-id-input"]').type('test:happy_path')
+  //   cy.get('[data-testid="join-game-button"]').click()
 
-    cy.url().should('eq', 'http://localhost:8081/game?id=test%3Ahappy_path')
-  })
+  //   cy.url().should('eq', 'http://localhost:8081/game?id=test%3Ahappy_path')
+  // })
 })

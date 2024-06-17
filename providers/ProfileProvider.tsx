@@ -4,11 +4,13 @@ import { supabase } from '@/lib/supabase'
 import { Alert } from 'react-native'
 
 const ProfileContext = createContext<{
+  id: string
   name: string | null
   sex: 'male' | 'female'
   loading: boolean
   updateProfile: ({ name, sex }: { name: string | null; sex: 'male' | 'female' }) => Promise<void>
 }>({
+  id: '',
   name: null,
   sex: 'male',
   loading: true,
@@ -26,6 +28,7 @@ export function useProfile() {
 
 export function ProfileProvider(props: PropsWithChildren) {
   const { session } = useAuth()
+  const [id, setId] = useState<string>('')
   const [name, setName] = useState<string | null>(null)
   const [sex, setSex] = useState<'male' | 'female'>('male')
   const [loading, setLoading] = useState<boolean>(true)
@@ -37,7 +40,7 @@ export function ProfileProvider(props: PropsWithChildren) {
 
       const { data, error, status } = await supabase
         .from('profiles')
-        .select('name, sex')
+        .select('id, name, sex')
         .eq('id', session?.user.id)
         .single()
       if (error && status !== 406) {
@@ -45,6 +48,7 @@ export function ProfileProvider(props: PropsWithChildren) {
       }
 
       if (data) {
+        setId(data.id)
         setName(data.name)
         setSex(data.sex)
       }
@@ -88,6 +92,8 @@ export function ProfileProvider(props: PropsWithChildren) {
   }, [getProfile, session])
 
   return (
-    <ProfileContext.Provider value={{ name, sex, loading, updateProfile }}>{props.children}</ProfileContext.Provider>
+    <ProfileContext.Provider value={{ id, name, sex, loading, updateProfile }}>
+      {props.children}
+    </ProfileContext.Provider>
   )
 }

@@ -4,12 +4,19 @@ import ThemedPressable from '@/components/ThemedPressable'
 import ThemedView from '@/components/ThemedView'
 import ThemedTextInput from '@/components/ThemedTextInput'
 import Spacer from '@/components/Spacer'
-import { canJoinGame } from '@/services/game-services'
+import { joinGame } from '@/services/game-services'
 import { router } from 'expo-router'
+import { useProfile } from '@/providers/ProfileProvider'
+import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
+import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 
 export default function JoinScreen() {
   const [newGameId, setNewGameId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const { id: playerId, name: playerName } = useProfile()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  if (loading) return <ThemedActivityIndicator />
 
   return (
     <ThemedView className="justify-center">
@@ -18,11 +25,14 @@ export default function JoinScreen() {
       <ThemedTextInput onChangeText={setNewGameId} value={newGameId} placeholder="XXXXXX" testID="game-id-input" />
       <ThemedPressable
         onPress={async () => {
-          const canJoin = await canJoinGame(newGameId)
-          if (canJoin === true) {
-            router.replace(`/game?id=${newGameId}`)
+          setLoading(true)
+          const errorMessage = await joinGame(newGameId, playerId, playerName)
+          if (errorMessage) {
+            setLoading(false)
+            setErrorMessage(getUserFriendlyErrMsg(errorMessage))
           } else {
-            setErrorMessage(canJoin)
+            setLoading(false)
+            router.replace(`/game?id=${newGameId}`)
           }
         }}
         testID="join-game-button"
