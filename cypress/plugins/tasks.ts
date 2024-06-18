@@ -1,3 +1,5 @@
+// https://github.com/orgs/supabase/discussions/6177
+
 import { createClient } from '@supabase/supabase-js'
 require('dotenv').config()
 

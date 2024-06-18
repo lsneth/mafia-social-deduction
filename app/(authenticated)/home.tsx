@@ -19,7 +19,7 @@ export default function AuthenticatedHomeScreen() {
             <ThemedText>Join Game</ThemedText>
           </ThemedPressable>
         </Link>
-        <Link href="/467958" replace asChild>
+        <Link href="/game" replace asChild>
           <ThemedPressable>
             <ThemedText>Host Game</ThemedText>
           </ThemedPressable>
