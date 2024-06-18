@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { useGlobalSearchParams } from 'expo-router'
 import { useProfile } from './ProfileProvider'
 
 const GameContext = createContext<{
@@ -23,7 +23,7 @@ export function GameProvider(props: PropsWithChildren) {
   const [gameId, setGameId] = useState<string>('')
   const [loading] = useState<boolean>(false)
   const { id: playerId, name } = useProfile()
-  const { id: gameIdFromQueryParam } = useLocalSearchParams<{ id?: string }>()
+  const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id?: string }>()
 
   useEffect(() => {
     if (gameIdFromQueryParam) {

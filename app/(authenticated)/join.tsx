@@ -13,7 +13,10 @@ import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 export default function JoinScreen() {
   const [newGameId, setNewGameId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const { id: playerId, name: playerName } = useProfile()
+  const { id: playerId, name: playerName, loading: profileLoading } = useProfile()
+
+  console.log('playerIdFirst:', playerId)
+
   const [loading, setLoading] = useState<boolean>(false)
 
   if (loading) return <ThemedActivityIndicator />
@@ -38,6 +41,7 @@ export default function JoinScreen() {
           }
         }}
         testID="join-game-button"
+        disabled={profileLoading}
       >
         <ThemedText>Join Game</ThemedText>
       </ThemedPressable>

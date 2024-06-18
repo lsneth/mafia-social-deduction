@@ -20,7 +20,7 @@ describe('Account', () => {
 
   // TODO: figure out how to access value of sex toggle, then test it
 
-  it.only('should update name', () => {
+  it('should update name', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/account')
 

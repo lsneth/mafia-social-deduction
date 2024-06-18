@@ -15,39 +15,44 @@ describe('Join screen', () => {
     cy.get('[data-testid="join-game-button"]')
   })
 
-  it('should navigate to /game?id=gameId if gameId is valid', () => {
-    cy.signInNoCache() // needs to be used if we're going to log out in the same test
+  it('should navigate to /game?id=gameId if gameId is valid, should leave game', () => {
+    // This test is a bit hacky. To make this reproducible, I need to remove the player from the game after they join. Right now the best way to do that is with the UI. Since we have to leave the game anyway, I decided to test in here as well. So we join the game, make an assertion, then leave the game and make another assertion. This is not ideal, but it works for now.
+    // This also has potential to be flaky; if the test player is ever added but not removed then it will need to be manually removed.
+    // TODO: make a cy.removePlayerFromGame command. Call it at the beginning of the test instead of the end to remove flakiness.
+
+    cy.signIn()
     cy.visit('http://localhost:8081/join')
 
-    cy.get('[data-testid="game-id-input"]').type('test:happy_path')
+    cy.get('[data-testid="game-id-input"]').type('test-happy_path')
     cy.get('[data-testid="join-game-button"]').click()
 
-    cy.url().should('eq', 'http://localhost:8081/game?id=test%3Ahappy_path')
+    cy.url().should('eq', 'http://localhost:8081/game?id=test-happy_path')
 
-    cy.contains('Leave Game').click() // remove player to set up test for next time. Because of this we have to use the signInNoCache command, otherwise the cached session ends up being a logged out one.
+    cy.contains('Leave Game').click() // remove player to set up test for next time
+    cy.url().should('eq', 'http://localhost:8081/home')
   })
 
-  // TODO
-  // it('should not allow a player to join a game that they have already joined', () => {
-  //   cy.signInNoCache()
-  //   cy.visit('http://localhost:8081/join')
-
-  //   cy.get('[data-testid="game-id-input"]').type('test:happy_path')
-  //   cy.get('[data-testid="join-game-button"]').click()
-  //   cy.visit('http://localhost:8081/join')
-  //   cy.get('[data-testid="game-id-input"]').type('test:happy_path')
-  //   cy.get('[data-testid="join-game-button"]').click()
-
-  //   cy.contains('You have already joined this game.')
-
-  //   cy.contains('Leave Game').click() // remove player to set up test for next time
-  // })
-
-  it('should show an error message if a user tries to join a game but has no name', () => {
-    cy.signIn(Cypress.env('AUTOMATED_TESTING_EMAIL_NO_NAME'), Cypress.env('AUTOMATED_TESTING_PASSWORD_NO_NAME'))
+  it('should not allow a player to join a game that they have already joined', () => {
+    cy.signIn({
+      email: Cypress.env('AUTOMATED_TESTING_EMAIL_ALREADY_JOINED'),
+      password: Cypress.env('AUTOMATED_TESTING_PASSWORD_ALREADY_JOINED'),
+    })
     cy.visit('http://localhost:8081/join')
 
-    cy.get('[data-testid="game-id-input"]').type('test:happy_path')
+    cy.get('[data-testid="game-id-input"]').type('test-happy_path')
+    cy.get('[data-testid="join-game-button"]').click()
+
+    cy.contains('You have already joined this game.')
+  })
+
+  it('should show an error message if a user tries to join a game but has no name', () => {
+    cy.signIn({
+      email: Cypress.env('AUTOMATED_TESTING_EMAIL_NO_NAME'),
+      password: Cypress.env('AUTOMATED_TESTING_PASSWORD_NO_NAME'),
+    })
+    cy.visit('http://localhost:8081/join')
+
+    cy.get('[data-testid="game-id-input"]').type('test-happy_path')
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('Please add a name to your account to join a game.')
@@ -76,7 +81,7 @@ describe('Join screen', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/join')
 
-    cy.get('[data-testid="game-id-input"]').type('test:15_players')
+    cy.get('[data-testid="game-id-input"]').type('test-15_players')
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('This game already has 15 players.')
@@ -86,7 +91,7 @@ describe('Join screen', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/join')
 
-    cy.get('[data-testid="game-id-input"]').type('test:already_started')
+    cy.get('[data-testid="game-id-input"]').type('test-already_started')
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('This game has already started.')
