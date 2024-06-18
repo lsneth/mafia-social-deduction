@@ -4,12 +4,14 @@ import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
 import { useGame } from '@/providers/GameProvider'
 import { useProfile } from '@/providers/ProfileProvider'
-import { leaveGame } from '@/services/game-services'
+import { deleteGame } from '@/services/game-services'
 import { router } from 'expo-router'
+import { useState } from 'react'
 
 export default function LobbyScreen() {
-  const { gameId, loading } = useGame()
+  const { gameId } = useGame()
   const { id: playerId } = useProfile()
+  const [loading, setLoading] = useState<boolean>(false)
 
   if (loading) return <ThemedActivityIndicator />
 
@@ -20,19 +22,26 @@ export default function LobbyScreen() {
       <ThemedPressable>
         <ThemedText>Start Game</ThemedText>
       </ThemedPressable>
-      <ThemedPressable secondary testID="leave-game-button">
-        <ThemedText
-          onPress={async () => {
-            try {
-              await leaveGame(gameId, playerId)
-              router.replace('/home')
-            } catch (error) {
-              console.error(error)
-            }
-          }}
-        >
-          Leave Game
-        </ThemedText>
+      <ThemedPressable
+        secondary
+        onPress={async () => {
+          setLoading(true)
+          try {
+            const { error: deleteGameError } = await deleteGame(playerId)
+            if (deleteGameError) throw deleteGameError
+
+            router.replace('/home')
+
+            setLoading(false)
+          } catch (error) {
+            console.error(error)
+            setLoading(false)
+          }
+        }}
+        testID="leave-game-button"
+      >
+        <ThemedText>Delete Game</ThemedText>
+        {/* TODO: leave game text and functionality for non hosts */}
       </ThemedPressable>
     </ThemedView>
   )

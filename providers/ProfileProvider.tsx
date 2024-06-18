@@ -52,11 +52,11 @@ export function ProfileProvider(props: PropsWithChildren) {
         setName(data.name)
         setSex(data.sex)
       }
+      setLoading(false)
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
       }
-    } finally {
       setLoading(false)
     }
   }, [session?.user])

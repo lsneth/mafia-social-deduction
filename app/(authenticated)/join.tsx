@@ -8,15 +8,11 @@ import { joinGame } from '@/services/game-services'
 import { router } from 'expo-router'
 import { useProfile } from '@/providers/ProfileProvider'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
-import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 
 export default function JoinScreen() {
-  const [newGameId, setNewGameId] = useState<string>('')
+  const [gameId, setGameId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const { id: playerId, name: playerName, loading: profileLoading } = useProfile()
-
-  console.log('playerIdFirst:', playerId)
-
+  const { id: playerId, loading: profileLoading } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
 
   if (loading) return <ThemedActivityIndicator />
@@ -25,19 +21,26 @@ export default function JoinScreen() {
     <ThemedView className="justify-center">
       <ThemedText>Enter a code to join a game.</ThemedText>
       <Spacer />
-      <ThemedTextInput onChangeText={setNewGameId} value={newGameId} placeholder="XXXXXX" testID="game-id-input" />
+      <ThemedTextInput
+        onChangeText={(text) => setGameId(text.toUpperCase())}
+        value={gameId}
+        placeholder="XXXXXX"
+        testID="game-id-input"
+      />
       <ThemedPressable
         onPress={async () => {
           setLoading(true)
-          console.log('playerId:', playerId)
-          const errorMessage = await joinGame(newGameId, playerId, playerName)
+          try {
+            const { error } = await joinGame(gameId, playerId)
+            if (error) throw error
 
-          if (errorMessage) {
+            router.replace(`/game?id=${gameId}`)
+
             setLoading(false)
-            setErrorMessage(getUserFriendlyErrMsg(errorMessage))
-          } else {
+          } catch (error: any) {
+            console.error(error)
+            setErrorMessage(error.message)
             setLoading(false)
-            router.replace(`/game?id=${newGameId}`)
           }
         }}
         testID="join-game-button"
