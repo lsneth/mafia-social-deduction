@@ -3,10 +3,10 @@ import { useLocalSearchParams } from 'expo-router'
 import { useProfile } from './ProfileProvider'
 
 const GameContext = createContext<{
-  gameId: string | null
+  gameId: string
   loading: boolean
 }>({
-  gameId: null,
+  gameId: '',
   loading: false,
 })
 
@@ -20,7 +20,7 @@ export function useGame() {
 }
 
 export function GameProvider(props: PropsWithChildren) {
-  const [gameId, setGameId] = useState<string | null>(null)
+  const [gameId, setGameId] = useState<string>('')
   const [loading] = useState<boolean>(false)
   const { id: playerId, name } = useProfile()
   const { id: gameIdFromQueryParam } = useLocalSearchParams<{ id?: string }>()

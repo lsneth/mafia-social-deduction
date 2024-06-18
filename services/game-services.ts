@@ -23,3 +23,13 @@ export async function joinGame(
     // return error
   }
 }
+
+export async function leaveGame(gameId: string, playerId: string) {
+  try {
+    const { error } = await supabase.from(gameId).delete().eq('player_id', playerId)
+
+    if (error) throw error
+  } catch (error) {
+    console.error(error)
+  }
+}

@@ -26,7 +26,9 @@ export default function JoinScreen() {
       <ThemedPressable
         onPress={async () => {
           setLoading(true)
+          console.log('playerId:', playerId)
           const errorMessage = await joinGame(newGameId, playerId, playerName)
+
           if (errorMessage) {
             setLoading(false)
             setErrorMessage(getUserFriendlyErrMsg(errorMessage))
