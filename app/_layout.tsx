@@ -46,11 +46,12 @@ export default function RootLayout() {
           <Stack.Screen
             name="auth"
             options={{
-              headerTitle: 'Sign in or Sign up',
+              headerTitle: 'Welcome to Mafia!',
               headerTitleStyle: {
                 color: colors.mafiaWhite,
                 fontFamily: 'CrimsonText_400Regular',
               },
+              headerTitleAlign: 'center',
               headerShadowVisible: false,
               headerTintColor: colors.mafiaWhite, // back arrow
               headerStyle: { backgroundColor: colors.mafiaBlack },

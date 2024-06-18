@@ -6,13 +6,13 @@ import resetRouter from '@/helpers/resetRouter'
 
 const AuthContext = createContext<{
   signIn: (email: string, password: string, displayErrorMessage: (message: string) => void) => void
-  signUp: (email: string, password: string, displayErrorMessage: (message: string) => void) => void
+  signUp: (email: string, password: string, name: string, displayErrorMessage: (message: string) => void) => void
   signOut: () => void
   session?: Session | null
   loading: boolean
 }>({
   signIn: (email: string, password: string) => null,
-  signUp: (email: string, password: string) => null,
+  signUp: (email: string, name: string, password: string) => null,
   signOut: () => null,
   session: null,
   loading: false,
@@ -69,12 +69,24 @@ export function AuthProvider(props: PropsWithChildren) {
 
           setLoading(false)
         },
-        signUp: async (email: string, password: string, displayErrorMessage: (message: string) => void) => {
+        signUp: async (
+          email: string,
+          password: string,
+          name: string,
+          displayErrorMessage: (message: string) => void
+        ) => {
+          if (!name) return displayErrorMessage('Please enter your name.')
+
           setLoading(true)
           const {
             data: { session },
             error,
           } = await supabase.auth.signUp({
+            options: {
+              data: {
+                display_name: name,
+              },
+            },
             email: email,
             password: password,
           })

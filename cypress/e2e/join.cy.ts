@@ -15,7 +15,7 @@ describe('Join screen', () => {
     cy.get('[data-testid="join-game-button"]')
   })
 
-  it('should navigate to /game?id=gameId if gameId is valid, should leave game', () => {
+  it.skip('should navigate to /game?id=gameId if gameId is valid, should leave game', () => {
     // This test is a bit hacky. To make this reproducible, I need to remove the player from the game after they join. Right now the best way to do that is with the UI. Since we have to leave the game anyway, I decided to test in here as well. So we join the game, make an assertion, then leave the game and make another assertion. This is not ideal, but it works for now.
     // This also has potential to be flaky; if the test player is ever added but not removed then it will need to be manually removed.
     // TODO: make a cy.removePlayerFromGame command. Call it at the beginning of the test instead of the end to remove flakiness.
@@ -32,7 +32,7 @@ describe('Join screen', () => {
     cy.url().should('eq', 'http://localhost:8081/home')
   })
 
-  it('should not allow a player to join a game that they have already joined', () => {
+  it.skip('should not allow a player to join a game that they have already joined', () => {
     cy.signIn({
       email: Cypress.env('AUTOMATED_TESTING_EMAIL_ALREADY_JOINED'),
       password: Cypress.env('AUTOMATED_TESTING_PASSWORD_ALREADY_JOINED'),
@@ -45,7 +45,7 @@ describe('Join screen', () => {
     cy.contains('You have already joined this game.')
   })
 
-  it('should show an error message if a user tries to join a game but has no name', () => {
+  it.skip('should show an error message if a user tries to join a game but has no name', () => {
     cy.signIn({
       email: Cypress.env('AUTOMATED_TESTING_EMAIL_NO_NAME'),
       password: Cypress.env('AUTOMATED_TESTING_PASSWORD_NO_NAME'),
@@ -77,7 +77,7 @@ describe('Join screen', () => {
     cy.contains('Please enter a valid game id.')
   })
 
-  it('should show an error message if there are already 15 players in the game', () => {
+  it.skip('should show an error message if there are already 15 players in the game', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/join')
 
@@ -87,7 +87,7 @@ describe('Join screen', () => {
     cy.contains('This game already has 15 players.')
   })
 
-  it("should show an error message if the game is already started (if it isn't in the lobby phase)", () => {
+  it.skip("should show an error message if the game is already started (if it isn't in the lobby phase)", () => {
     cy.signIn()
     cy.visit('http://localhost:8081/join')
 

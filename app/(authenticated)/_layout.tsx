@@ -22,6 +22,7 @@ export default function AuthenticatedLayout() {
               color: colors.mafiaWhite,
               fontFamily: 'CrimsonText_400Regular',
             },
+            headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTintColor: colors.mafiaWhite, // back arrow
             headerStyle: { backgroundColor: colors.mafiaBlack },
@@ -36,6 +37,7 @@ export default function AuthenticatedLayout() {
               color: colors.mafiaWhite,
               fontFamily: 'CrimsonText_400Regular',
             },
+            headerTitleAlign: 'center',
             headerShadowVisible: false,
             headerTintColor: colors.mafiaWhite, // back arrow
             headerStyle: { backgroundColor: colors.mafiaBlack },

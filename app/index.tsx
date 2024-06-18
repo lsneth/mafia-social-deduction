@@ -19,11 +19,18 @@ export default function HomeScreen() {
         <ThemedText type="title">MAFIA</ThemedText>
         <ThemedText type="subtitle">Social Deduction</ThemedText>
       </Group>
-      <Link href="/auth" asChild>
-        <ThemedPressable>
-          <ThemedText>Sign in</ThemedText>
-        </ThemedPressable>
-      </Link>
+      <Group>
+        <Link href="/auth?has-account=true" asChild>
+          <ThemedPressable>
+            <ThemedText>Sign in</ThemedText>
+          </ThemedPressable>
+        </Link>
+        <Link href="/auth?has-account=false" asChild>
+          <ThemedPressable secondary>
+            <ThemedText>Sign up</ThemedText>
+          </ThemedPressable>
+        </Link>
+      </Group>
     </ThemedView>
   )
 }
