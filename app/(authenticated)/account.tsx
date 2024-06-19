@@ -47,7 +47,7 @@ export default function AccountScreen() {
       </Group>
 
       <Group>
-        <ThemedPressable onPress={() => updateProfile({ name: newName, sex: newSex })}>
+        <ThemedPressable onPress={() => updateProfile({ name: newName ?? '', sex: newSex })}>
           <ThemedText>Update</ThemedText>
         </ThemedPressable>
 

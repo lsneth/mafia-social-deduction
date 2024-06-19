@@ -8,7 +8,7 @@ export default function AuthenticatedLayout() {
   const { session, loading } = useAuth()
 
   if (loading) return <ThemedActivityIndicator />
-  if (!session) return <Redirect href="/auth" />
+  if (!session) return <Redirect href="/auth?has-account=true" />
 
   return (
     <ProfileProvider>

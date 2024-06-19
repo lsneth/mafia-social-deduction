@@ -7,7 +7,7 @@ import ThemedTextInput from '@/components/ThemedTextInput'
 import Group from '@/components/Group'
 import Spacer from '@/components/Spacer'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
-import { Redirect } from 'expo-router'
+import { Link, Redirect } from 'expo-router'
 import { useGlobalSearchParams } from 'expo-router'
 
 export default function AuthScreen() {
@@ -58,15 +58,27 @@ export default function AuthScreen() {
           </>
         ) : null}
       </Group>
-      {hasAccount ? (
-        <ThemedPressable onPress={() => signIn(email, password, displayErrorMessage)} testID="sign-in">
-          <ThemedText>Sign in</ThemedText>
-        </ThemedPressable>
-      ) : (
-        <ThemedPressable onPress={() => signUp(email, password, name, displayErrorMessage)} testID="sign-up">
-          <ThemedText>Sign up</ThemedText>
-        </ThemedPressable>
-      )}
+      <Group>
+        {hasAccount ? (
+          <ThemedPressable onPress={() => signIn(email, password, displayErrorMessage)} testID="sign-in">
+            <ThemedText>Sign in</ThemedText>
+          </ThemedPressable>
+        ) : (
+          <ThemedPressable onPress={() => signUp(email, password, name, displayErrorMessage)} testID="sign-up">
+            <ThemedText>Sign up</ThemedText>
+          </ThemedPressable>
+        )}
+        <Spacer />
+        {hasAccount ? (
+          <Link href="/auth?has-account=false" replace>
+            <ThemedText underline>Don't have an account?</ThemedText>
+          </Link>
+        ) : (
+          <Link href="/auth?has-account=true" replace>
+            <ThemedText underline>Already have an account?</ThemedText>
+          </Link>
+        )}
+      </Group>
     </ThemedView>
   )
 }

@@ -1,18 +1,32 @@
-export default function getUserFriendlyErrMsg(error: string) {
+export default function getUserFriendlyErrMsg(errorMessage: string) {
   // join game errors
-  if (error.includes('duplicate key value violates unique constraint')) return 'You have already joined this game.'
+  if (
+    errorMessage.includes('duplicate key value violates unique constraint "players_player_id_key"') ||
+    errorMessage.includes('duplicate key value violates unique constraint "players_pkey"')
+  ) {
+    return 'You have already joined a game.'
+  }
 
-  if (error.includes('no valid playerName provided')) return 'Please add a name to your account to join a game.'
+  if (errorMessage.includes('null value in column "name" of relation "players" violates not-null constraint')) {
+    return 'Please add a name to your account to join a game.'
+  }
 
-  if (error.includes('no valid playerId provided')) return 'Please sign in to join a game.'
-
-  if (error.includes('no valid gameId provided') || /relation .* does not exist/.test(error)) {
+  if (
+    errorMessage.includes(
+      'insert or update on table "players" violates foreign key constraint "players_game_id_fkey"'
+    ) ||
+    errorMessage.includes('JSON object requested, multiple (or no) rows returned')
+  ) {
     return 'Please enter a valid game id.'
   }
 
-  if (error.includes('already has 15 players')) return 'This game already has 15 players.'
+  if (errorMessage.includes('there are already 15 players')) {
+    return 'This game already has 15 players.'
+  }
 
-  if (error.includes('has already started')) return 'This game has already started.'
+  if (errorMessage.includes('game has already started')) {
+    return 'This game has already started.'
+  }
 
-  return error
+  return errorMessage
 }

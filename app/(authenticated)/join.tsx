@@ -8,14 +8,18 @@ import { joinGame } from '@/services/game-services'
 import { router } from 'expo-router'
 import { useProfile } from '@/providers/ProfileProvider'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
+import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 
 export default function JoinScreen() {
   const [gameId, setGameId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const { id: playerId, loading: profileLoading } = useProfile()
+  const { id: playerId, loading: profileLoading, name: playerName } = useProfile()
+
+  console.log('playerName:', playerName)
+
   const [loading, setLoading] = useState<boolean>(false)
 
-  if (loading) return <ThemedActivityIndicator />
+  if (loading || profileLoading) return <ThemedActivityIndicator />
 
   return (
     <ThemedView className="justify-center">
@@ -31,7 +35,7 @@ export default function JoinScreen() {
         onPress={async () => {
           setLoading(true)
           try {
-            const { error } = await joinGame(gameId, playerId)
+            const { error } = await joinGame(gameId, playerId, playerName)
             if (error) throw error
 
             router.replace(`/game?id=${gameId}`)
@@ -39,12 +43,11 @@ export default function JoinScreen() {
             setLoading(false)
           } catch (error: any) {
             console.error(error)
-            setErrorMessage(error.message)
+            setErrorMessage(getUserFriendlyErrMsg(error.message))
             setLoading(false)
           }
         }}
         testID="join-game-button"
-        disabled={profileLoading}
       >
         <ThemedText>Join Game</ThemedText>
       </ThemedPressable>

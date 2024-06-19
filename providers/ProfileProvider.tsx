@@ -8,7 +8,7 @@ const ProfileContext = createContext<{
   name: string | null
   sex: 'male' | 'female'
   loading: boolean
-  updateProfile: ({ name, sex }: { name: string | null; sex: 'male' | 'female' }) => Promise<void>
+  updateProfile: ({ name, sex }: { name: string; sex: 'male' | 'female' }) => Promise<void>
 }>({
   id: '',
   name: null,
@@ -36,19 +36,16 @@ export function ProfileProvider(props: PropsWithChildren) {
   const getProfile = useCallback(async () => {
     try {
       setLoading(true)
+      setId(session?.user.id ?? '')
+
       if (!session?.user) throw new Error('No user on the session!')
 
-      const { data, error, status } = await supabase
-        .from('profiles')
-        .select('id, name, sex')
-        .eq('id', session?.user.id)
-        .single()
+      const { data, error, status } = await supabase.from('profiles').select('name, sex').eq('id', id).single()
       if (error && status !== 406) {
         throw error
       }
 
       if (data) {
-        setId(data.id)
         setName(data.name)
         setSex(data.sex)
       }
@@ -59,9 +56,9 @@ export function ProfileProvider(props: PropsWithChildren) {
       }
       setLoading(false)
     }
-  }, [session?.user])
+  }, [id, session?.user])
 
-  async function updateProfile({ name, sex }: { name: string | null; sex: 'male' | 'female' }) {
+  async function updateProfile({ name, sex }: { name: string; sex: 'male' | 'female' }) {
     try {
       setLoading(true)
       if (!session?.user) throw new Error('No user on the session!')
@@ -75,14 +72,13 @@ export function ProfileProvider(props: PropsWithChildren) {
 
       const { error } = await supabase.from('profiles').upsert(updates)
 
-      if (error) {
-        throw error
-      }
+      if (error) throw error
+
+      setLoading(false)
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
       }
-    } finally {
       setLoading(false)
     }
   }

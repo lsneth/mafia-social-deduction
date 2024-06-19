@@ -10,7 +10,7 @@ import { useState } from 'react'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 
 export default function AuthenticatedHomeScreen() {
-  const { id: profileId, loading: profileLoading } = useProfile()
+  const { id: profileId, loading: profileLoading, name: playerName } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
@@ -43,7 +43,7 @@ export default function AuthenticatedHomeScreen() {
               if (gameIdError) throw gameIdError
 
               // add player to 'players' table
-              const { error: addPlayerError } = await joinGame(gameIdData[0].id, profileId)
+              const { error: addPlayerError } = await joinGame(gameIdData[0].id, profileId, playerName)
               if (addPlayerError) throw addPlayerError
 
               // navigate to lobby
