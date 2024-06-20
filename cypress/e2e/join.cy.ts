@@ -30,7 +30,7 @@ describe('Join screen', () => {
   it('should not allow a player to join a game if they are already part of a game', () => {
     cy.signIn({
       email: Cypress.env('AUTOMATED_TESTING_HOST_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_HOST_PASSWORD'),
+      password: Cypress.env('AUTOMATED_TESTING_HOST_PASSWORD').toString(),
     })
     cy.visit('http://localhost:8081/join')
 
@@ -43,7 +43,7 @@ describe('Join screen', () => {
   it('should show an error message if a user tries to join a game but has no name', () => {
     cy.signIn({
       email: Cypress.env('AUTOMATED_TESTING_NO_NAME_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_NO_NAME_PASSWORD'),
+      password: Cypress.env('AUTOMATED_TESTING_NO_NAME_PASSWORD').toString(),
     })
     cy.visit('http://localhost:8081/join')
 
