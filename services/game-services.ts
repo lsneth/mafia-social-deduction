@@ -17,28 +17,16 @@ export async function leaveGame(playerId: string) {
 }
 
 export async function joinGame(gameId: string, playerId: string, playerName: string | null) {
-  // TODO: move to edge function
-  if (!playerName) {
-    return { error: { message: 'Please add a name to your account to join a game.' } }
+  try {
+    const { error } = await supabase.functions.invoke('join-game', {
+      body: { gameId, playerId, playerName },
+    })
+
+    if (error) throw error
+
+    return { error: null }
+  } catch (error: any) {
+    const errorObj = await error.context.json() // https://github.com/supabase/functions-js/issues/45#issuecomment-2068191215
+    return { error: { message: errorObj.error } }
   }
-
-  // get all players in game
-  const playersRes = await supabase.from('players').select('player_id').eq('game_id', gameId)
-  if (playersRes.error) return playersRes
-
-  // see if game is full
-  if (playersRes.data.length >= 15) {
-    return { error: { message: 'there are already 15 players' } }
-  }
-
-  // see if game has already started
-  const gameRes = await supabase.from('games').select('phase').eq('id', gameId).single()
-  if (gameRes.error) return gameRes
-
-  const { phase } = gameRes.data
-  if (phase !== 'lobby') {
-    return { error: { message: 'game has already started' } }
-  }
-
-  return supabase.from('players').insert({ player_id: playerId, game_id: gameId, name: playerName })
 }
