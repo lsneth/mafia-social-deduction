@@ -29,8 +29,8 @@ describe('Join screen', () => {
 
   it('should not allow a player to join a game if they are already part of a game', () => {
     cy.signIn({
-      email: Cypress.env('AUTOMATED_TESTING_HOST_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_HOST_PASSWORD'),
+      email: Cypress.env('CYPRESS_AUTOMATED_TESTING_HOST_EMAIL'),
+      password: Cypress.env('CYPRESS_AUTOMATED_TESTING_HOST_PASSWORD'),
     })
     cy.visit('http://localhost:8081/join')
 
