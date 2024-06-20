@@ -6,10 +6,6 @@ jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
-      - name: temp debugging - CYPRESS_AUTOMATED_TESTING_EMAIL
-        run: echo ${{secrets.CYPRESS_AUTOMATED_TESTING_EMAIL}}
-      - name: temp debugging - blah
-        run: echo ${{secrets.blah}}
       - name: Checkout
         uses: actions/checkout@v4
       - name: Cypress run

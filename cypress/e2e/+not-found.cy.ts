@@ -14,7 +14,6 @@ describe('not found page', () => {
   })
 
   it('should navigate to home screen (if authenticated)', () => {
-    console.log('**********this test is running************')
     cy.signIn()
     cy.visit('http://localhost:8081/blahblahblah', { failOnStatusCode: false })
 

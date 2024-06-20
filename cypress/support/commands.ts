@@ -7,14 +7,10 @@ Cypress.Commands.add(
   'signIn',
   (
     credentials = {
-      email: Cypress.env('AUTOMATED_TESTING_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_PASSWORD'),
+      email: '1@test.com',
+      password: '12345',
     }
   ) => {
-    console.log('**********this command is running************')
-    console.log(Cypress.env('AUTOMATED_TESTING_EMAIL'))
-    console.log(Cypress.env('AUTOMATED_TESTING_PASSWORD'))
-
     cy.task('signIn', credentials).then((sessionData) => {
       localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
     })
