@@ -36,27 +36,31 @@ export function ProfileProvider(props: PropsWithChildren) {
   const getProfile = useCallback(async () => {
     try {
       setLoading(true)
-      setId(session?.user.id ?? '')
 
       if (!session?.user) throw new Error('No user on the session!')
 
-      const { data, error, status } = await supabase.from('profiles').select('name, sex').eq('id', id).single()
+      const { data, error, status } = await supabase
+        .from('profiles')
+        .select('id, name, sex')
+        .eq('id', session?.user.id)
+        .single()
       if (error && status !== 406) {
         throw error
       }
 
       if (data) {
+        setId(data.id)
         setName(data.name)
         setSex(data.sex)
       }
-      setLoading(false)
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
       }
+    } finally {
       setLoading(false)
     }
-  }, [id, session?.user])
+  }, [session?.user])
 
   async function updateProfile({ name, sex }: { name: string; sex: 'male' | 'female' }) {
     try {
