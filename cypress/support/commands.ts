@@ -3,19 +3,20 @@
 export {}
 
 // https://github.com/orgs/supabase/discussions/6177
-Cypress.Commands.add(
-  'signIn',
-  (
-    credentials = {
-      email: Cypress.env('AUTOMATED_TESTING_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_PASSWORD'),
-    }
-  ) => {
-    cy.task('signIn', credentials).then((sessionData) => {
-      localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
-    })
-  }
-)
+// Cypress.Commands.add(
+//   'signIn',
+//   (
+//     credentials = {
+//       email: Cypress.env('AUTOMATED_TESTING_EMAIL'),
+//       password: Cypress.env('AUTOMATED_TESTING_PASSWORD'),
+//     }
+//   ) => {
+//     cy.task('signIn', credentials).then((sessionData) => {
+//       localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
+//     })
+//   }
+// )
+Cypress.Commands.add('signIn', () => console.log('hahaha'))
 
 Cypress.Commands.add('signOut', () => cy.task('signOut'))
 
