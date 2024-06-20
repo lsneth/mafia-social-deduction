@@ -14,7 +14,7 @@ describe('not found page', () => {
   })
 
   it('should navigate to home screen (if authenticated)', () => {
-    cy.signIn({ email: Cypress.env('AUTOMATED_TESTING_EMAIL'), password: Cypress.env('AUTOMATED_TESTING_PASSWORD') })
+    cy.signIn({ email: '1@test.com', password: '123456' })
     cy.visit('http://localhost:8081/blahblahblah', { failOnStatusCode: false })
 
     cy.contains('Go to home screen').click()
