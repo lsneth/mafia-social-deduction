@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "test": "npx cypress run",
     "lint": "expo lint",
-    "build": "npx expo export"
+    "build": "npx expo export --platform web"
   },
   "pre-commit": [
     "lint",
