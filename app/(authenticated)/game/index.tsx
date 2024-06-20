@@ -23,7 +23,7 @@ export default function LobbyScreen() {
         <ThemedText>Invite others with this code</ThemedText>
       </Group>
       <Group>
-        <ThemedPressable>
+        <ThemedPressable testID="start-game-button">
           <ThemedText>Start Game</ThemedText>
         </ThemedPressable>
         <ThemedPressable
@@ -42,7 +42,7 @@ export default function LobbyScreen() {
               setLoading(false)
             }
           }}
-          testID="leave-game-button"
+          testID="delete-game-button"
         >
           <ThemedText>Delete Game</ThemedText>
           {/* TODO: only show leave game to non hosts and only show delete game to hosts */}
