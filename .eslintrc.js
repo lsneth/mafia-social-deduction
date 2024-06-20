@@ -5,4 +5,5 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'error',
   },
   plugins: ['cypress'],
+  ignorePatterns: ['dist/**'],
 }

@@ -10,7 +10,7 @@ describe('Account', () => {
     cy.visit('http://localhost:8081/account')
 
     cy.contains('Account')
-    cy.contains(Cypress.env('AUTOMATED_TESTING_EMAIL'))
+    cy.contains(Cypress.env('CYPRESS_EMAIL'))
     cy.contains('Name')
     cy.contains('female')
     cy.contains('male')

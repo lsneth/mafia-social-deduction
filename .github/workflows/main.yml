@@ -13,3 +13,12 @@ jobs:
         with:
           build: npm run build
           start: npm start
+        env:
+          CYPRESS_EMAIL: ${{secrets.CYPRESS_EMAIL}}
+          CYPRESS_PASSWORD: ${{secrets.CYPRESS_PASSWORD}}
+          CYPRESS_HOST_EMAIL: ${{secrets.CYPRESS_HOST_EMAIL}}
+          CYPRESS_HOST_PASSWORD: ${{secrets.CYPRESS_HOST_PASSWORD}}
+          CYPRESS_NO_NAME_EMAIL: ${{secrets.CYPRESS_NO_NAME_EMAIL}}
+          CYPRESS_NO_NAME_PASSWORD: ${{secrets.CYPRESS_NO_NAME_PASSWORD}}
+          CYPRESS_SUPABASE_URL: ${{secrets.CYPRESS_SUPABASE_URL}}
+          CYPRESS_SUPABASE_ANON_KEY: ${{secrets.CYPRESS_SUPABASE_ANON_KEY}}
