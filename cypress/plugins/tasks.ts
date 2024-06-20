@@ -15,8 +15,9 @@ export async function signIn({ email, password }: { email: string; password: str
   // Create a session for the user if it doesn't exist already.
   if (!sessions[email]) {
     const { data } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+      // for some reason, when running tests in github actions, if the password only had digit characters in it it was being sent as a number and the supabase sign in request was failing. These toString() functions ensure that won't happen.
+      email: email.toString(),
+      password: password.toString(),
     })
 
     sessions[email] = data.session

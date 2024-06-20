@@ -8,7 +8,7 @@ Cypress.Commands.add(
   (
     credentials = {
       email: Cypress.env('AUTOMATED_TESTING_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_PASSWORD').toString(),
+      password: Cypress.env('AUTOMATED_TESTING_PASSWORD'),
     }
   ) => {
     cy.task('signIn', credentials).then((sessionData) => {
