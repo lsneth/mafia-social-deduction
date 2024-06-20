@@ -1,13 +1,13 @@
-describe('Join screen', () => {
+describe('join game screen', () => {
   it('should redirect to auth screen if a session does not exist', () => {
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
     cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 
   it('should render all elements', () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
     cy.contains('Join Game')
     cy.contains('Enter a code to join a game.')
@@ -19,12 +19,12 @@ describe('Join screen', () => {
     cy.signIn()
     cy.removePlayerFromGame()
     cy.deleteGame()
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
-    cy.get('[data-testid="game-id-input"]').type('TEST-HAPPY-PATH')
+    cy.get('[data-testid="game-id-input"]').type(Cypress.env('AUTOMATED_TESTING_GAME_ID'))
     cy.get('[data-testid="join-game-button"]').click()
 
-    cy.url().should('eq', 'http://localhost:8081/game?id=TEST-HAPPY-PATH')
+    cy.url().should('eq', `http://localhost:8081/game?id=${Cypress.env('AUTOMATED_TESTING_GAME_ID')}`)
   })
 
   it('should not allow a player to join a game if they are already part of a game', () => {
@@ -32,9 +32,9 @@ describe('Join screen', () => {
       email: Cypress.env('AUTOMATED_TESTING_HOST_EMAIL'),
       password: Cypress.env('AUTOMATED_TESTING_HOST_PASSWORD'),
     })
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
-    cy.get('[data-testid="game-id-input"]').type('TEST-HAPPY-PATH')
+    cy.get('[data-testid="game-id-input"]').type(Cypress.env('AUTOMATED_TESTING_GAME_ID'))
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('You have already joined a game.')
@@ -45,9 +45,9 @@ describe('Join screen', () => {
       email: Cypress.env('AUTOMATED_TESTING_NO_NAME_EMAIL'),
       password: Cypress.env('AUTOMATED_TESTING_NO_NAME_PASSWORD'),
     })
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
-    cy.get('[data-testid="game-id-input"]').type('TEST-HAPPY-PATH')
+    cy.get('[data-testid="game-id-input"]').type(Cypress.env('AUTOMATED_TESTING_GAME_ID'))
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('Please add a name to your account to join a game.')
@@ -55,7 +55,7 @@ describe('Join screen', () => {
 
   it('should show an error message if the game does not exist', () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
     cy.get('[data-testid="game-id-input"]').type('bad-id')
     cy.get('[data-testid="join-game-button"]').click()
@@ -65,7 +65,7 @@ describe('Join screen', () => {
 
   it('should show an error message if an empty string is submitted', () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
     cy.get('[data-testid="join-game-button"]').click()
 
@@ -74,7 +74,7 @@ describe('Join screen', () => {
 
   it('should show an error message if there are already 15 players in the game', () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
     cy.get('[data-testid="game-id-input"]').type('TEST-15-PLAYERS')
     cy.get('[data-testid="join-game-button"]').click()
@@ -84,7 +84,7 @@ describe('Join screen', () => {
 
   it("should show an error message if the game is already started (if it isn't in the lobby phase)", () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/join')
+    cy.visit('/join')
 
     cy.get('[data-testid="game-id-input"]').type('TEST-ALREADY-STARTED')
     cy.get('[data-testid="join-game-button"]').click()

@@ -23,6 +23,10 @@ Cypress.Commands.add('removePlayerFromGame', () => cy.task('removePlayerFromGame
 
 Cypress.Commands.add('deleteGame', () => cy.task('deleteGame'))
 
+Cypress.Commands.add('addPlayerToGame', (gameId = Cypress.env('AUTOMATED_TESTING_GAME_ID')) => {
+  cy.task('addPlayerToGame', gameId)
+})
+
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -30,6 +34,7 @@ declare global {
       signOut(): Chainable<void>
       removePlayerFromGame(): Chainable<void>
       deleteGame(): Chainable<void>
+      addPlayerToGame(gameId?: string): Chainable<void>
     }
   }
 }

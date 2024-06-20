@@ -31,10 +31,31 @@ export async function signOut() {
 }
 
 export async function removePlayerFromGame() {
-  const { data } = await supabase.auth.getSession()
-  const { id } = data.session?.user ?? { id: '' }
+  const res = await supabase.auth.getSession()
+  if (res.error) return res
+
+  const { id } = res.data.session?.user ?? { id: '' }
 
   return supabase.from('players').delete().eq('player_id', id)
+}
+
+export async function addPlayerToGame(gameId: string) {
+  try {
+    const { data, error: authError } = await supabase.auth.getSession()
+    if (authError) throw authError
+    const { id } = data.session?.user ?? { id: '' }
+
+    const { error } = await supabase.functions.invoke('join-game', {
+      body: { gameId, playerId: id, playerName: 'test name' },
+    })
+
+    if (error) throw error
+
+    return { error: null }
+  } catch (error: any) {
+    const errorObj = await error.context.json() // https://github.com/supabase/functions-js/issues/45#issuecomment-2068191215
+    return { error: { message: errorObj.error } }
+  }
 }
 
 export async function deleteGame() {

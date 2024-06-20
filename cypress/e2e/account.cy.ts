@@ -1,13 +1,13 @@
-describe('Account', () => {
+describe('account screen', () => {
   it('should redirect to auth screen if a session does not exist', () => {
-    cy.visit('http://localhost:8081/account')
+    cy.visit('/account')
 
     cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 
   it('should render all elements', () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/account')
+    cy.visit('/account')
 
     cy.contains('Account')
     cy.contains(Cypress.env('AUTOMATED_TESTING_EMAIL'))
@@ -22,7 +22,7 @@ describe('Account', () => {
 
   it('should update name', () => {
     cy.signIn()
-    cy.visit('http://localhost:8081/account')
+    cy.visit('/account')
 
     cy.get('[data-testid="name-input"]').clear() // TODO: fix flakiness
     const randomString = generateRandomString()
