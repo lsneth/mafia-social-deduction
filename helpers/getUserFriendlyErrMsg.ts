@@ -28,5 +28,29 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
     return 'This game has already started.'
   }
 
+  if (errorMessage.includes('Anonymous sign-ins are disabled')) {
+    return 'Please enter a valid email.'
+  }
+
+  if (errorMessage.includes('Signup requires a valid password')) {
+    return 'Please enter a valid password.'
+  }
+
+  if (errorMessage.includes('Please enter your name.')) {
+    return 'Please enter a valid name.'
+  }
+
+  if (errorMessage.includes('Password should be at least 6 characters.')) {
+    return errorMessage
+  }
+
+  if (errorMessage.includes('User already registered')) {
+    return 'An account with that email already exists.'
+  }
+
+  if (errorMessage.includes('Invalid login credentials')) {
+    return 'Invalid login credentials. Please try again.'
+  }
+
   return errorMessage
 }

@@ -2,7 +2,7 @@ describe('home screen', () => {
   it('should redirect to auth screen if a session does not exist', () => {
     cy.visit('http://localhost:8081/home')
 
-    cy.location('pathname').should('eq', '/auth')
+    cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 
   it('should render all elements', () => {
@@ -26,14 +26,13 @@ describe('home screen', () => {
 
   it('should host game', () => {
     cy.signIn()
+    cy.removePlayerFromGame()
+    cy.deleteGame()
     cy.visit('http://localhost:8081/home')
 
     cy.contains('Host Game').click()
-    cy.location('pathname').should('eq', '/game')
 
-    // clean up for next time
-    // TODO: create a cy.deleteGame() command, run it at the beginning of this test to remove flakiness
-    cy.contains('Delete Game').click()
+    cy.location('pathname').should('eq', '/game')
   })
 
   it('should navigate to account screen', () => {

@@ -1,4 +1,4 @@
-describe('Not found', () => {
+describe('not found page', () => {
   it('should render all elements', () => {
     cy.visit('http://localhost:8081/blahblahblah', { failOnStatusCode: false })
 
@@ -19,5 +19,12 @@ describe('Not found', () => {
 
     cy.contains('Go to home screen').click()
     cy.location('pathname').should('eq', '/home')
+  })
+
+  it('should navigate to index (if not authenticated)', () => {
+    cy.visit('http://localhost:8081/blahblahblah', { failOnStatusCode: false })
+
+    cy.contains('Go to home screen').click()
+    cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 })

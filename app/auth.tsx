@@ -9,6 +9,7 @@ import Spacer from '@/components/Spacer'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import { Link, Redirect } from 'expo-router'
 import { useGlobalSearchParams } from 'expo-router'
+import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 
 export default function AuthScreen() {
   const { signIn, signUp, session, loading } = useAuth()
@@ -22,7 +23,7 @@ export default function AuthScreen() {
   if (loading) return <ThemedActivityIndicator />
   if (session) return <Redirect href="/home" />
 
-  const displayErrorMessage = (message: string): void => setErrorMessage(message)
+  const displayErrorMessage = (message: string): void => setErrorMessage(getUserFriendlyErrMsg(message))
 
   return (
     <ThemedView className="justify-between">
@@ -54,7 +55,7 @@ export default function AuthScreen() {
         {errorMessage ? (
           <>
             <Spacer />
-            <ThemedText>{errorMessage}</ThemedText> // TODO: improve error messaging
+            <ThemedText>{errorMessage}</ThemedText>
           </>
         ) : null}
       </Group>

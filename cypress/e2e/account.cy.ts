@@ -2,7 +2,7 @@ describe('Account', () => {
   it('should redirect to auth screen if a session does not exist', () => {
     cy.visit('http://localhost:8081/account')
 
-    cy.location('pathname').should('eq', '/auth')
+    cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 
   it('should render all elements', () => {
@@ -24,7 +24,7 @@ describe('Account', () => {
     cy.signIn()
     cy.visit('http://localhost:8081/account')
 
-    cy.get('[data-testid="name-input"]').clear() // TODO: fix the flakiness
+    cy.get('[data-testid="name-input"]').clear() // TODO: fix flakiness
     const randomString = generateRandomString()
     cy.get('[data-testid="name-input"]').type(randomString)
     cy.contains('Update').click()

@@ -17,10 +17,10 @@ export type Player = {
 
 export type Change = {
   commit_timestamp: string // '2023-10-27T14:02:37.898Z'
-  errors: any // TODO
+  errors: any
   eventType: Event
   new: Player
   old: Player
   schema: 'public'
-  table: string // same as gameId
+  table: string
 }

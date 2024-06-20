@@ -2,7 +2,7 @@ describe('Join screen', () => {
   it('should redirect to auth screen if a session does not exist', () => {
     cy.visit('http://localhost:8081/join')
 
-    cy.location('pathname').should('eq', '/auth')
+    cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 
   it('should render all elements', () => {
@@ -15,21 +15,16 @@ describe('Join screen', () => {
     cy.get('[data-testid="join-game-button"]')
   })
 
-  it('should navigate to /game?id=gameId if gameId is valid, should leave game', () => {
-    // This test is a bit hacky. To make this reproducible, I need to remove the player from the game after they join. Right now the best way to do that is with the UI. Since we have to leave the game anyway, I decided to test in here as well. So we join the game, make an assertion, then leave the game and make another assertion. This is not ideal, but it works for now.
-    // This also has potential to be flaky; if the test player is ever added but not removed then it will need to be manually removed.
-    // TODO: make a cy.removePlayerFromGame command. Call it at the beginning of the test instead of the end to remove flakiness.
-
+  it('should join game and navigate to /game?id=gameId if gameId is valid', () => {
     cy.signIn()
+    cy.removePlayerFromGame()
+    cy.deleteGame()
     cy.visit('http://localhost:8081/join')
 
     cy.get('[data-testid="game-id-input"]').type('TEST-HAPPY-PATH')
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.url().should('eq', 'http://localhost:8081/game?id=TEST-HAPPY-PATH')
-
-    cy.contains('Leave Game').click() // remove player to set up test for next time
-    cy.url().should('eq', 'http://localhost:8081/home')
   })
 
   it('should not allow a player to join a game if they are already part of a game', () => {

@@ -10,6 +10,7 @@ const supabase = createClient(
 
 // cache session data for each user name
 const sessions: Record<string, any> = {}
+
 export async function signIn({ email, password }: { email: string; password: string }) {
   // Create a session for the user if it doesn't exist already.
   if (!sessions[email]) {
@@ -25,10 +26,19 @@ export async function signIn({ email, password }: { email: string; password: str
 }
 
 export async function signOut() {
-  try {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
-  } catch (error: any) {
-    console.error(error.message)
-  }
+  return supabase.auth.signOut()
+}
+
+export async function removePlayerFromGame() {
+  const { data } = await supabase.auth.getSession()
+  const { id } = data.session?.user ?? { id: '' }
+
+  return supabase.from('players').delete().eq('player_id', id)
+}
+
+export async function deleteGame() {
+  const { data } = await supabase.auth.getSession()
+  const { id } = data.session?.user ?? { id: '' }
+
+  return supabase.from('games').delete().eq('host_id', id)
 }

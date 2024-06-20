@@ -16,16 +16,9 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('signOut', () => cy.task('signOut'))
 
-Cypress.Commands.add(
-  'signInNoCache',
-  (email = Cypress.env('AUTOMATED_TESTING_EMAIL'), password = Cypress.env('AUTOMATED_TESTING_PASSWORD')) => {
-    cy.visit('http://localhost:8081/auth')
-    cy.get('[data-testid="email-input"]').type(email)
-    cy.get('[data-testid="password-input"]').type(password)
-    cy.get('[data-testid="sign-in"]').click()
-    cy.location('pathname').should('eq', '/home')
-  }
-)
+Cypress.Commands.add('removePlayerFromGame', () => cy.task('removePlayerFromGame'))
+
+Cypress.Commands.add('deleteGame', () => cy.task('deleteGame'))
 
 declare global {
   namespace Cypress {
@@ -33,7 +26,8 @@ declare global {
       // signIn(email?: string, password?: string): Chainable<void>
       signIn(credentials?: { email: string; password: string }): Chainable<void>
       signOut(): Chainable<void>
-      signInNoCache(email?: string, password?: string): Chainable<void>
+      removePlayerFromGame(): Chainable<void>
+      deleteGame(): Chainable<void>
     }
   }
 }

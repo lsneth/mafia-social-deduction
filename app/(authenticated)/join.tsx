@@ -14,9 +14,6 @@ export default function JoinScreen() {
   const [gameId, setGameId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const { id: playerId, loading: profileLoading, name: playerName } = useProfile()
-
-  console.log('playerName:', playerName)
-
   const [loading, setLoading] = useState<boolean>(false)
 
   if (loading || profileLoading) return <ThemedActivityIndicator />
