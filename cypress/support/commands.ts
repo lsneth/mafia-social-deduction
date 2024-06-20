@@ -8,7 +8,7 @@ Cypress.Commands.add(
   (
     credentials = {
       email: '1@test.com',
-      password: '12345',
+      password: '123456',
     }
   ) => {
     cy.task('signIn', credentials).then((sessionData) => {
