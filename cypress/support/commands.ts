@@ -26,7 +26,6 @@ Cypress.Commands.add('deleteGame', () => cy.task('deleteGame'))
 declare global {
   namespace Cypress {
     interface Chainable {
-      // signIn(email?: string, password?: string): Chainable<void>
       signIn(credentials?: { email: string; password: string }): Chainable<void>
       signOut(): Chainable<void>
       removePlayerFromGame(): Chainable<void>
