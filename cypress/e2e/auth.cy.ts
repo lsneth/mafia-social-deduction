@@ -20,8 +20,8 @@ describe('sign in', () => {
   it('should sign in', () => {
     cy.visit('http://localhost:8081/auth?has-account=true')
 
-    cy.get('[data-testid="email-input"]').type(Cypress.env('CYPRESS_EMAIL'))
-    cy.get('[data-testid="password-input"]').type(Cypress.env('CYPRESS_PASSWORD'))
+    cy.get('[data-testid="email-input"]').type(Cypress.env('AUTOMATED_TESTING_EMAIL'))
+    cy.get('[data-testid="password-input"]').type(Cypress.env('AUTOMATED_TESTING_PASSWORD'))
     cy.get('[data-testid="sign-in"]').click()
     cy.location('pathname').should('eq', '/home')
   })
@@ -79,8 +79,8 @@ describe('sign up', () => {
     cy.visit('http://localhost:8081/auth?has-account=false')
 
     cy.get('[data-testid="name-input"]').type('a random name')
-    cy.get('[data-testid="email-input"]').type(Cypress.env('CYPRESS_EMAIL'))
-    cy.get('[data-testid="password-input"]').type(Cypress.env('CYPRESS_PASSWORD'))
+    cy.get('[data-testid="email-input"]').type(Cypress.env('AUTOMATED_TESTING_EMAIL'))
+    cy.get('[data-testid="password-input"]').type(Cypress.env('AUTOMATED_TESTING_PASSWORD'))
     cy.get('[data-testid="sign-up"]').click()
     cy.contains('An account with that email already exists.')
   })
@@ -89,7 +89,7 @@ describe('sign up', () => {
     cy.visit('http://localhost:8081/auth?has-account=false')
 
     cy.get('[data-testid="name-input"]').type('a random name')
-    cy.get('[data-testid="email-input"]').type(Cypress.env('CYPRESS_EMAIL'))
+    cy.get('[data-testid="email-input"]').type(Cypress.env('AUTOMATED_TESTING_EMAIL'))
     cy.get('[data-testid="password-input"]').type('short')
     cy.get('[data-testid="sign-up"]').click()
     cy.contains('Password should be at least 6 characters.')
@@ -98,8 +98,8 @@ describe('sign up', () => {
   it('should display error text for sign up attempt with no name', () => {
     cy.visit('http://localhost:8081/auth?has-account=false')
 
-    cy.get('[data-testid="email-input"]').type(Cypress.env('CYPRESS_EMAIL'))
-    cy.get('[data-testid="password-input"]').type(Cypress.env('CYPRESS_PASSWORD'))
+    cy.get('[data-testid="email-input"]').type(Cypress.env('AUTOMATED_TESTING_EMAIL'))
+    cy.get('[data-testid="password-input"]').type(Cypress.env('AUTOMATED_TESTING_PASSWORD'))
     cy.get('[data-testid="sign-up"]').click()
     cy.contains('Please enter a valid name.')
   })
@@ -108,7 +108,7 @@ describe('sign up', () => {
     cy.visit('http://localhost:8081/auth?has-account=false')
 
     cy.get('[data-testid="name-input"]').type('a random name')
-    cy.get('[data-testid="email-input"]').type(Cypress.env('CYPRESS_EMAIL'))
+    cy.get('[data-testid="email-input"]').type(Cypress.env('AUTOMATED_TESTING_EMAIL'))
     cy.get('[data-testid="sign-up"]').click()
     cy.contains('Please enter a valid password.')
   })
@@ -117,7 +117,7 @@ describe('sign up', () => {
     cy.visit('http://localhost:8081/auth?has-account=false')
 
     cy.get('[data-testid="name-input"]').type('a random name')
-    cy.get('[data-testid="password-input"]').type(Cypress.env('CYPRESS_PASSWORD'))
+    cy.get('[data-testid="password-input"]').type(Cypress.env('AUTOMATED_TESTING_PASSWORD'))
     cy.get('[data-testid="sign-up"]').click()
     cy.contains('Please enter a valid email.')
   })
