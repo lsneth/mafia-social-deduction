@@ -6,15 +6,16 @@ import ThemedView from '@/components/ThemedView'
 import { useGame } from '@/providers/GameProvider'
 import { useProfile } from '@/providers/ProfileProvider'
 import { deleteGame, leaveGame } from '@/services/game-services'
-import { router } from 'expo-router'
+import { Redirect, router } from 'expo-router'
 import { useState } from 'react'
 
 export default function LobbyScreen() {
-  const { gameId } = useGame()
-  const { id: playerId } = useProfile()
+  const { gameId, unsubscribeFromGame, loading: gameLoading, notFound } = useGame()
+  const { id: profileId } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
 
-  if (loading) return <ThemedActivityIndicator />
+  if (loading || gameLoading) return <ThemedActivityIndicator />
+  if (notFound) return <Redirect href="/+not-found" />
 
   return (
     <ThemedView className="justify-between">
@@ -31,7 +32,7 @@ export default function LobbyScreen() {
           onPress={async () => {
             setLoading(true)
             try {
-              const { error } = await deleteGame(playerId)
+              const { error } = await deleteGame(profileId)
               if (error) throw error
 
               router.replace('/home')
@@ -52,8 +53,11 @@ export default function LobbyScreen() {
           onPress={async () => {
             setLoading(true)
             try {
-              const { error } = await leaveGame(playerId)
-              if (error) throw error
+              const res = await unsubscribeFromGame()
+              if (res !== 'ok') throw res
+
+              const { error: leaveError } = await leaveGame(profileId)
+              if (leaveError) throw leaveError
 
               router.replace('/home')
 

@@ -4,13 +4,15 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "start-test": "npx expo export -p web && npx serve dist -l 8081",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "npx cypress run",
+    "test-open": "npx cypress open",
     "lint": "expo lint",
-    "build": "npx expo export --platform web"
+    "build": "npx expo export -p web"
   },
   "pre-commit": [
     "lint",

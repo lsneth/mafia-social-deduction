@@ -10,7 +10,7 @@ describe('account screen', () => {
     cy.visit('/account')
 
     cy.contains('Account')
-    cy.contains(Cypress.env('AUTOMATED_TESTING_EMAIL'))
+    cy.contains(Cypress.env('TEST_USER_EMAIL'))
     cy.contains('Name')
     cy.contains('female')
     cy.contains('male')
@@ -21,24 +21,17 @@ describe('account screen', () => {
   // TODO: figure out how to access value of sex toggle, then test it
 
   it('should update name', () => {
+    cy.intercept('https://krsvqfsdxblshgkwnwnb.supabase.co/rest/v1/profiles').as('nameUpdate')
     cy.signIn()
+    cy.addUserName()
     cy.visit('/account')
 
-    cy.get('[data-testid="name-input"]').clear() // TODO: fix flakiness
-    const randomString = generateRandomString()
-    cy.get('[data-testid="name-input"]').type(randomString)
+    cy.get('[data-testid="name-input"]').clear()
+    cy.get('[data-testid="name-input"]').type('new name')
     cy.contains('Update').click()
+    cy.wait('@nameUpdate')
     cy.reload()
-    cy.get('[data-testid="name-input"]').should('have.value', randomString)
+
+    cy.get('[data-testid="name-input"]').should('have.value', 'new name')
   })
 })
-
-function generateRandomString(): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  let randomString = ''
-  for (let i = 0; i < 5; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length)
-    randomString += characters.charAt(randomIndex)
-  }
-  return randomString
-}
