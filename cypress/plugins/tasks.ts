@@ -36,7 +36,7 @@ export async function removePlayerFromGame() {
 
   const { id } = res.data.session?.user ?? { id: '' }
 
-  return supabase.from('players').delete().eq('player_id', id)
+  return supabase.from('players').delete().eq('profile_id', id)
 }
 
 export async function addPlayerToGame(gameId: string) {

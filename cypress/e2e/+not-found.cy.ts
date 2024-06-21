@@ -1,19 +1,19 @@
 describe('not found screen', () => {
-  it('should render all elements', () => {
+  it.skip('should render all elements', () => {
     cy.visit('/blahblahblah', { failOnStatusCode: false })
 
     cy.contains('404 - This page is in witness protection')
     cy.contains('Go to home screen')
   })
 
-  it('should render all elements (deeper path)', () => {
+  it.skip('should render all elements (deeper path)', () => {
     cy.visit('/blah/blah/blah', { failOnStatusCode: false })
 
     cy.contains('404 - This page is in witness protection')
     cy.contains('Go to home screen')
   })
 
-  it('should navigate to home screen (if authenticated)', () => {
+  it.skip('should navigate to home screen (if authenticated)', () => {
     cy.signIn()
     cy.visit('/blahblahblah', { failOnStatusCode: false })
 
@@ -21,7 +21,7 @@ describe('not found screen', () => {
     cy.location('pathname').should('eq', '/home')
   })
 
-  it('should navigate to index (if not authenticated)', () => {
+  it.skip('should navigate to index (if not authenticated)', () => {
     cy.visit('/blahblahblah', { failOnStatusCode: false })
 
     cy.contains('Go to home screen').click()

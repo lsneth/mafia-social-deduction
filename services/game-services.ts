@@ -13,7 +13,7 @@ export async function deleteGame(hostId: string) {
 }
 
 export async function leaveGame(playerId: string) {
-  return supabase.from('players').delete().eq('player_id', playerId)
+  return supabase.from('players').delete().eq('profile_id', playerId)
 }
 
 export async function joinGame(gameId: string, playerId: string, playerName: string | null) {

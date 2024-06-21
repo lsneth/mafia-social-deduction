@@ -1,7 +1,7 @@
 export default function getUserFriendlyErrMsg(errorMessage: string) {
   // join game errors
   if (
-    errorMessage.includes('duplicate key value violates unique constraint "players_player_id_key"') ||
+    errorMessage.includes('duplicate key value violates unique constraint "players_profile_id_key"') ||
     errorMessage.includes('duplicate key value violates unique constraint "players_pkey"')
   ) {
     return 'You have already joined a game.'

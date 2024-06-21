@@ -13,7 +13,7 @@ import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 export default function JoinScreen() {
   const [gameId, setGameId] = useState<string>('')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const { id: playerId, loading: profileLoading, name: playerName } = useProfile()
+  const { id: profileId, loading: profileLoading, name: playerName } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
 
   if (loading || profileLoading) return <ThemedActivityIndicator />
@@ -32,7 +32,7 @@ export default function JoinScreen() {
         onPress={async () => {
           setLoading(true)
           try {
-            const { error } = await joinGame(gameId, playerId, playerName)
+            const { error } = await joinGame(gameId, profileId, playerName)
             if (error) throw error
 
             router.replace(`/game?id=${gameId}`)
