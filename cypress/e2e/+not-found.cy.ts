@@ -1,6 +1,6 @@
 describe('not found screen', () => {
-  it.skip('should render all elements', () => {
-    cy.visit('/blahblahblah', { failOnStatusCode: false })
+  it('should render all elements', () => {
+    cy.visit('/+not-found', { failOnStatusCode: false })
 
     cy.contains('404 - This page is in witness protection')
     cy.contains('Go to home screen')

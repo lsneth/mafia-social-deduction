@@ -3,50 +3,40 @@
 import { createClient } from '@supabase/supabase-js'
 require('dotenv').config()
 
-const supabase = createClient(
-  process.env.EXPO_PUBLIC_SUPABASE_URL ?? '',
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? ''
-)
+// for some reason, when running tests in github actions, if the env var only had digit characters in it it was being sent as a number and which caused requests to fail. These toString() functions ensure that won't happen.
+const TEST_USER_EMAIL = process.env.EXPO_PUBLIC_TEST_USER_EMAIL?.toString() ?? ''
+const TEST_USER_PASSWORD = process.env.EXPO_PUBLIC_TEST_USER_PASSWORD?.toString() ?? ''
+const TEST_USER_ID = process.env.EXPO_PUBLIC_TEST_USER_ID?.toString() ?? ''
+const TEST_USER_NAME = 'test name'
+const SUPABASE_URL = 'https://krsvqfsdxblshgkwnwnb.supabase.co'
+const SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtyc3ZxZnNkeGJsc2hna3dud25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc3Njc4NTgsImV4cCI6MjAzMzM0Mzg1OH0.-GlDIfDvVrauGuuvmZDReVVBN7BIy-SBCvRDGeUf9NI'
 
-// cache session data for each user name
-const sessions: Record<string, any> = {}
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-export async function signIn({ email, password }: { email: string; password: string }) {
-  // Create a session for the user if it doesn't exist already.
-  if (!sessions[email]) {
+const sessions: Record<string, any> = {} // cache session data for each email
+
+export async function signIn() {
+  if (!sessions[TEST_USER_EMAIL]) {
     const { data } = await supabase.auth.signInWithPassword({
-      // for some reason, when running tests in github actions, if the password only had digit characters in it it was being sent as a number and the supabase sign in request was failing. These toString() functions ensure that won't happen.
-      email: email.toString(),
-      password: password.toString(),
+      email: TEST_USER_EMAIL,
+      password: TEST_USER_PASSWORD,
     })
 
-    sessions[email] = data.session
+    sessions[TEST_USER_EMAIL] = data.session
   }
 
-  return sessions[email]
+  return sessions[TEST_USER_EMAIL]
 }
 
 export async function signOut() {
   return supabase.auth.signOut()
 }
 
-export async function removePlayerFromGame() {
-  const res = await supabase.auth.getSession()
-  if (res.error) return res
-
-  const { id } = res.data.session?.user ?? { id: '' }
-
-  return supabase.from('players').delete().eq('profile_id', id)
-}
-
 export async function addPlayerToGame(gameId: string) {
   try {
-    const { data, error: authError } = await supabase.auth.getSession()
-    if (authError) throw authError
-    const { id } = data.session?.user ?? { id: '' }
-
     const { error } = await supabase.functions.invoke('join-game', {
-      body: { gameId, playerId: id, playerName: 'test name' },
+      body: { gameId, playerId: TEST_USER_ID, playerName: TEST_USER_NAME },
     })
 
     if (error) throw error
@@ -58,9 +48,18 @@ export async function addPlayerToGame(gameId: string) {
   }
 }
 
-export async function deleteGame() {
-  const { data } = await supabase.auth.getSession()
-  const { id } = data.session?.user ?? { id: '' }
+export async function removePlayerFromGame() {
+  return supabase.from('players').delete().eq('profile_id', TEST_USER_ID)
+}
 
-  return supabase.from('games').delete().eq('host_id', id)
+export async function deleteUserGame() {
+  return supabase.from('games').delete().eq('host_id', TEST_USER_ID)
+}
+
+export async function addUserName() {
+  return supabase.from('profiles').update({ name: TEST_USER_NAME }).eq('id', TEST_USER_ID)
+}
+
+export async function deleteUserName() {
+  return supabase.from('profiles').update({ name: '' }).eq('id', TEST_USER_ID)
 }

@@ -25,9 +25,7 @@ describe('home screen', () => {
   })
 
   it('should host game', () => {
-    cy.signIn()
-    cy.removePlayerFromGame()
-    cy.deleteGame()
+    cy.cleanSignIn()
     cy.visit('/home')
 
     cy.contains('Host Game').click()

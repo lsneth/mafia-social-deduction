@@ -2,39 +2,43 @@
 
 export {}
 
-// https://github.com/orgs/supabase/discussions/6177
-Cypress.Commands.add(
-  'signIn',
-  (
-    credentials = {
-      email: Cypress.env('AUTOMATED_TESTING_EMAIL'),
-      password: Cypress.env('AUTOMATED_TESTING_PASSWORD'),
-    }
-  ) => {
-    cy.task('signIn', credentials).then((sessionData) => {
-      localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
-    })
-  }
-)
-
+// auth
+Cypress.Commands.add('cleanSignIn', () => {
+  cy.signIn()
+  cy.removePlayerFromGame()
+  cy.deleteUserGame()
+  cy.addUserName()
+})
+Cypress.Commands.add('signIn', () => {
+  // https://github.com/orgs/supabase/discussions/6177
+  cy.task('signIn').then((sessionData) => {
+    localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
+  })
+})
 Cypress.Commands.add('signOut', () => cy.task('signOut'))
 
-Cypress.Commands.add('removePlayerFromGame', () => cy.task('removePlayerFromGame'))
-
-Cypress.Commands.add('deleteGame', () => cy.task('deleteGame'))
-
-Cypress.Commands.add('addPlayerToGame', (gameId = Cypress.env('AUTOMATED_TESTING_GAME_ID')) => {
+// game
+Cypress.Commands.add('addPlayerToGame', (gameId = Cypress.env('TEST_GAME_ID')) => {
   cy.task('addPlayerToGame', gameId)
 })
+Cypress.Commands.add('removePlayerFromGame', () => cy.task('removePlayerFromGame'))
+Cypress.Commands.add('deleteUserGame', () => cy.task('deleteUserGame'))
+
+// name
+Cypress.Commands.add('addUserName', () => cy.task('addUserName'))
+Cypress.Commands.add('deleteUserName', () => cy.task('deleteUserName'))
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      signIn(credentials?: { email: string; password: string }): Chainable<void>
+      cleanSignIn(): Chainable<void>
+      signIn(): Chainable<void>
       signOut(): Chainable<void>
-      removePlayerFromGame(): Chainable<void>
-      deleteGame(): Chainable<void>
       addPlayerToGame(gameId?: string): Chainable<void>
+      removePlayerFromGame(): Chainable<void>
+      deleteUserGame(): Chainable<void>
+      addUserName(): Chainable<void>
+      deleteUserName(): Chainable<void>
     }
   }
 }
