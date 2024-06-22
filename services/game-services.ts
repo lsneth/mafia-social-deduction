@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { Phase } from '@/types/game-types'
 
 export async function createGame(hostId: string) {
   return supabase.from('games').insert({ host_id: hostId })
@@ -36,15 +37,24 @@ export async function joinGame(gameId: string, playerId: string, playerName: str
 }
 
 export async function hostGame(profileId: string, playerName: string) {
+  // TODO: move to edge function
   try {
     if (!playerName) throw new Error("Player doesn't have a name")
 
     // make sure player isn't already in a game
-    const { data: playerData, error: playerError } = await supabase.from('players').select('profile_id')
-    if (playerError) throw playerError
-    playerData.forEach((player) => {
-      if (player.profile_id === profileId) throw new Error('Player is already in a game')
-    })
+    const { data: playerData, error: playerError } = await supabase
+      .from('players')
+      .select('profile_id')
+      .eq('profile_id', profileId)
+      .single()
+    if (playerError && playerError.message !== 'JSON object requested, multiple (or no) rows returned') {
+      // this one error is good in this case, means they aren't in game
+      throw playerError
+    }
+    if (playerData !== null) {
+      // we want null in this case, means they aren't in game
+      throw new Error('Player is already in a game')
+    }
 
     // create row in 'games' table
     const { error: createGameError } = await createGame(profileId)
@@ -63,4 +73,8 @@ export async function hostGame(profileId: string, playerName: string) {
     console.error(error)
     return { error: { message: error.message }, data: { gameId: null } }
   }
+}
+
+export async function updateGamePhase(gameId: string, phase: Phase) {
+  return supabase.from('games').update({ phase }).eq('id', gameId)
 }

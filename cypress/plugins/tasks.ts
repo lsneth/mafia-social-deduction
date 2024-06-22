@@ -69,7 +69,6 @@ export async function hostGame() {
     profile_id: TEST_USER_ID,
     game_id: TEST_HOST_GAME_ID,
     name: 'test name',
-    is_host: true,
   })
   if (addPlayerError) throw addPlayerError
 

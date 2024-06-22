@@ -7,11 +7,10 @@ import React, {
   useReducer,
   useState,
 } from 'react'
-import { useGlobalSearchParams } from 'expo-router'
 import { supabase } from '@/lib/supabase'
 import { RealtimeChannel } from '@supabase/supabase-js'
-import { useProfile } from './ProfileProvider'
-import { Change, Event, Player } from '@/types/game-types'
+import { PlayersChange, Event, Player, GameChange, Game } from '@/types/game-types'
+import { useGlobalSearchParams } from 'expo-router'
 
 type PlayersReducerAction =
   | {
@@ -21,9 +20,10 @@ type PlayersReducerAction =
     }
   | { type: 'REFRESH'; players: Player[] }
 
-function playersReducer(players: Player[], action: PlayersReducerAction): Player[] {
+function playersReducer(players: Player[] | null, action: PlayersReducerAction): Player[] | null {
   switch (action.type) {
     case 'UPDATE':
+      if (players === null) return players // should never happen, but makes TS happy
       return players.map((player) => {
         if (player.profile_id === action.new.profile_id) {
           return action.new
@@ -33,9 +33,11 @@ function playersReducer(players: Player[], action: PlayersReducerAction): Player
       })
 
     case 'INSERT':
+      if (players === null) return players
       return [...players, action.new]
 
     case 'DELETE':
+      if (players === null) return players
       return players.filter((player) => player.profile_id !== action.old.profile_id)
 
     case 'REFRESH':
@@ -47,19 +49,15 @@ function playersReducer(players: Player[], action: PlayersReducerAction): Player
 }
 
 const GameContext = createContext<{
-  gameId: string
+  players: Player[] | null
+  game: Game | null
   loading: boolean
-  unsubscribeFromGame: () => Promise<'ok' | 'timed out' | 'error' | 'no channel'>
-  notFound: boolean
-  players: Player[]
-  player: Player | undefined
+  unsubscribeFromGame: () => Promise<'ok' | 'timed out' | 'error' | undefined>
 }>({
-  gameId: '',
+  players: null,
+  game: null,
   loading: false,
-  unsubscribeFromGame: async () => 'no channel',
-  notFound: false,
-  players: [],
-  player: undefined,
+  unsubscribeFromGame: async () => undefined,
 })
 
 export function useGame() {
@@ -72,16 +70,14 @@ export function useGame() {
 }
 
 export function GameProvider(props: PropsWithChildren) {
-  const [gameId, setGameId] = useState<string>('')
+  // These set/dispatch functions should never be used outside of this provider. All updates to game state should be done through the supabase JavaScript Client Library. As subscription changes come in from the supabase real time channel, state updates will be handled here.
+  const [players, dispatch] = useReducer(playersReducer, null)
+  const [game, setGame] = useState<Game | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const [notFound, setNotFound] = useState<boolean>(false)
-  const [players, dispatch] = useReducer(playersReducer, [])
-  const [supabaseChannel, setSupabaseChannel] = useState<RealtimeChannel>()
-  const { id: profileId } = useProfile()
-  const player = players.find((player) => player.profile_id === profileId)
-  const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id?: string }>()
+  const [rtChannel, setRtChannel] = useState<RealtimeChannel | null>(null)
+  const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id: string }>()
 
-  const onGameUpdate = (change: Change) => {
+  const onPlayersUpdate = (change: PlayersChange) => {
     dispatch({
       type: change.eventType,
       new: change.new,
@@ -89,106 +85,114 @@ export function GameProvider(props: PropsWithChildren) {
     })
   }
 
-  const refreshGame = useCallback(async () => {
-    try {
-      const { data, error } = await supabase.from('players').select('*').eq('game_id', gameId)
-      if (error) throw error
+  const onGameUpdate = (change: GameChange) => {
+    setGame(change.new)
+  }
 
-      dispatch({
-        type: 'REFRESH',
-        players: data as Player[],
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }, [gameId])
-
-  const subscribeToGame = useCallback(async () => {
-    if (supabaseChannel) {
-      setLoading(true)
+  const refreshGameAndPlayers = useCallback(
+    async (gameId: string = game?.id ?? '') => {
       try {
-        // check to see if the user is already in a game
-        const { data, error } = await supabase
+        setLoading(true)
+        // get players data
+        const { data: playersData, error: playersError } = await supabase
           .from('players')
-          .select('profile_id, game_id')
-          .eq('profile_id', profileId)
-          .single()
+          .select('*')
+          .eq('game_id', gameId)
+        if (playersError) throw playersError
 
-        if (error) {
-          setNotFound(true)
-          throw error
-        }
+        // update state
+        dispatch({
+          type: 'REFRESH',
+          players: playersData,
+        })
 
-        if (!data.profile_id) {
-          setNotFound(true)
-          throw new Error('user has not joined a game')
-        }
+        // get game data
+        const { data: gameData, error: gameError } = await supabase.from('games').select('*').eq('id', gameId).single()
+        if (gameError) throw gameError
 
-        if (data.game_id !== gameId) {
-          setNotFound(true)
-          throw new Error('user is already in a different game')
-        }
-
-        // subscribe to game changes
-        supabaseChannel
-          .on(
-            'postgres_changes',
-            {
-              event: '*',
-              schema: 'public',
-              table: 'players',
-              filter: `game_id=eq.${gameId}`,
-            },
-            (change) => {
-              onGameUpdate(change as Change)
-            },
-          )
-          .subscribe()
-
-        await refreshGame()
+        // update state
+        setGame(gameData)
       } catch (error) {
         console.error(error)
       } finally {
         setLoading(false)
       }
+    },
+    [game?.id],
+  )
+
+  const subscribeToGame = useCallback(async () => {
+    try {
+      setLoading(true)
+      // create an rtChannel obj and save it to state
+      // gameId is guaranteed to be defined here because we only call this function in the useEffect below where we check before we call it
+      setRtChannel(supabase.channel(gameIdFromQueryParam!))
+
+      // subscribe to players changes
+      rtChannel
+        ?.on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'players',
+            filter: `game_id=eq.${gameIdFromQueryParam}`,
+          },
+          (change) => {
+            onPlayersUpdate(change as PlayersChange)
+          },
+        )
+        .subscribe()
+
+      // subscribe to game changes
+      rtChannel
+        ?.on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'games',
+            filter: `id=eq.${gameIdFromQueryParam}`,
+          },
+          (change) => {
+            onGameUpdate(change as GameChange)
+          },
+        )
+        .subscribe()
+
+      // make request to game and player data to get full starting state
+      await refreshGameAndPlayers(gameIdFromQueryParam)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
     }
-  }, [gameId, profileId, refreshGame, supabaseChannel])
+  }, [gameIdFromQueryParam, refreshGameAndPlayers, rtChannel])
 
   async function unsubscribeFromGame() {
-    if (supabaseChannel) {
-      setLoading(true)
-      const res = await supabase.removeChannel(supabaseChannel)
-      setLoading(false)
-      return res
-    }
-    return 'no channel'
+    if (!rtChannel) return
+    return supabase.removeChannel(rtChannel)
   }
 
   useEffect(() => {
+    // this will only be called in the lobby where the query param is.
+    // after that the game id will always be accessed from game.id
     if (gameIdFromQueryParam) {
-      setGameId(gameIdFromQueryParam)
-      setSupabaseChannel(supabase.channel(gameIdFromQueryParam))
+      async function subscribe() {
+        await subscribeToGame()
+      }
+      subscribe()
     }
-  }, [gameIdFromQueryParam])
-
-  useEffect(() => {
-    async function subscribe() {
-      if (!profileId || !gameId) return
-      await subscribeToGame()
-    }
-
-    subscribe()
-  }, [gameId, profileId, subscribeToGame])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
+  }, [])
 
   return (
     <GameContext.Provider
       value={{
-        gameId,
+        players,
+        game,
         loading,
         unsubscribeFromGame,
-        notFound,
-        players,
-        player,
       }}
     >
       {props.children}
