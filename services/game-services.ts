@@ -5,7 +5,11 @@ export async function createGame(hostId: string) {
 }
 
 export async function getGameId(hostId: string) {
-  return supabase.from('games').select('id').eq('host_id', hostId)
+  return supabase.from('games').select('id').eq('host_id', hostId).single()
+}
+
+export async function getHostId(gameId: string) {
+  return supabase.from('games').select('host_id').eq('id', gameId).single()
 }
 
 export async function deleteGame(hostId: string) {
@@ -16,10 +20,10 @@ export async function leaveGame(playerId: string) {
   return supabase.from('players').delete().eq('profile_id', playerId)
 }
 
-export async function joinGame(gameId: string, playerId: string, playerName: string | null) {
+export async function joinGame(gameId: string, playerId: string, playerName: string | null, isHost: boolean = false) {
   try {
     const { error } = await supabase.functions.invoke('join-game', {
-      body: { gameId, playerId, playerName },
+      body: { gameId, playerId, playerName, isHost },
     })
 
     if (error) throw error

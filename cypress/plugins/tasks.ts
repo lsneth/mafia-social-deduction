@@ -7,6 +7,7 @@ require('dotenv').config()
 const TEST_USER_EMAIL = process.env.EXPO_PUBLIC_TEST_USER_EMAIL?.toString() ?? ''
 const TEST_USER_PASSWORD = process.env.EXPO_PUBLIC_TEST_USER_PASSWORD?.toString() ?? ''
 const TEST_USER_ID = process.env.EXPO_PUBLIC_TEST_USER_ID?.toString() ?? ''
+const TEST_HOST_GAME_ID = process.env.EXPO_PUBLIC_TEST_HOST_GAME_ID?.toString() ?? ''
 const TEST_USER_NAME = 'test name'
 const SUPABASE_URL = 'https://krsvqfsdxblshgkwnwnb.supabase.co'
 const SUPABASE_ANON_KEY =
@@ -54,6 +55,25 @@ export async function removePlayerFromGame() {
 
 export async function deleteUserGame() {
   return supabase.from('games').delete().eq('host_id', TEST_USER_ID)
+}
+
+export async function hostGame() {
+  // create row in 'games' table
+  const { error: createGameError } = await supabase
+    .from('games')
+    .insert({ id: TEST_HOST_GAME_ID, host_id: TEST_USER_ID })
+  if (createGameError) throw createGameError
+
+  // add player to 'players' table as host
+  const { error: addPlayerError } = await supabase.from('players').insert({
+    profile_id: TEST_USER_ID,
+    game_id: TEST_HOST_GAME_ID,
+    name: 'fake name',
+    is_host: true,
+  })
+  if (addPlayerError) throw addPlayerError
+
+  return null
 }
 
 export async function addUserName() {

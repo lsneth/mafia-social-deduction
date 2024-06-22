@@ -5,7 +5,19 @@ describe('lobby screen', () => {
     cy.url().should('eq', 'http://localhost:8081/auth?has-account=true')
   })
 
-  it('should render all elements', () => {
+  it('should render all elements (host)', () => {
+    cy.cleanSignIn()
+    cy.hostGame()
+    cy.visit(`/game?id=${Cypress.env('TEST_HOST_GAME_ID')}`)
+
+    cy.contains(Cypress.env('TEST_HOST_GAME_ID'))
+    cy.contains('Invite others with this code')
+    cy.contains('Start Game')
+    cy.contains('Delete Game')
+    cy.contains('Leave Game').should('not.exist')
+  })
+
+  it('should render all elements (non-host)', () => {
     cy.cleanSignIn()
     cy.addPlayerToGame()
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
@@ -13,7 +25,7 @@ describe('lobby screen', () => {
     cy.contains(Cypress.env('TEST_GAME_ID'))
     cy.contains('Invite others with this code')
     cy.contains('Start Game')
-    cy.contains('Delete Game')
+    cy.contains('Delete Game').should('not.exist')
     cy.contains('Leave Game')
   })
 
