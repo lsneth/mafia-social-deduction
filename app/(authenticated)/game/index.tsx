@@ -12,12 +12,12 @@ import { Redirect, router } from 'expo-router'
 import { useState } from 'react'
 
 export default function LobbyScreen() {
-  const { gameId, unsubscribeFromGame, loading: gameLoading, notFound, player } = useGame()
+  const { gameId, unsubscribeFromGame, loading: gameLoading, notFound, players, player } = useGame()
   const { id: profileId } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
 
   if (loading || gameLoading) return <ThemedActivityIndicator />
-  if (notFound) return <Redirect href="/+not-found" />
+  if (notFound || players.length <= 0) return <Redirect href="/+not-found" />
 
   return (
     <ThemedView className="justify-between">

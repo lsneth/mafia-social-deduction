@@ -5,9 +5,10 @@ import ThemedView from '@/components/ThemedView'
 import Group from '@/components/Group'
 import backgroundImage from '../../assets/images/mafia-bg.png'
 import { useProfile } from '@/providers/ProfileProvider'
-import { createGame, getGameId, joinGame } from '@/services/game-services'
+import { hostGame } from '@/services/game-services'
 import { useState } from 'react'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
+import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 
 export default function AuthenticatedHomeScreen() {
   const { id: profileId, loading: profileLoading, name: playerName } = useProfile()
@@ -34,25 +35,18 @@ export default function AuthenticatedHomeScreen() {
           onPress={async () => {
             setLoading(true)
             try {
-              // create row in 'games' table
-              const { error: createGameError } = await createGame(profileId)
-              if (createGameError) throw createGameError
-
-              // get game id from 'games' table
-              const { data: gameIdData, error: gameIdError } = await getGameId(profileId)
-              if (gameIdError) throw gameIdError
-
-              // add player to 'players' table as host
-              const { error: addPlayerError } = await joinGame(gameIdData.id, profileId, playerName, true)
-              if (addPlayerError) throw addPlayerError
+              const {
+                data: { gameId },
+                error,
+              } = await hostGame(profileId, playerName ?? '')
+              if (error) throw error
 
               // navigate to lobby
-              router.replace(`/game?id=${gameIdData.id}`)
-
-              setLoading(false)
+              router.replace(`/game?id=${gameId}`)
             } catch (error: any) {
               console.error(error)
-              setErrorMessage(error.message)
+              setErrorMessage(getUserFriendlyErrMsg(error.message))
+            } finally {
               setLoading(false)
             }
           }}

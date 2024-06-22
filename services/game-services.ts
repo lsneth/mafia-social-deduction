@@ -34,3 +34,33 @@ export async function joinGame(gameId: string, playerId: string, playerName: str
     return { error: { message: errorObj.error } }
   }
 }
+
+export async function hostGame(profileId: string, playerName: string) {
+  try {
+    if (!playerName) throw new Error("Player doesn't have a name")
+
+    // make sure player isn't already in a game
+    const { data: playerData, error: playerError } = await supabase.from('players').select('profile_id')
+    if (playerError) throw playerError
+    playerData.forEach((player) => {
+      if (player.profile_id === profileId) throw new Error('Player is already in a game')
+    })
+
+    // create row in 'games' table
+    const { error: createGameError } = await createGame(profileId)
+    if (createGameError) throw createGameError
+
+    // get game id from 'games' table
+    const { data: gameIdData, error: gameIdError } = await getGameId(profileId)
+    if (gameIdError) throw gameIdError
+
+    // add player to 'players' table as host
+    const { error: addPlayerError } = await joinGame(gameIdData.id, profileId, playerName, true)
+    if (addPlayerError) throw addPlayerError
+
+    return { error: null, data: { gameId: gameIdData.id } }
+  } catch (error: any) {
+    console.error(error)
+    return { error: { message: error.message }, data: { gameId: null } }
+  }
+}

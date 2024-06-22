@@ -1,10 +1,16 @@
 export default function getUserFriendlyErrMsg(errorMessage: string) {
   // join game errors
-  if (errorMessage.includes('duplicate key value violates unique constraint "players_player_id_key"')) {
+  if (
+    errorMessage.includes('duplicate key value violates unique constraint "players_player_id_key"') ||
+    errorMessage.includes('Player is already in a game')
+  ) {
     return 'You have already joined a game.'
   }
 
-  if (errorMessage.includes('null value in column "name" of relation "players" violates not-null constraint')) {
+  if (
+    errorMessage.includes('null value in column "name" of relation "players" violates not-null constraint') ||
+    errorMessage.includes("Player doesn't have a name")
+  ) {
     return 'Please add a name to your account to join a game.'
   }
 
@@ -47,6 +53,10 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
 
   if (errorMessage.includes('Invalid login credentials')) {
     return 'Invalid login credentials. Please try again.'
+  }
+
+  if (errorMessage.includes('duplicate key value violates unique constraint "games_host_id_key"')) {
+    return 'You are already hosting a game.'
   }
 
   return errorMessage
