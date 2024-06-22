@@ -9,8 +9,8 @@ export default function ThemedView({ bgImageSrc, className, ...rest }: ThemedVie
   const insets = useSafeAreaInsets()
 
   return bgImageSrc ? (
-    <View className="bg-mafiaBlack flex-1">
-      <ImageBackground source={bgImageSrc} className="w-full h-full">
+    <View className="flex-1 bg-mafiaBlack">
+      <ImageBackground source={bgImageSrc} className="h-full w-full">
         <View
           style={{
             paddingTop: insets.top,
@@ -18,7 +18,7 @@ export default function ThemedView({ bgImageSrc, className, ...rest }: ThemedVie
           }}
           className="flex-1"
         >
-          <View className={`flex-1 p-8 items-center ${className}`} {...rest} />
+          <View className={`flex-1 items-center p-8 ${className}`} {...rest} />
         </View>
       </ImageBackground>
     </View>
@@ -28,9 +28,9 @@ export default function ThemedView({ bgImageSrc, className, ...rest }: ThemedVie
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
       }}
-      className="bg-mafiaBlack flex-1"
+      className="flex-1 bg-mafiaBlack"
     >
-      <View className={`flex-1 p-8 items-center ${className}`} {...rest} />
+      <View className={`flex-1 items-center p-8 ${className}`} {...rest} />
     </View>
   )
 }

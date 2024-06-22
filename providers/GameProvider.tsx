@@ -133,10 +133,15 @@ export function GameProvider(props: PropsWithChildren) {
         supabaseChannel
           .on(
             'postgres_changes',
-            { event: '*', schema: 'public', table: 'players', filter: `game_id=eq.${gameId}` },
+            {
+              event: '*',
+              schema: 'public',
+              table: 'players',
+              filter: `game_id=eq.${gameId}`,
+            },
             (change) => {
               onGameUpdate(change as Change)
-            }
+            },
           )
           .subscribe()
 

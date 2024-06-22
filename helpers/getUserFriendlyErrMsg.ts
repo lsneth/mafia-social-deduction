@@ -10,7 +10,7 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
 
   if (
     errorMessage.includes(
-      'insert or update on table "players" violates foreign key constraint "players_game_id_fkey"'
+      'insert or update on table "players" violates foreign key constraint "players_game_id_fkey"',
     ) ||
     errorMessage.includes('JSON object requested, multiple (or no) rows returned')
   ) {

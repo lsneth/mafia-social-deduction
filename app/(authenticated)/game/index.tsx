@@ -1,4 +1,5 @@
 import Group from '@/components/Group'
+import PlayerGrid from '@/components/PlayerGrid'
 import Spacer from '@/components/Spacer'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import ThemedPressable from '@/components/ThemedPressable'
@@ -11,7 +12,7 @@ import { Redirect, router } from 'expo-router'
 import { useState } from 'react'
 
 export default function LobbyScreen() {
-  const { gameId, unsubscribeFromGame, loading: gameLoading, notFound, players, player } = useGame()
+  const { gameId, unsubscribeFromGame, loading: gameLoading, notFound, player } = useGame()
   const { id: profileId } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -25,7 +26,7 @@ export default function LobbyScreen() {
         <Spacer />
         <ThemedText>Invite others with this code</ThemedText>
       </Group>
-      <ThemedText>{JSON.stringify(players)}</ThemedText>
+      <PlayerGrid />
       <Group>
         <ThemedPressable testID="start-game-button">
           <ThemedText>Start Game</ThemedText>

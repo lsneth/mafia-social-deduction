@@ -68,7 +68,7 @@ export async function hostGame() {
   const { error: addPlayerError } = await supabase.from('players').insert({
     profile_id: TEST_USER_ID,
     game_id: TEST_HOST_GAME_ID,
-    name: 'fake name',
+    name: 'test name',
     is_host: true,
   })
   if (addPlayerError) throw addPlayerError

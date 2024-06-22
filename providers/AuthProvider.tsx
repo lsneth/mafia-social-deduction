@@ -73,7 +73,7 @@ export function AuthProvider(props: PropsWithChildren) {
           email: string,
           password: string,
           name: string,
-          displayErrorMessage: (message: string) => void
+          displayErrorMessage: (message: string) => void,
         ) => {
           if (!name) return displayErrorMessage('Please enter your name.')
 

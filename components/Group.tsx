@@ -5,5 +5,5 @@ type GroupProps = ViewProps & {}
 
 export default forwardRef(function Group(props: GroupProps, ref): JSX.Element {
   const { className, ...rest } = props
-  return <View className={`w-full max-w-sm flex items-center`} {...rest} />
+  return <View className={`flex w-full max-w-sm items-center`} {...rest} />
 })

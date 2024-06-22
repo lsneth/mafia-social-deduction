@@ -12,6 +12,7 @@ describe('lobby screen', () => {
 
     cy.contains(Cypress.env('TEST_HOST_GAME_ID'))
     cy.contains('Invite others with this code')
+    cy.contains('test name')
     cy.contains('Start Game')
     cy.contains('Delete Game')
     cy.contains('Leave Game').should('not.exist')
@@ -24,6 +25,8 @@ describe('lobby screen', () => {
 
     cy.contains(Cypress.env('TEST_GAME_ID'))
     cy.contains('Invite others with this code')
+    cy.contains('Host: Happy Path')
+    cy.contains('test name')
     cy.contains('Start Game')
     cy.contains('Delete Game').should('not.exist')
     cy.contains('Leave Game')
