@@ -8,10 +8,10 @@ export type ThemedTextProps = TextProps & {
 export function ThemedText({ className, type = 'default', underline = false, ...rest }: ThemedTextProps): JSX.Element {
   return (
     <Text
-      style={{ fontFamily: type === 'title' ? 'Oswald_700Bold' : 'CrimsonText_400Regular' }}
-      className={`text-mafiaWhite ${
-        type === 'title' ? 'text-7xl pt-5' : type === 'subtitle' ? 'text-3xl' : 'text-lg'
-      } ${underline ? 'underline' : ''} ${className}`}
+      style={{
+        fontFamily: type === 'title' ? 'Oswald_700Bold' : 'CrimsonText_400Regular',
+      }}
+      className={`text-mafiaWhite ${type === 'title' ? 'pt-5 text-7xl' : type === 'subtitle' ? 'text-3xl' : 'text-lg'} ${underline ? 'underline' : ''} ${className}`}
       {...rest}
     />
   )

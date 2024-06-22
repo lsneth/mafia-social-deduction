@@ -1,19 +1,65 @@
-import React, { PropsWithChildren, createContext, useCallback, useContext, useEffect, useState } from 'react'
+import React, {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react'
 import { useGlobalSearchParams } from 'expo-router'
 import { supabase } from '@/lib/supabase'
 import { RealtimeChannel } from '@supabase/supabase-js'
 import { useProfile } from './ProfileProvider'
+import { Change, Event, Player } from '@/types/game-types'
+
+type PlayersReducerAction =
+  | {
+      type: Event
+      new: Player
+      old: Player
+    }
+  | { type: 'REFRESH'; players: Player[] }
+
+function playersReducer(players: Player[], action: PlayersReducerAction): Player[] {
+  switch (action.type) {
+    case 'UPDATE':
+      return players.map((player) => {
+        if (player.profile_id === action.new.profile_id) {
+          return action.new
+        } else {
+          return player
+        }
+      })
+
+    case 'INSERT':
+      return [...players, action.new]
+
+    case 'DELETE':
+      return players.filter((player) => player.profile_id !== action.old.profile_id)
+
+    case 'REFRESH':
+      return [...action.players]
+
+    default:
+      return players
+  }
+}
 
 const GameContext = createContext<{
   gameId: string
   loading: boolean
   unsubscribeFromGame: () => Promise<'ok' | 'timed out' | 'error' | 'no channel'>
   notFound: boolean
+  players: Player[]
+  player: Player | undefined
 }>({
   gameId: '',
   loading: false,
   unsubscribeFromGame: async () => 'no channel',
   notFound: false,
+  players: [],
+  player: undefined,
 })
 
 export function useGame() {
@@ -28,10 +74,34 @@ export function useGame() {
 export function GameProvider(props: PropsWithChildren) {
   const [gameId, setGameId] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-  const [notFound, setNotFound] = useState<boolean>(false) // this is a hack to get around the fact that the game id is not available on the first render
-  const { id: profileId } = useProfile()
+  const [notFound, setNotFound] = useState<boolean>(false)
+  const [players, dispatch] = useReducer(playersReducer, [])
   const [supabaseChannel, setSupabaseChannel] = useState<RealtimeChannel>()
+  const { id: profileId } = useProfile()
+  const player = players.find((player) => player.profile_id === profileId)
   const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id?: string }>()
+
+  const onGameUpdate = (change: Change) => {
+    dispatch({
+      type: change.eventType,
+      new: change.new,
+      old: change.old,
+    })
+  }
+
+  const refreshGame = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.from('players').select('*').eq('game_id', gameId)
+      if (error) throw error
+
+      dispatch({
+        type: 'REFRESH',
+        players: data as Player[],
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }, [gameId])
 
   const subscribeToGame = useCallback(async () => {
     if (supabaseChannel) {
@@ -63,19 +133,26 @@ export function GameProvider(props: PropsWithChildren) {
         supabaseChannel
           .on(
             'postgres_changes',
-            { event: '*', schema: 'public', table: 'players', filter: `game_id=eq.${gameId}` },
-            (payload) => {
-              console.log('Change received!', payload)
-            }
+            {
+              event: '*',
+              schema: 'public',
+              table: 'players',
+              filter: `game_id=eq.${gameId}`,
+            },
+            (change) => {
+              onGameUpdate(change as Change)
+            },
           )
           .subscribe()
+
+        await refreshGame()
       } catch (error) {
         console.error(error)
       } finally {
         setLoading(false)
       }
     }
-  }, [gameId, profileId, supabaseChannel])
+  }, [gameId, profileId, refreshGame, supabaseChannel])
 
   async function unsubscribeFromGame() {
     if (supabaseChannel) {
@@ -110,6 +187,8 @@ export function GameProvider(props: PropsWithChildren) {
         loading,
         unsubscribeFromGame,
         notFound,
+        players,
+        player,
       }}
     >
       {props.children}

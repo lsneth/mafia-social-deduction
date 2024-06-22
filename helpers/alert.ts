@@ -5,7 +5,7 @@ import { Alert, AlertButton, Platform } from 'react-native'
 const alertPolyfill = (
   title: string,
   message?: string | undefined,
-  buttons?: AlertButton[] | undefined
+  buttons?: AlertButton[] | undefined,
   //   options?: AlertOptions | undefined
 ): void => {
   const result = window.confirm([title, message].filter(Boolean).join('\n'))

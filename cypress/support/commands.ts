@@ -23,6 +23,7 @@ Cypress.Commands.add('addPlayerToGame', (gameId = Cypress.env('TEST_GAME_ID')) =
 })
 Cypress.Commands.add('removePlayerFromGame', () => cy.task('removePlayerFromGame'))
 Cypress.Commands.add('deleteUserGame', () => cy.task('deleteUserGame'))
+Cypress.Commands.add('hostGame', () => cy.task('hostGame'))
 
 // name
 Cypress.Commands.add('addUserName', () => cy.task('addUserName'))
@@ -37,6 +38,7 @@ declare global {
       addPlayerToGame(gameId?: string): Chainable<void>
       removePlayerFromGame(): Chainable<void>
       deleteUserGame(): Chainable<void>
+      hostGame(): Chainable<void>
       addUserName(): Chainable<void>
       deleteUserName(): Chainable<void>
     }

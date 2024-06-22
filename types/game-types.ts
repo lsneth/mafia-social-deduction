@@ -5,14 +5,14 @@ export type Phase = 'lobby' | 'role' | 'mafia' | 'investigator' | 'innocent'
 export type Event = 'INSERT' | 'UPDATE' | 'DELETE'
 
 export type Player = {
-  playerId: string
+  game_id: string
+  has_been_investigated: boolean
+  is_alive: boolean
+  is_host: boolean
   name: string
+  profile_id: string
   role: Role
-  selectedPlayerId: string
-  isAlive: boolean
-  hasBeenInvestigated: boolean
-  isHost: boolean
-  phase: Phase
+  selected_player_id: string
 }
 
 export type Change = {
@@ -22,5 +22,5 @@ export type Change = {
   new: Player
   old: Player
   schema: 'public'
-  table: string
+  table: 'players'
 }

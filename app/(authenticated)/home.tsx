@@ -42,12 +42,12 @@ export default function AuthenticatedHomeScreen() {
               const { data: gameIdData, error: gameIdError } = await getGameId(profileId)
               if (gameIdError) throw gameIdError
 
-              // add player to 'players' table
-              const { error: addPlayerError } = await joinGame(gameIdData[0].id, profileId, playerName)
+              // add player to 'players' table as host
+              const { error: addPlayerError } = await joinGame(gameIdData.id, profileId, playerName, true)
               if (addPlayerError) throw addPlayerError
 
               // navigate to lobby
-              router.replace(`/game?id=${gameIdData[0].id}`)
+              router.replace(`/game?id=${gameIdData.id}`)
 
               setLoading(false)
             } catch (error: any) {

@@ -6,6 +6,7 @@ import {
   addPlayerToGame,
   removePlayerFromGame,
   deleteUserGame,
+  hostGame,
   addUserName,
   deleteUserName,
 } from './tasks'
@@ -17,6 +18,7 @@ export default (on: any, config: any) => {
     addPlayerToGame,
     removePlayerFromGame,
     deleteUserGame,
+    hostGame,
     addUserName,
     deleteUserName,
   })
