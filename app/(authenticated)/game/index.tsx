@@ -11,8 +11,6 @@ import { deleteGame, leaveGame } from '@/services/game-services'
 import { Redirect, router } from 'expo-router'
 import { useState } from 'react'
 
-// test
-
 export default function LobbyScreen() {
   const { gameId, unsubscribeFromGame, loading: gameLoading, notFound, player } = useGame()
   const { id: profileId } = useProfile()
