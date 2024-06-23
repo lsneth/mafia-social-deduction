@@ -74,8 +74,8 @@ export function GameProvider(props: PropsWithChildren) {
   const [players, dispatch] = useReducer(playersReducer, null)
   const [game, setGame] = useState<Game | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const [rtChannel, setRtChannel] = useState<RealtimeChannel | null>(null)
   const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id: string }>()
+  const [rtChannel] = useState<RealtimeChannel>(supabase.channel(gameIdFromQueryParam ?? ''))
 
   const onPlayersUpdate = (change: PlayersChange) => {
     dispatch({
@@ -124,36 +124,18 @@ export function GameProvider(props: PropsWithChildren) {
   const subscribeToGame = useCallback(async () => {
     try {
       setLoading(true)
-      // create an rtChannel obj and save it to state
-      // gameId is guaranteed to be defined here because we only call this function in the useEffect below where we check before we call it
-      setRtChannel(supabase.channel(gameIdFromQueryParam!))
-
       // subscribe to players changes
       rtChannel
         ?.on(
           'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'players',
-            filter: `game_id=eq.${gameIdFromQueryParam}`,
-          },
+          { event: '*', schema: 'public', table: 'players', filter: `game_id=eq.${gameIdFromQueryParam}` },
           (change) => {
             onPlayersUpdate(change as PlayersChange)
           },
         )
-        .subscribe()
-
-      // subscribe to game changes
-      rtChannel
         ?.on(
           'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'games',
-            filter: `id=eq.${gameIdFromQueryParam}`,
-          },
+          { event: '*', schema: 'public', table: 'games', filter: `id=eq.${gameIdFromQueryParam}` },
           (change) => {
             onGameUpdate(change as GameChange)
           },

@@ -35,9 +35,8 @@ export default function Lobby() {
 
       <PlayerGrid />
 
+      <SummaryTable />
       <Group>
-        <SummaryTable />
-        <Spacer size={8} />
         {isHost ? (
           <>
             <ThemedPressable
