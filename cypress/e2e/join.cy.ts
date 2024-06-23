@@ -74,15 +74,15 @@ describe('join game screen', () => {
 
     cy.contains('This game has already started.')
   })
-})
 
-it('should show an error message if a user tries to join when they are already in a game', () => {
-  cy.cleanSignIn()
-  cy.addPlayerToGame(Cypress.env('TEST_ALREADY_JOINED_GAME_ID'))
-  cy.visit('/join')
+  it('should show an error message if a user tries to join when they are already in a game', () => {
+    cy.cleanSignIn()
+    cy.addPlayerToGame(Cypress.env('TEST_ALREADY_JOINED_GAME_ID'))
+    cy.visit('/join')
 
-  cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
-  cy.get('[data-testid="join-game-button"]').click()
+    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
+    cy.get('[data-testid="join-game-button"]').click()
 
-  cy.contains('You have already joined a game.')
+    cy.contains('You have already joined a game.')
+  })
 })

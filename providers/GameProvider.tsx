@@ -166,7 +166,7 @@ export function GameProvider(props: PropsWithChildren) {
       subscribe()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
-  }, [])
+  }, [gameIdFromQueryParam])
 
   return (
     <GameContext.Provider

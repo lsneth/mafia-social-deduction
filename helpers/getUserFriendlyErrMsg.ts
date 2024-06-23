@@ -14,9 +14,7 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
     return 'Please add a name to your account to join a game.'
   }
 
-  if (
-    errorMessage.includes('insert or update on table "players" violates foreign key constraint "players_game_id_fkey"')
-  ) {
+  if (errorMessage.includes('JSON object requested, multiple (or no) rows returned')) {
     return 'Please enter a valid game id.'
   }
 
