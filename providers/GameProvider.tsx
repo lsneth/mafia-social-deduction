@@ -11,6 +11,7 @@ import { supabase } from '@/lib/supabase'
 import { RealtimeChannel } from '@supabase/supabase-js'
 import { PlayersChange, Event, Player, GameChange, Game } from '@/types/game-types'
 import { useGlobalSearchParams } from 'expo-router'
+import { useProfile } from './ProfileProvider'
 
 type PlayersReducerAction =
   | {
@@ -76,6 +77,7 @@ export function GameProvider(props: PropsWithChildren) {
   const [loading, setLoading] = useState<boolean>(true)
   const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id: string }>()
   const [rtChannel] = useState<RealtimeChannel>(supabase.channel(gameIdFromQueryParam ?? ''))
+  const { id: profileId } = useProfile()
 
   const onPlayersUpdate = (change: PlayersChange) => {
     dispatch({
@@ -124,6 +126,16 @@ export function GameProvider(props: PropsWithChildren) {
   const subscribeToGame = useCallback(async () => {
     try {
       setLoading(true)
+
+      // make sure the user is in the game
+      const { data: playerData, error: playerError } = await supabase
+        .from('players')
+        .select('*')
+        .eq('game_id', gameIdFromQueryParam)
+        .eq('profile_id', profileId)
+      if (playerError) throw playerError
+      if (playerData.length <= 0) throw new Error('Player not in game')
+
       // subscribe to players changes
       rtChannel
         ?.on(
@@ -149,7 +161,7 @@ export function GameProvider(props: PropsWithChildren) {
     } finally {
       setLoading(false)
     }
-  }, [gameIdFromQueryParam, refreshGameAndPlayers, rtChannel])
+  }, [gameIdFromQueryParam, profileId, refreshGameAndPlayers, rtChannel])
 
   async function unsubscribeFromGame() {
     if (!rtChannel) return
