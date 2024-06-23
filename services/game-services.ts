@@ -21,10 +21,25 @@ export async function leaveGame(playerId: string) {
   return supabase.from('players').delete().eq('profile_id', playerId)
 }
 
-export async function joinGame(gameId: string, playerId: string, playerName: string | null, isHost: boolean = false) {
+export async function joinGame(gameId: string, playerId: string, playerName: string | null) {
   try {
     const { error } = await supabase.functions.invoke('join-game', {
-      body: { gameId, playerId, playerName, isHost },
+      body: { gameId, playerId, playerName },
+    })
+
+    if (error) throw error
+
+    return { error: null }
+  } catch (error: any) {
+    const errorObj = await error.context.json() // https://github.com/supabase/functions-js/issues/45#issuecomment-2068191215
+    return { error: { message: errorObj.error } }
+  }
+}
+
+export async function assignRoles(gameId: string, playerCount: number) {
+  try {
+    const { error } = await supabase.functions.invoke('assign-roles', {
+      body: { gameId, playerCount },
     })
 
     if (error) throw error
@@ -65,7 +80,7 @@ export async function hostGame(profileId: string, playerName: string) {
     if (gameIdError) throw gameIdError
 
     // add player to 'players' table as host
-    const { error: addPlayerError } = await joinGame(gameIdData.id, profileId, playerName, true)
+    const { error: addPlayerError } = await joinGame(gameIdData.id, profileId, playerName)
     if (addPlayerError) throw addPlayerError
 
     return { error: null, data: { gameId: gameIdData.id } }
