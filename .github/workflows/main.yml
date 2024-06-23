@@ -12,7 +12,7 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           build: npx expo export -p web
-          start: npm start
+          start: npx serve dist -l 8081
         env:
           CYPRESS_TEST_USER_EMAIL: ${{secrets.CYPRESS_TEST_USER_EMAIL}}
           CYPRESS_TEST_USER_PASSWORD: ${{secrets.CYPRESS_TEST_USER_PASSWORD}}
