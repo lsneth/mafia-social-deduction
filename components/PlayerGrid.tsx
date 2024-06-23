@@ -6,7 +6,7 @@ import Spacer from './Spacer'
 
 function PlayerCard({ player }: { player: Player }) {
   return (
-    <View className="flex-1 items-center justify-center rounded-lg bg-mafiaGray" style={{ maxWidth: '32%' }}>
+    <View className="flex-1 items-center justify-center rounded-lg bg-mafiaDarkGray" style={{ maxWidth: '32%' }}>
       <View className="min-h-36">
         <ThemedText>{player.name}</ThemedText>
       </View>

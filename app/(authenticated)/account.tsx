@@ -9,6 +9,7 @@ import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import Toggle from '@/components/Toggle'
 import { useProfile } from '@/providers/ProfileProvider'
 import { useEffect, useState } from 'react'
+import Spacer from '@/components/Spacer'
 
 export default function AccountScreen() {
   const { session, loading: sessionLoading } = useAuth()
@@ -50,7 +51,7 @@ export default function AccountScreen() {
         <ThemedPressable onPress={() => updateProfile({ name: newName ?? '', sex: newSex })}>
           <ThemedText>Update</ThemedText>
         </ThemedPressable>
-
+        <Spacer />
         <ThemedPressable secondary onPress={() => supabase.auth.signOut()}>
           <ThemedText>Sign Out</ThemedText>
         </ThemedPressable>

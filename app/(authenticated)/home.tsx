@@ -9,6 +9,7 @@ import { hostGame } from '@/services/game-services'
 import { useState } from 'react'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
+import Spacer from '@/components/Spacer'
 
 export default function AuthenticatedHomeScreen() {
   const { id: profileId, loading: profileLoading, name: playerName } = useProfile()
@@ -31,6 +32,7 @@ export default function AuthenticatedHomeScreen() {
             <ThemedText>Join Game</ThemedText>
           </ThemedPressable>
         </Link>
+        <Spacer />
         <ThemedPressable
           onPress={async () => {
             setLoading(true)
@@ -53,6 +55,7 @@ export default function AuthenticatedHomeScreen() {
         >
           <ThemedText>Host Game</ThemedText>
         </ThemedPressable>
+        <Spacer />
         <Link href="/account" asChild>
           <ThemedPressable secondary>
             <ThemedText>Account</ThemedText>

@@ -28,6 +28,7 @@ export default function JoinScreen() {
         placeholder="XXXXXX"
         testID="game-id-input"
       />
+      <Spacer />
       <ThemedPressable
         onPress={async () => {
           setLoading(true)

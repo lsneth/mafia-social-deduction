@@ -6,10 +6,10 @@ type ThemedPressableProps = PressableProps & {
 }
 
 export default forwardRef(function ThemedPressable(props: ThemedPressableProps, ref): JSX.Element {
-  const { className, secondary = false, ...rest } = props
+  const { className, secondary = false, disabled, ...rest } = props
   return (
     <Pressable
-      className={`${secondary ? 'bg-mafiaDarkGray' : 'bg-mafiaAccent'} my-1 flex w-full max-w-sm items-center rounded-full p-3 ${className}`}
+      className={`${secondary ? 'bg-mafiaDarkGray' : disabled ? 'bg-mafiaGray' : 'bg-mafiaAccent'} flex w-full max-w-sm items-center rounded-full p-3 ${className}`}
       {...rest}
     />
   )
