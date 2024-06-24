@@ -7,7 +7,7 @@ import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
 import { useGame } from '@/providers/GameProvider'
 import { useProfile } from '@/providers/ProfileProvider'
-import { deleteGame, leaveGame, updateGamePhase } from '@/services/game-services'
+import { assignRoles, deleteGame, leaveGame, updateGamePhase } from '@/services/game-services'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import SummaryTable from '../SummaryTable'
@@ -43,8 +43,11 @@ export default function Lobby() {
               disabled={startButtonDisabled}
               onPress={async () => {
                 try {
-                  const { error } = await updateGamePhase(gameId, 'role')
-                  if (error) throw error
+                  const { error: assignRolesError } = await assignRoles(gameId, players?.length ?? 0)
+                  if (assignRolesError) throw assignRolesError
+
+                  const { error: updatePhaseError } = await updateGamePhase(gameId, 'role')
+                  if (updatePhaseError) throw updatePhaseError
                 } catch (error) {
                   console.error(error)
                 }

@@ -1,20 +1,19 @@
 import React, { PropsWithChildren, createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { useAuth } from './AuthProvider'
 import { supabase } from '@/lib/supabase'
-import { Alert } from 'react-native'
 
 const ProfileContext = createContext<{
   id: string
   name: string | null
   sex: 'male' | 'female'
   loading: boolean
-  updateProfile: ({ name, sex }: { name: string; sex: 'male' | 'female' }) => Promise<void>
+  updateProfile: ({ name, sex }: { name: string; sex: 'male' | 'female' }) => Promise<{ error: any }>
 }>({
   id: '',
   name: null,
   sex: 'male',
   loading: true,
-  updateProfile: async () => {},
+  updateProfile: async () => ({ error: null }),
 })
 
 export function useProfile() {
@@ -54,9 +53,7 @@ export function ProfileProvider(props: PropsWithChildren) {
         setSex(data.sex)
       }
     } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
+      console.error(error)
     } finally {
       setLoading(false)
     }
@@ -78,11 +75,13 @@ export function ProfileProvider(props: PropsWithChildren) {
 
       if (error) throw error
 
-      setLoading(false)
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message)
-      }
+      setName(name)
+
+      return { error: null }
+    } catch (error: any) {
+      console.error('Error updating profile:', error.message)
+      return { error }
+    } finally {
       setLoading(false)
     }
   }

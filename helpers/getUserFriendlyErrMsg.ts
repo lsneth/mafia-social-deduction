@@ -14,7 +14,10 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
     return 'Please add a name to your account to join a game.'
   }
 
-  if (errorMessage.includes('JSON object requested, multiple (or no) rows returned')) {
+  if (
+    errorMessage.includes('JSON object requested, multiple (or no) rows returned') || // empty string
+    errorMessage.includes('insert or update on table "players" violates foreign key constraint "players_game_id_fkey"') // invalid game id
+  ) {
     return 'Please enter a valid game id.'
   }
 
@@ -52,6 +55,10 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
 
   if (errorMessage.includes('duplicate key value violates unique constraint "games_host_id_key"')) {
     return 'You are already hosting a game.'
+  }
+
+  if (errorMessage.includes('new row for relation "profiles" violates check constraint "profiles_name_check"')) {
+    return 'Please enter a name.'
   }
 
   return errorMessage

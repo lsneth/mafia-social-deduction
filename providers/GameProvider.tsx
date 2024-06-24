@@ -124,42 +124,44 @@ export function GameProvider(props: PropsWithChildren) {
   )
 
   const subscribeToGame = useCallback(async () => {
-    try {
-      setLoading(true)
+    if (profileId) {
+      try {
+        setLoading(true)
 
-      // make sure the user is in the game
-      const { data: playerData, error: playerError } = await supabase
-        .from('players')
-        .select('*')
-        .eq('game_id', gameIdFromQueryParam)
-        .eq('profile_id', profileId)
-      if (playerError) throw playerError
-      if (playerData.length <= 0) throw new Error('Player not in game')
+        // make sure the user is in the game
+        const { data: playerData, error: playerError } = await supabase
+          .from('players')
+          .select('*')
+          .eq('game_id', gameIdFromQueryParam)
+          .eq('profile_id', profileId)
+        if (playerError) throw playerError
+        if (playerData.length <= 0) throw new Error('Player not in game')
 
-      // subscribe to players changes
-      rtChannel
-        ?.on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'players', filter: `game_id=eq.${gameIdFromQueryParam}` },
-          (change) => {
-            onPlayersUpdate(change as PlayersChange)
-          },
-        )
-        ?.on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'games', filter: `id=eq.${gameIdFromQueryParam}` },
-          (change) => {
-            onGameUpdate(change as GameChange)
-          },
-        )
-        .subscribe()
+        // subscribe to players changes
+        rtChannel
+          ?.on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'players', filter: `game_id=eq.${gameIdFromQueryParam}` },
+            (change) => {
+              onPlayersUpdate(change as PlayersChange)
+            },
+          )
+          ?.on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'games', filter: `id=eq.${gameIdFromQueryParam}` },
+            (change) => {
+              onGameUpdate(change as GameChange)
+            },
+          )
+          .subscribe()
 
-      // make request to game and player data to get full starting state
-      await refreshGameAndPlayers(gameIdFromQueryParam)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
+        // make request to game and player data to get full starting state
+        await refreshGameAndPlayers(gameIdFromQueryParam)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
     }
   }, [gameIdFromQueryParam, profileId, refreshGameAndPlayers, rtChannel])
 
@@ -177,8 +179,7 @@ export function GameProvider(props: PropsWithChildren) {
       }
       subscribe()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
-  }, [gameIdFromQueryParam])
+  }, [gameIdFromQueryParam, subscribeToGame])
 
   return (
     <GameContext.Provider

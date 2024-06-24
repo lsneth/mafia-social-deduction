@@ -36,9 +36,9 @@ export async function signOut() {
 
 export async function addPlayerToGame(gameId: string) {
   try {
-    const { error } = await supabase.functions.invoke('join-game', {
-      body: { gameId, playerId: TEST_USER_ID, playerName: TEST_USER_NAME },
-    })
+    const { error } = await supabase
+      .from('players')
+      .insert({ profile_id: TEST_USER_ID, game_id: gameId, name: TEST_USER_NAME })
 
     if (error) throw error
 
@@ -77,8 +77,4 @@ export async function hostGame() {
 
 export async function addUserName() {
   return supabase.from('profiles').update({ name: TEST_USER_NAME }).eq('id', TEST_USER_ID)
-}
-
-export async function deleteUserName() {
-  return supabase.from('profiles').update({ name: '' }).eq('id', TEST_USER_ID)
 }
