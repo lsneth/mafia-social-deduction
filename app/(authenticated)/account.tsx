@@ -10,11 +10,12 @@ import Toggle from '@/components/Toggle'
 import { useProfile } from '@/providers/ProfileProvider'
 import { useEffect, useState } from 'react'
 import Spacer from '@/components/Spacer'
+import getUserFriendlyErrMsg from '@/helpers/getUserFriendlyErrMsg'
 
 export default function AccountScreen() {
   const { session, loading: sessionLoading } = useAuth()
   const { name, sex, loading, updateProfile } = useProfile()
-
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const [newName, setNewName] = useState<string | null>(null)
   const [newSex, setNewSex] = useState<'male' | 'female'>('male')
 
@@ -48,7 +49,18 @@ export default function AccountScreen() {
       </Group>
 
       <Group>
-        <ThemedPressable onPress={() => updateProfile({ name: newName ?? '', sex: newSex })}>
+        {errorMessage ? <ThemedText>{errorMessage}</ThemedText> : ''}
+        <ThemedPressable
+          onPress={async () => {
+            try {
+              const { error } = await updateProfile({ name: newName ?? '', sex: newSex })
+              if (error) throw error
+            } catch (error: any) {
+              setErrorMessage(getUserFriendlyErrMsg(error.message))
+              console.error(error)
+            }
+          }}
+        >
           <ThemedText>Update</ThemedText>
         </ThemedPressable>
         <Spacer />

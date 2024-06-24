@@ -27,7 +27,6 @@ Cypress.Commands.add('hostGame', () => cy.task('hostGame'))
 
 // name
 Cypress.Commands.add('addUserName', () => cy.task('addUserName'))
-Cypress.Commands.add('deleteUserName', () => cy.task('deleteUserName'))
 
 declare global {
   namespace Cypress {
@@ -40,7 +39,6 @@ declare global {
       deleteUserGame(): Chainable<void>
       hostGame(): Chainable<void>
       addUserName(): Chainable<void>
-      deleteUserName(): Chainable<void>
     }
   }
 }

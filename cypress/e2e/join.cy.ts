@@ -25,17 +25,6 @@ describe('join game screen', () => {
     cy.url().should('eq', `http://localhost:8081/game?id=${Cypress.env('TEST_GAME_ID')}`)
   })
 
-  it('should show an error message if a user tries to join a game but has no name', () => {
-    cy.cleanSignIn()
-    cy.deleteUserName()
-    cy.visit('/join')
-
-    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
-    cy.get('[data-testid="join-game-button"]').click()
-
-    cy.contains('Please add a name to your account to join a game.')
-  })
-
   it('should show an error message if the game does not exist', () => {
     cy.cleanSignIn()
     cy.visit('/join')

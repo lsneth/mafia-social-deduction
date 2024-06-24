@@ -4,21 +4,7 @@ import { useFonts as useOswald, Oswald_700Bold } from '@expo-google-fonts/oswald
 import { useFonts as useCrimsonText, CrimsonText_400Regular } from '@expo-google-fonts/crimson-text'
 import { NativeWindStyleSheet } from 'nativewind'
 import { AuthProvider } from '@/providers/AuthProvider'
-import { AppState } from 'react-native'
-import { supabase } from '@/lib/supabase'
 import colors from '../constants/colors'
-
-// Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
-AppState.addEventListener('change', (state) => {
-  if (state === 'active') {
-    supabase.auth.startAutoRefresh()
-  } else {
-    supabase.auth.stopAutoRefresh()
-  }
-})
 
 // This makes it so native-wind styles also work on web. For some reason it was necessary even though I'm currently using Expo 51 which is greater than 45.
 // https://www.nativewind.dev/quick-starts/expo#expo-sdk-45

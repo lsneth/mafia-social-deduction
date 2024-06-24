@@ -34,4 +34,15 @@ describe('account screen', () => {
 
     cy.get('[data-testid="name-input"]').should('have.value', 'new name')
   })
+
+  it('should display error message if user attempts to save empty string as a name', () => {
+    cy.signIn()
+    cy.addUserName()
+    cy.visit('/account')
+
+    cy.get('[data-testid="name-input"]').clear()
+    cy.contains('Update').click()
+
+    cy.contains('Please enter a name.')
+  })
 })

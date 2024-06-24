@@ -52,7 +52,7 @@ describe('lobby screen', () => {
     cy.location('pathname').should('eq', '/+not-found')
   })
 
-  it.only("should render error if player isn't in the game that matches the game id in the url (they should have gone there through join flow instead)", () => {
+  it("should render error if player isn't in the game that matches the game id in the url (they should have gone there through join flow instead)", () => {
     cy.cleanSignIn()
     cy.removePlayerFromGame()
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
