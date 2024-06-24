@@ -51,11 +51,13 @@ function playersReducer(players: Player[] | null, action: PlayersReducerAction):
 
 const GameContext = createContext<{
   players: Player[] | null
+  player: Player | null
   game: Game | null
   loading: boolean
   unsubscribeFromGame: () => Promise<'ok' | 'timed out' | 'error' | undefined>
 }>({
   players: null,
+  player: null,
   game: null,
   loading: false,
   unsubscribeFromGame: async () => undefined,
@@ -91,38 +93,6 @@ export function GameProvider(props: PropsWithChildren) {
     setGame(change.new)
   }
 
-  const refreshGameAndPlayers = useCallback(
-    async (gameId: string = game?.id ?? '') => {
-      try {
-        setLoading(true)
-        // get players data
-        const { data: playersData, error: playersError } = await supabase
-          .from('players')
-          .select('*')
-          .eq('game_id', gameId)
-        if (playersError) throw playersError
-
-        // update state
-        dispatch({
-          type: 'REFRESH',
-          players: playersData,
-        })
-
-        // get game data
-        const { data: gameData, error: gameError } = await supabase.from('games').select('*').eq('id', gameId).single()
-        if (gameError) throw gameError
-
-        // update state
-        setGame(gameData)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setLoading(false)
-      }
-    },
-    [game?.id],
-  )
-
   const subscribeToGame = useCallback(async () => {
     if (profileId) {
       try {
@@ -156,14 +126,36 @@ export function GameProvider(props: PropsWithChildren) {
           .subscribe()
 
         // make request to game and player data to get full starting state
-        await refreshGameAndPlayers(gameIdFromQueryParam)
+        // get players data
+        const { data: playersData, error: playersError } = await supabase
+          .from('players')
+          .select('*')
+          .eq('game_id', gameIdFromQueryParam)
+        if (playersError) throw playersError
+
+        // update state
+        dispatch({
+          type: 'REFRESH',
+          players: playersData,
+        })
+
+        // get game data
+        const { data: gameData, error: gameError } = await supabase
+          .from('games')
+          .select('*')
+          .eq('id', gameIdFromQueryParam)
+          .single()
+        if (gameError) throw gameError
+
+        // update state
+        setGame(gameData)
       } catch (error) {
         console.error(error)
       } finally {
         setLoading(false)
       }
     }
-  }, [gameIdFromQueryParam, profileId, refreshGameAndPlayers, rtChannel])
+  }, [gameIdFromQueryParam, profileId, rtChannel])
 
   async function unsubscribeFromGame() {
     if (!rtChannel) return
@@ -185,6 +177,7 @@ export function GameProvider(props: PropsWithChildren) {
     <GameContext.Provider
       value={{
         players,
+        player: players?.find((player) => player.profile_id === profileId) ?? null,
         game,
         loading,
         unsubscribeFromGame,

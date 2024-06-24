@@ -9,7 +9,7 @@ describe('auth screen (sign in)', () => {
   it('should render all elements', () => {
     cy.visit('/auth?has-account=true')
 
-    cy.contains('Welcome to Mafia!')
+    cy.contains('Welcome to Mafia: Social Deduction!')
     cy.contains('Email')
     cy.get('[data-testid="email-input"]')
     cy.contains('Password')
@@ -47,7 +47,7 @@ describe('auth screen(sign up)', () => {
   it('should render all elements', () => {
     cy.visit('/auth?has-account=false')
 
-    cy.contains('Welcome to Mafia!')
+    cy.contains('Welcome to Mafia: Social Deduction!')
     cy.contains('Name')
     cy.get('[data-testid="name-input"]')
     cy.contains('Email')

@@ -9,19 +9,22 @@ import { GameProvider, useGame } from '@/providers/GameProvider'
 import { Redirect } from 'expo-router'
 
 function GameManager() {
-  const { players, game, loading } = useGame()
+  const { players, player, game, loading } = useGame()
+  const phase = game?.phase
+  const playerCount = players?.length ?? 0
 
   if (loading) return <ThemedActivityIndicator />
-  if (!game || (players?.length ?? 0) <= 0) return <Redirect href="/+not-found" />
+  if (!game || !player || !players || playerCount <= 0 || (phase !== 'lobby' && playerCount < 5))
+    return <Redirect href="/+not-found" />
 
   return (
     <>
-      {game!.phase === 'lobby' ? <Lobby /> : null}
-      {game!.phase === 'role' ? <Role /> : null}
-      {game!.phase === 'mafia' ? <Mafia /> : null}
-      {game!.phase === 'innocent' ? <Innocent /> : null}
-      {game!.phase === 'investigator' ? <Investigator /> : null}
-      {game!.phase === 'end' ? <GameEnd /> : null}
+      {phase === 'lobby' ? <Lobby /> : null}
+      {phase === 'role' ? <Role /> : null}
+      {phase === 'mafia' ? <Mafia /> : null}
+      {phase === 'innocent' ? <Innocent /> : null}
+      {phase === 'investigator' ? <Investigator /> : null}
+      {phase === 'end' ? <GameEnd /> : null}
     </>
   )
 }

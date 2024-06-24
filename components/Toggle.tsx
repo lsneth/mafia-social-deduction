@@ -13,12 +13,12 @@ export default function Toggle({ trueDisplayValue, falseDisplayValue, ...rest }:
       <ThemedText>{falseDisplayValue}</ThemedText>
       <Switch
         trackColor={{ false: colors.mafiaGray, true: colors.mafiaGray }}
-        thumbColor={colors.mafiaAccent}
+        thumbColor={colors.mafiaRed}
         ios_backgroundColor={colors.mafiaGray}
         className="m-3"
         {...Platform.select({
           web: {
-            activeThumbColor: colors.mafiaAccent,
+            activeThumbColor: colors.mafiaRed,
           },
         })}
         {...rest}
