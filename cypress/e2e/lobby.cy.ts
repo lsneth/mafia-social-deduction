@@ -64,7 +64,7 @@ describe('lobby screen', () => {
     cy.contains('Start Game').click()
 
     cy.contains('Victory')
-    cy.contains('Continue')
+    cy.contains('Ready')
   })
 
   it('should start game (non-host)', () => {
@@ -72,6 +72,6 @@ describe('lobby screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('Victory')
-    cy.contains('Continue')
+    cy.contains('Ready')
   })
 })

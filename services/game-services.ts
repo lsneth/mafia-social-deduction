@@ -61,3 +61,7 @@ export async function hostGame(profileId: string, playerName: string) {
 export async function updateGamePhase(gameId: string, phase: Phase) {
   return supabase.from('games').update({ phase }).eq('id', gameId)
 }
+
+export async function readyPlayer(playerId: string) {
+  return supabase.from('players').update({ ready: true }).eq('profile_id', playerId)
+}
