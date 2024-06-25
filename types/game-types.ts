@@ -12,6 +12,7 @@ export type Player = {
   profile_id: string
   role: Role
   selected_player_id: string
+  ready: boolean
 }
 
 export type PlayersChange = {
