@@ -32,7 +32,7 @@ export default function RootLayout() {
           <Stack.Screen
             name="auth"
             options={{
-              headerTitle: 'Welcome to Mafia!',
+              headerTitle: 'Welcome to Mafia: Social Deduction!',
               headerTitleStyle: {
                 color: colors.mafiaWhite,
                 fontFamily: 'CrimsonText_400Regular',

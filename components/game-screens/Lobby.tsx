@@ -11,6 +11,7 @@ import { assignRoles, deleteGame, leaveGame, updateGamePhase } from '@/services/
 import { router } from 'expo-router'
 import { useState } from 'react'
 import SummaryTable from '../SummaryTable'
+import getRoleCounts from '@/helpers/getRoleCounts'
 
 export default function Lobby() {
   const { game, unsubscribeFromGame, players } = useGame()
@@ -18,7 +19,10 @@ export default function Lobby() {
   const hostId = game!.host_id
   const { id: profileId } = useProfile()
   const [loading, setLoading] = useState<boolean>(false)
+
   const isHost = hostId === profileId
+  const playerCount = players!.length
+  const { mafiaCount, investigatorCount, innocentCount } = getRoleCounts(playerCount)
 
   const startButtonDisabled = (players?.length ?? 0) < 5
   const numMorePlayersNeeded = 5 - (players?.length ?? 0)
@@ -35,7 +39,38 @@ export default function Lobby() {
 
       <PlayerGrid />
 
-      <SummaryTable />
+      <SummaryTable
+        title={`${playerCount} Player${playerCount !== 1 ? 's' : ''}`}
+        sections={[
+          {
+            component: (
+              <>
+                <ThemedText>{mafiaCount}</ThemedText>
+                <ThemedText>Mafia</ThemedText>
+              </>
+            ),
+            bgColor: 'bg-mafiaRed',
+          },
+          {
+            component: (
+              <>
+                <ThemedText>{investigatorCount}</ThemedText>
+                <ThemedText>{`Investigator${investigatorCount !== 1 ? 's' : ''}`}</ThemedText>
+              </>
+            ),
+            bgColor: 'bg-mafiaBlue',
+          },
+          {
+            component: (
+              <>
+                <ThemedText>{innocentCount}</ThemedText>
+                <ThemedText>{`Innocent${innocentCount !== 1 ? 's' : ''}`}</ThemedText>
+              </>
+            ),
+            bgColor: 'bg-mafiaYellow',
+          },
+        ]}
+      />
       <Group>
         {isHost ? (
           <>

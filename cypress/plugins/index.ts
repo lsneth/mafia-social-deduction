@@ -1,15 +1,12 @@
 // https://github.com/orgs/supabase/discussions/6177
 
-import { signIn, signOut, addPlayerToGame, removePlayerFromGame, deleteUserGame, hostGame, addUserName } from './tasks'
+import { deleteGames, signIn, setUpGame, addUserName } from './tasks'
 
 export default (on: any, config: any) => {
   on('task', {
+    deleteGames,
     signIn,
-    signOut,
-    addPlayerToGame,
-    removePlayerFromGame,
-    deleteUserGame,
-    hostGame,
+    setUpGame,
     addUserName,
   })
 

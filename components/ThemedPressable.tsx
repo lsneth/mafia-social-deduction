@@ -9,7 +9,8 @@ export default forwardRef(function ThemedPressable(props: ThemedPressableProps, 
   const { className, secondary = false, disabled, ...rest } = props
   return (
     <Pressable
-      className={`${secondary ? 'bg-mafiaDarkGray' : disabled ? 'bg-mafiaGray' : 'bg-mafiaAccent'} flex w-full max-w-sm items-center rounded-full p-3 ${className}`}
+      className={`${secondary ? 'bg-mafiaDarkGray' : disabled ? 'bg-mafiaGray' : 'bg-mafiaRed'} flex w-full max-w-sm items-center rounded-lg p-3 ${className}`}
+      disabled={disabled}
       {...rest}
     />
   )

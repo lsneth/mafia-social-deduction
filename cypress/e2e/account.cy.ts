@@ -6,12 +6,13 @@ describe('account screen', () => {
   })
 
   it('should render all elements', () => {
-    cy.signIn()
+    cy.cleanSignIn()
     cy.visit('/account')
 
     cy.contains('Account')
     cy.contains(Cypress.env('TEST_USER_EMAIL'))
     cy.contains('Name')
+    cy.get('[data-testid="name-input"]').should('have.value', Cypress.env('TEST_USER_NAME'))
     cy.contains('female')
     cy.contains('male')
     cy.contains('Update')
@@ -22,8 +23,7 @@ describe('account screen', () => {
 
   it('should update name', () => {
     cy.intercept('https://krsvqfsdxblshgkwnwnb.supabase.co/rest/v1/profiles').as('nameUpdate')
-    cy.signIn()
-    cy.addUserName()
+    cy.cleanSignIn()
     cy.visit('/account')
 
     cy.get('[data-testid="name-input"]').clear()
@@ -36,8 +36,7 @@ describe('account screen', () => {
   })
 
   it('should display error message if user attempts to save empty string as a name', () => {
-    cy.signIn()
-    cy.addUserName()
+    cy.cleanSignIn()
     cy.visit('/account')
 
     cy.get('[data-testid="name-input"]').clear()

@@ -1,31 +1,27 @@
 import { View } from 'react-native'
 import { ThemedText } from './ThemedText'
-import { useGame } from '@/providers/GameProvider'
-import getRoleCounts from '@/helpers/getRoleCounts'
 
-export default function SummaryTable() {
-  const { players } = useGame()
-  const playerCount = players?.length ?? 0
-  const { mafiaCount, investigatorCount, innocentCount } = getRoleCounts(playerCount)
-
+export default function SummaryTable({
+  title,
+  sections,
+}: {
+  title: string
+  sections: { component: JSX.Element; bgColor: string }[]
+}) {
   return (
     <View className="w-full max-w-sm">
-      <View className="items-center rounded-t-lg bg-mafiaDarkGray px-2 py-1">
-        <ThemedText>{`${playerCount} Player${playerCount !== 1 ? 's' : ''}`}</ThemedText>
+      <View className="items-center rounded-t-lg border-2 border-b-0 border-mafiaDarkGray bg-mafiaBlack px-2 py-1">
+        <ThemedText>{title}</ThemedText>
       </View>
       <View className="flex flex-row">
-        <View className="w-1/3 items-center rounded-bl-lg bg-mafiaAccent px-2 py-1">
-          <ThemedText>{mafiaCount}</ThemedText>
-          <ThemedText>Mafia</ThemedText>
-        </View>
-        <View className="w-1/3 items-center bg-blue-950 px-2 py-1">
-          <ThemedText>{investigatorCount}</ThemedText>
-          <ThemedText>{`Investigator${investigatorCount !== 1 ? 's' : ''}`}</ThemedText>
-        </View>
-        <View className="w-1/3 items-center rounded-br-lg bg-yellow-900 px-2 py-1">
-          <ThemedText>{innocentCount}</ThemedText>
-          <ThemedText>{`Innocent${innocentCount !== 1 ? 's' : ''}`}</ThemedText>
-        </View>
+        {sections.map((section, index) => (
+          <View
+            className={`flex-1 items-center ${index === 0 ? 'rounded-bl-lg' : ''} ${index === sections.length - 1 ? 'rounded-br-lg' : ''} ${section.bgColor} px-2 py-1`}
+            key={section.bgColor}
+          >
+            {section.component}
+          </View>
+        ))}
       </View>
     </View>
   )

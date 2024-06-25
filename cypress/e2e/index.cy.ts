@@ -1,6 +1,6 @@
 describe('index screen', () => {
   it('should redirect to authenticated home screen if a session exists', () => {
-    cy.signIn()
+    cy.cleanSignIn()
     cy.visit('/')
 
     cy.location('pathname').should('eq', '/home')
