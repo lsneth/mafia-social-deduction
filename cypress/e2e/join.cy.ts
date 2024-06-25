@@ -55,7 +55,7 @@ describe('join game screen', () => {
   })
 
   it("should show an error message if the game is already started (if it isn't in the lobby phase)", () => {
-    cy.setUpGame({ hostedByMe: false, phase: 'role' })
+    cy.setUpGame({ hostedByMe: false, phase: 'role', numOtherPlayers: 4 })
 
     cy.visit('/join')
 

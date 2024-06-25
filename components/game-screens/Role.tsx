@@ -24,13 +24,13 @@ const roleDetails = {
     male: investigatorMale,
     female: investigatorFemale,
     victory: 'You win when all the mafia players are dead.',
-    special: 'The investigator team can investigate a player every night.',
+    special: 'The investigator team investigates a player every night.',
   },
   mafia: {
     male: mafiaMale,
     female: mafiaFemale,
     victory: 'You win when all non-mafia players are dead.',
-    special: 'The mafia team may kill a player every night.',
+    special: 'The mafia team kills a player every night.',
   },
 }
 

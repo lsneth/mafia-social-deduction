@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { Phase } from '@/types/game-types'
+import { Phase, Role } from '@/types/game-types'
 
 export {}
 
@@ -14,14 +14,17 @@ Cypress.Commands.add('cleanSignIn', () => {
 })
 
 // deletes old test game and sets up a new one
-Cypress.Commands.add('setUpGame', ({ hostedByMe = true, addMe = false, numOtherPlayers = 0, phase = 'lobby' } = {}) => {
-  cy.task('deleteGames')
-  cy.task('addUserName')
-  cy.task('signIn').then((sessionData) => {
-    localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
-  })
-  cy.task('setUpGame', { phase, numOtherPlayers, hostedByMe, addMe })
-})
+Cypress.Commands.add(
+  'setUpGame',
+  ({ hostedByMe = true, addMe = false, numOtherPlayers = 0, phase = 'lobby', myRole = 'innocent' } = {}) => {
+    cy.task('deleteGames')
+    cy.task('addUserName')
+    cy.task('signIn').then((sessionData) => {
+      localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
+    })
+    cy.task('setUpGame', { phase, numOtherPlayers, hostedByMe, addMe, myRole })
+  },
+)
 
 declare global {
   namespace Cypress {
@@ -37,6 +40,7 @@ declare global {
         addMe?: boolean
         numOtherPlayers?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
         phase?: Phase
+        myRole?: Role
       }): Chainable<void>
     }
   }

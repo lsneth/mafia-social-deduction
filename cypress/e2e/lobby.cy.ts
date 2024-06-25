@@ -56,4 +56,22 @@ describe('lobby screen', () => {
 
     cy.location('pathname').should('eq', '/+not-found')
   })
+
+  it('should start game (host)', () => {
+    cy.setUpGame({ phase: 'lobby', numOtherPlayers: 4 })
+    cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
+
+    cy.contains('Start Game').click()
+
+    cy.contains('Victory')
+    cy.contains('Continue')
+  })
+
+  it('should start game (non-host)', () => {
+    cy.setUpGame({ hostedByMe: false, addMe: true, phase: 'role', numOtherPlayers: 3 })
+    cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
+
+    cy.contains('Victory')
+    cy.contains('Continue')
+  })
 })
