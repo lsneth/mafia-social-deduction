@@ -5,10 +5,10 @@ import { createClient } from '@supabase/supabase-js'
 require('dotenv').config()
 
 // for some reason, when running tests in github actions, if the env var only had digit characters in it it was being sent as a number and which caused requests to fail. These toString() functions ensure that won't happen.
-const TEST_USER_EMAIL = process.env.EXPO_PUBLIC_TEST_USER_EMAIL?.toString() ?? ''
-const TEST_USER_PASSWORD = process.env.EXPO_PUBLIC_TEST_USER_PASSWORD?.toString() ?? ''
-const TEST_USER_ID = process.env.EXPO_PUBLIC_TEST_USER_ID?.toString() ?? ''
-const TEST_USER_NAME = process.env.EXPO_PUBLIC_TEST_USER_NAME?.toString() ?? ''
+const TEST_USER_EMAIL = process.env.CYPRESS_TEST_USER_EMAIL?.toString() ?? ''
+const TEST_USER_PASSWORD = process.env.CYPRESS_TEST_USER_PASSWORD?.toString() ?? ''
+const TEST_USER_ID = process.env.CYPRESS_TEST_USER_ID?.toString() ?? ''
+const TEST_USER_NAME = process.env.CYPRESS_TEST_USER_NAME?.toString() ?? ''
 const SUPABASE_URL = 'https://krsvqfsdxblshgkwnwnb.supabase.co'
 const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtyc3ZxZnNkeGJsc2hna3dud25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc3Njc4NTgsImV4cCI6MjAzMzM0Mzg1OH0.-GlDIfDvVrauGuuvmZDReVVBN7BIy-SBCvRDGeUf9NI'
