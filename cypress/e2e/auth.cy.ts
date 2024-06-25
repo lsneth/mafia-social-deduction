@@ -1,6 +1,6 @@
 describe('auth screen (sign in)', () => {
   it('should redirect to authenticated home screen if a session exists', () => {
-    cy.signIn()
+    cy.cleanSignIn()
     cy.visit('/auth?has-account=true')
 
     cy.location('pathname').should('eq', '/home')
@@ -38,7 +38,7 @@ describe('auth screen (sign in)', () => {
 
 describe('auth screen(sign up)', () => {
   it('should redirect to authenticated home screen if a session exists', () => {
-    cy.signIn()
+    cy.cleanSignIn()
     cy.visit('/auth?has-account=false')
 
     cy.location('pathname').should('eq', '/home')

@@ -6,13 +6,12 @@ describe('lobby screen', () => {
   })
 
   it('should render all elements (host)', () => {
-    cy.cleanSignIn()
-    cy.hostGame()
-    cy.visit(`/game?id=${Cypress.env('TEST_HOST_GAME_ID')}`)
+    cy.setUpGame()
+    cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains(Cypress.env('TEST_HOST_GAME_ID'))
+    cy.contains(Cypress.env('TEST_GAME_ID'))
     cy.contains('Invite others with this code')
-    cy.contains('test name')
+    cy.contains(Cypress.env('TEST_USER_NAME'))
     cy.contains('1 Player')
     cy.contains('0')
     cy.contains('Mafia')
@@ -25,14 +24,13 @@ describe('lobby screen', () => {
   })
 
   it('should render all elements (non-host)', () => {
-    cy.cleanSignIn()
-    cy.addPlayerToGame()
+    cy.setUpGame({ hostedByMe: false, addMe: true })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains(Cypress.env('TEST_GAME_ID'))
     cy.contains('Invite others with this code')
-    cy.contains('Host: Happy Path')
-    cy.contains('test name')
+    cy.contains('host')
+    cy.contains(Cypress.env('TEST_USER_NAME'))
     cy.contains('0')
     cy.contains('Mafia')
     cy.contains('Investigators')
@@ -53,8 +51,7 @@ describe('lobby screen', () => {
   })
 
   it("should render error if player isn't in the game that matches the game id in the url (they should have gone there through join flow instead)", () => {
-    cy.cleanSignIn()
-    cy.removePlayerFromGame()
+    cy.setUpGame({ hostedByMe: false })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.location('pathname').should('eq', '/+not-found')

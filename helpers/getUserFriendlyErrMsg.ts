@@ -4,7 +4,7 @@ export default function getUserFriendlyErrMsg(errorMessage: string) {
     errorMessage.includes('duplicate key value violates unique constraint "players_player_id_key"') ||
     errorMessage.includes('Player is already in a game')
   ) {
-    return 'You have already joined a game.'
+    return 'You are already in a game.'
   }
 
   if (

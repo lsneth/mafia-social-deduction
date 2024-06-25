@@ -14,7 +14,7 @@ describe('not found screen', () => {
   })
 
   it('should navigate to home screen (if authenticated)', () => {
-    cy.signIn()
+    cy.cleanSignIn()
     cy.visit('/blahblahblah', { failOnStatusCode: false })
 
     cy.contains('Go to home screen').click()

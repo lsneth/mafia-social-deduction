@@ -1,5 +1,6 @@
 // https://github.com/orgs/supabase/discussions/6177
 
+import { Phase } from '@/types/game-types'
 import { createClient } from '@supabase/supabase-js'
 require('dotenv').config()
 
@@ -7,8 +8,7 @@ require('dotenv').config()
 const TEST_USER_EMAIL = process.env.EXPO_PUBLIC_TEST_USER_EMAIL?.toString() ?? ''
 const TEST_USER_PASSWORD = process.env.EXPO_PUBLIC_TEST_USER_PASSWORD?.toString() ?? ''
 const TEST_USER_ID = process.env.EXPO_PUBLIC_TEST_USER_ID?.toString() ?? ''
-const TEST_HOST_GAME_ID = process.env.EXPO_PUBLIC_TEST_HOST_GAME_ID?.toString() ?? ''
-const TEST_USER_NAME = 'test name'
+const TEST_USER_NAME = process.env.EXPO_PUBLIC_TEST_USER_NAME?.toString() ?? ''
 const SUPABASE_URL = 'https://krsvqfsdxblshgkwnwnb.supabase.co'
 const SUPABASE_ANON_KEY =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtyc3ZxZnNkeGJsc2hna3dud25iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc3Njc4NTgsImV4cCI6MjAzMzM0Mzg1OH0.-GlDIfDvVrauGuuvmZDReVVBN7BIy-SBCvRDGeUf9NI'
@@ -18,63 +18,67 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 const sessions: Record<string, any> = {} // cache session data for each email
 
 export async function signIn() {
-  if (!sessions[TEST_USER_EMAIL]) {
-    const { data } = await supabase.auth.signInWithPassword({
-      email: TEST_USER_EMAIL,
-      password: TEST_USER_PASSWORD,
-    })
-
-    sessions[TEST_USER_EMAIL] = data.session
-  }
-
-  return sessions[TEST_USER_EMAIL]
-}
-
-export async function signOut() {
-  return supabase.auth.signOut()
-}
-
-export async function addPlayerToGame(gameId: string) {
   try {
-    const { error } = await supabase
-      .from('players')
-      .insert({ profile_id: TEST_USER_ID, game_id: gameId, name: TEST_USER_NAME })
+    if (!sessions[TEST_USER_EMAIL]) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: TEST_USER_EMAIL,
+        password: TEST_USER_PASSWORD,
+      })
+      if (error) throw error
 
-    if (error) throw error
-
-    return { error: null }
-  } catch (error: any) {
-    const errorObj = await error.context.json() // https://github.com/supabase/functions-js/issues/45#issuecomment-2068191215
-    return { error: { message: errorObj.error } }
+      sessions[TEST_USER_EMAIL] = data.session
+    }
+    return sessions[TEST_USER_EMAIL]
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }
 
-export async function removePlayerFromGame() {
-  return supabase.from('players').delete().eq('profile_id', TEST_USER_ID)
+// deletes old test game and/or any game the test user is hosting
+export async function deleteGames() {
+  try {
+    const { error } = await supabase.functions.invoke('cypress-delete-game')
+    if (error) throw error
+  } catch (error) {
+    console.error(error)
+  } finally {
+    return null
+  }
 }
 
-export async function deleteUserGame() {
-  return supabase.from('games').delete().eq('host_id', TEST_USER_ID)
-}
-
-export async function hostGame() {
-  // create row in 'games' table
-  const { error: createGameError } = await supabase
-    .from('games')
-    .insert({ id: TEST_HOST_GAME_ID, host_id: TEST_USER_ID })
-  if (createGameError) throw createGameError
-
-  // add player to 'players' table as host
-  const { error: addPlayerError } = await supabase.from('players').insert({
-    profile_id: TEST_USER_ID,
-    game_id: TEST_HOST_GAME_ID,
-    name: 'test name',
-  })
-  if (addPlayerError) throw addPlayerError
-
-  return null
-}
-
+// deletes old test game
 export async function addUserName() {
-  return supabase.from('profiles').update({ name: TEST_USER_NAME }).eq('id', TEST_USER_ID)
+  try {
+    const { error } = await supabase.from('profiles').update({ name: TEST_USER_NAME }).eq('id', TEST_USER_ID)
+    if (error) throw error
+  } catch (error) {
+    console.error(error)
+  } finally {
+    return null
+  }
+}
+
+// deletes old test game and sets up a new one
+export async function setUpGame({
+  hostedByMe,
+  addMe,
+  numOtherPlayers,
+  phase,
+}: {
+  hostedByMe: boolean
+  addMe: boolean
+  numOtherPlayers: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
+  phase: Phase
+}) {
+  try {
+    const { error } = await supabase.functions.invoke('cypress-setup-game', {
+      body: { hostedByMe, addMe, numOtherPlayers, phase },
+    })
+    if (error) throw error
+  } catch (error) {
+    console.error(error)
+  } finally {
+    return null
+  }
 }

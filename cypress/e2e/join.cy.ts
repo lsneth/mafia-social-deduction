@@ -6,7 +6,7 @@ describe('join game screen', () => {
   })
 
   it('should render all elements', () => {
-    cy.signIn()
+    cy.cleanSignIn()
     cy.visit('/join')
 
     cy.contains('Join Game')
@@ -16,7 +16,7 @@ describe('join game screen', () => {
   })
 
   it('should join game and navigate to /game?id=gameId if gameId is valid', () => {
-    cy.cleanSignIn()
+    cy.setUpGame({ hostedByMe: false })
     cy.visit('/join')
 
     cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
@@ -45,33 +45,33 @@ describe('join game screen', () => {
   })
 
   it('should show an error message if there are already 15 players in the game', () => {
-    cy.cleanSignIn()
+    cy.setUpGame({ hostedByMe: false, numOtherPlayers: 14 })
     cy.visit('/join')
 
-    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_15_PLAYER_GAME_ID'))
+    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('This game already has 15 players.')
   })
 
   it("should show an error message if the game is already started (if it isn't in the lobby phase)", () => {
-    cy.cleanSignIn()
+    cy.setUpGame({ hostedByMe: false, phase: 'role' })
+
     cy.visit('/join')
 
-    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_ALREADY_STARTED_GAME_ID'))
+    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
     cy.get('[data-testid="join-game-button"]').click()
 
     cy.contains('This game has already started.')
   })
 
   it('should show an error message if a user tries to join when they are already in a game', () => {
-    cy.cleanSignIn()
-    cy.addPlayerToGame(Cypress.env('TEST_ALREADY_JOINED_GAME_ID'))
+    cy.setUpGame()
     cy.visit('/join')
 
-    cy.get('[data-testid="game-id-input"]').type(Cypress.env('TEST_GAME_ID'))
+    cy.get('[data-testid="game-id-input"]').type('blah')
     cy.get('[data-testid="join-game-button"]').click()
 
-    cy.contains('You have already joined a game.')
+    cy.contains('You are already in a game.')
   })
 })

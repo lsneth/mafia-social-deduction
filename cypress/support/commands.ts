@@ -1,44 +1,43 @@
 /// <reference types="cypress" />
 
+import { Phase } from '@/types/game-types'
+
 export {}
 
-// auth
 Cypress.Commands.add('cleanSignIn', () => {
-  cy.signIn()
-  cy.removePlayerFromGame()
-  cy.deleteUserGame()
-  cy.addUserName()
-})
-Cypress.Commands.add('signIn', () => {
   // https://github.com/orgs/supabase/discussions/6177
+  cy.task('deleteGames')
+  cy.task('addUserName')
   cy.task('signIn').then((sessionData) => {
     localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
   })
 })
-Cypress.Commands.add('signOut', () => cy.task('signOut'))
 
-// game
-Cypress.Commands.add('addPlayerToGame', (gameId = Cypress.env('TEST_GAME_ID')) => {
-  cy.task('addPlayerToGame', gameId)
+// deletes old test game and sets up a new one
+Cypress.Commands.add('setUpGame', ({ hostedByMe = true, addMe = false, numOtherPlayers = 0, phase = 'lobby' } = {}) => {
+  cy.task('deleteGames')
+  cy.task('addUserName')
+  cy.task('signIn').then((sessionData) => {
+    localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
+  })
+  cy.task('setUpGame', { phase, numOtherPlayers, hostedByMe, addMe })
 })
-Cypress.Commands.add('removePlayerFromGame', () => cy.task('removePlayerFromGame'))
-Cypress.Commands.add('deleteUserGame', () => cy.task('deleteUserGame'))
-Cypress.Commands.add('hostGame', () => cy.task('hostGame'))
-
-// name
-Cypress.Commands.add('addUserName', () => cy.task('addUserName'))
 
 declare global {
   namespace Cypress {
     interface Chainable {
       cleanSignIn(): Chainable<void>
-      signIn(): Chainable<void>
-      signOut(): Chainable<void>
-      addPlayerToGame(gameId?: string): Chainable<void>
-      removePlayerFromGame(): Chainable<void>
-      deleteUserGame(): Chainable<void>
-      hostGame(): Chainable<void>
-      addUserName(): Chainable<void>
+      setUpGame({
+        hostedByMe,
+        addMe,
+        numOtherPlayers,
+        phase,
+      }?: {
+        hostedByMe?: boolean
+        addMe?: boolean
+        numOtherPlayers?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
+        phase?: Phase
+      }): Chainable<void>
     }
   }
 }
