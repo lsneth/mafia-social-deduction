@@ -49,7 +49,7 @@ export default function AccountScreen() {
       </Group>
 
       <Group>
-        {errorMessage ? <ThemedText>{errorMessage}</ThemedText> : ''}
+        {errorMessage ? <ThemedText>{errorMessage}</ThemedText> : null}
         <ThemedPressable
           onPress={async () => {
             try {

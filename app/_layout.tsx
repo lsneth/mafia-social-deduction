@@ -5,6 +5,7 @@ import { useFonts as useCrimsonText, CrimsonText_400Regular } from '@expo-google
 import { NativeWindStyleSheet } from 'nativewind'
 import { AuthProvider } from '@/providers/AuthProvider'
 import colors from '../constants/colors'
+import * as SystemUI from 'expo-system-ui'
 
 // This makes it so native-wind styles also work on web. For some reason it was necessary even though I'm currently using Expo 51 which is greater than 45.
 // https://www.nativewind.dev/quick-starts/expo#expo-sdk-45
@@ -13,6 +14,8 @@ NativeWindStyleSheet.setOutput({
 })
 
 export default function RootLayout() {
+  SystemUI.setBackgroundColorAsync(colors.mafiaBlack)
+
   let [oswaldLoaded, oswaldError] = useOswald({
     Oswald_700Bold,
   })
@@ -27,7 +30,13 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <SafeAreaProvider>
-        <Stack>
+        <Stack
+          screenOptions={{
+            contentStyle: {
+              backgroundColor: colors.mafiaBlack,
+            },
+          }}
+        >
           <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
           <Stack.Screen
             name="auth"

@@ -6,6 +6,7 @@ import backgroundImage from '../assets/images/mafia-bg.png'
 import Group from '@/components/Group'
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import { useAuth } from '@/providers/AuthProvider'
+import Spacer from '@/components/Spacer'
 
 export default function HomeScreen() {
   const { session, loading } = useAuth()
@@ -25,6 +26,7 @@ export default function HomeScreen() {
             <ThemedText>Sign in</ThemedText>
           </ThemedPressable>
         </Link>
+        <Spacer />
         <Link href="/auth?has-account=false" asChild>
           <ThemedPressable secondary>
             <ThemedText>Sign up</ThemedText>
