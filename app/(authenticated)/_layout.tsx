@@ -12,7 +12,13 @@ export default function AuthenticatedLayout() {
 
   return (
     <ProfileProvider>
-      <Stack>
+      <Stack
+        screenOptions={{
+          contentStyle: {
+            backgroundColor: colors.mafiaBlack,
+          },
+        }}
+      >
         <Stack.Screen name="game" options={{ headerShown: false }} />
         <Stack.Screen
           name="account"
