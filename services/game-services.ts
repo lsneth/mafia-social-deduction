@@ -65,3 +65,22 @@ export async function updateGamePhase(gameId: string, phase: Phase) {
 export async function readyPlayer(playerId: string) {
   return supabase.from('players').update({ ready: true }).eq('profile_id', playerId)
 }
+
+export async function unreadyPlayers(playerIds: string[]) {
+  let response = { error: '' }
+
+  playerIds.forEach(async (playerId) => {
+    const { error } = await supabase.from('players').update({ ready: false }).eq('profile_id', playerId)
+    if (error) response = { error: error.message }
+  })
+
+  return response
+}
+
+export async function selectPlayer(playerId: string, selectedPlayerId: string) {
+  return supabase.from('players').update({ selected_player_id: selectedPlayerId }).eq('profile_id', playerId)
+}
+
+export async function markPlayerKilled(playerId: string) {
+  return supabase.from('players').update({ has_been_killed: true }).eq('profile_id', playerId)
+}

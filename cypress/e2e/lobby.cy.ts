@@ -37,7 +37,7 @@ describe('lobby screen', () => {
     cy.contains('2')
     cy.contains('Innocents')
     cy.contains('Start Game').should('not.exist')
-    cy.contains('Waiting for 3+ more players.')
+    cy.contains('Waiting for 3+ more players...')
     cy.contains('Need 4+ More Players').should('not.exist')
     cy.contains('Delete Game').should('not.exist')
     cy.contains('Leave Game')

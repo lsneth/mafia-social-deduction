@@ -79,6 +79,7 @@ export function GameProvider(props: PropsWithChildren) {
   const [loading, setLoading] = useState<boolean>(true)
   const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id: string }>()
   const [rtChannel] = useState<RealtimeChannel>(supabase.channel(gameIdFromQueryParam ?? ''))
+  const [rtLoading, setRtLoading] = useState<boolean>(true)
   const { id: profileId } = useProfile()
 
   const onPlayersUpdate = (change: PlayersChange) => {
@@ -123,6 +124,13 @@ export function GameProvider(props: PropsWithChildren) {
               onGameUpdate(change as GameChange)
             },
           )
+          // https://github.com/supabase/realtime/issues/282
+          // workaround. the SUBSCRIBED status of the callback passed to the subscribe function below reflects before the channel is actually joined and available to postgres changes. This "on system" checks for the message that indicates that it is actually ready.
+          .on('system' as any, {} as any, (payload: any) => {
+            if (payload.extension === 'postgres_changes' && payload.status === 'ok') {
+              setRtLoading(false)
+            }
+          })
           .subscribe()
 
         // make request to game and player data to get full starting state
@@ -152,6 +160,7 @@ export function GameProvider(props: PropsWithChildren) {
       } catch (error) {
         console.error(error)
       } finally {
+        setRtLoading(false)
         setLoading(false)
       }
     }
@@ -179,7 +188,7 @@ export function GameProvider(props: PropsWithChildren) {
         players,
         player: players?.find((player) => player.profile_id === profileId) ?? null,
         game,
-        loading,
+        loading: loading || rtLoading,
         unsubscribeFromGame,
       }}
     >
