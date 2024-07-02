@@ -37,7 +37,7 @@ export default function Lobby() {
         <ThemedText>Invite others with this code</ThemedText>
       </Group>
 
-      <PlayerGrid />
+      <PlayerGrid selectable={false} />
 
       <SummaryTable
         title={`${playerCount} Player${playerCount !== 1 ? 's' : ''}`}
@@ -119,8 +119,8 @@ export default function Lobby() {
           <>
             <ThemedText>
               {startButtonDisabled
-                ? `Waiting for ${numMorePlayersNeeded}+ more players.`
-                : 'Waiting for host to start.'}
+                ? `Waiting for ${numMorePlayersNeeded}+ more players...`
+                : 'Waiting for host to start...'}
             </ThemedText>
             <Spacer />
             <ThemedPressable

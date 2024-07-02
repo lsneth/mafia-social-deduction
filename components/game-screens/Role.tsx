@@ -66,10 +66,10 @@ export default function Role() {
           }}
           testID="start-mafia-phase-button"
         >
-          <ThemedText>{allPlayersReady ? 'Start Mafia Phase' : 'Waiting for other players.'}</ThemedText>
+          <ThemedText>{allPlayersReady ? 'Start Mafia Phase' : 'Waiting for other players...'}</ThemedText>
         </ThemedPressable>
       ) : (
-        <ThemedText>{allPlayersReady ? 'Waiting for host.' : 'Waiting for other players.'}</ThemedText>
+        <ThemedText>{allPlayersReady ? 'Waiting for host...' : 'Waiting for other players...'}</ThemedText>
       )}
     </ThemedView>
   ) : (
