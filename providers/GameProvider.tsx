@@ -158,9 +158,9 @@ export function GameProvider(props: PropsWithChildren) {
         // update state
         setGame(gameData)
       } catch (error) {
+        setRtLoading(false)
         console.error(error)
       } finally {
-        setRtLoading(false)
         setLoading(false)
       }
     }

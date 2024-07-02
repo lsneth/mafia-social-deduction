@@ -16,13 +16,21 @@ Cypress.Commands.add('cleanSignIn', () => {
 // deletes old test game and sets up a new one
 Cypress.Commands.add(
   'setUpGame',
-  ({ hostedByMe = true, addMe = false, numOtherPlayers = 0, phase = 'lobby', myRole, ready = '' } = {}) => {
+  ({
+    hostedByMe = true,
+    addMe = false,
+    numOtherPlayers = 0,
+    phase = 'lobby',
+    myRole,
+    ready = '',
+    selectedPlayerId = null,
+  } = {}) => {
     cy.task('deleteGames')
     cy.task('addUserName')
     cy.task('signIn').then((sessionData) => {
       localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
     })
-    cy.task('setUpGame', { phase, numOtherPlayers, hostedByMe, addMe, myRole, ready })
+    cy.task('setUpGame', { phase, numOtherPlayers, hostedByMe, addMe, myRole, ready, selectedPlayerId })
   },
 )
 
@@ -42,6 +50,7 @@ declare global {
         phase?: Phase
         myRole?: Role
         ready?: string
+        selectedPlayerId?: string
       }): Chainable<void>
     }
   }

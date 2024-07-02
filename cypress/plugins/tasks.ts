@@ -67,17 +67,19 @@ export async function setUpGame({
   phase,
   myRole,
   ready,
+  selectedPlayerId,
 }: {
   hostedByMe: boolean
   addMe: boolean
   numOtherPlayers: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
   phase: Phase
   myRole: Role
-  ready: boolean
+  ready: string
+  selectedPlayerId: string | null
 }) {
   try {
     const { error } = await supabase.functions.invoke('cypress-set-up-game', {
-      body: { hostedByMe, addMe, numOtherPlayers, phase, myRole, ready },
+      body: { hostedByMe, addMe, numOtherPlayers, phase, myRole, ready, selectedPlayerId },
     })
     if (error) throw error
   } catch (error) {
