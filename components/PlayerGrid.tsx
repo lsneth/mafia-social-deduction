@@ -6,14 +6,14 @@ import Spacer from './Spacer'
 import { selectPlayer } from '@/services/game-services'
 
 function PlayerCard({ cardPlayer, selectable }: { cardPlayer: Player; selectable: boolean }) {
-  const { player, players } = useGame()
+  const { player, players, game } = useGame()
   const selected = cardPlayer.profile_id === player?.selected_player_id
   const cardPlayerIsPlayer = cardPlayer.profile_id === player?.profile_id
   const voteCount = players?.filter((player) => player.selected_player_id === cardPlayer.profile_id).length
 
   return (
     <Pressable
-      className={`flex-1 items-center justify-center rounded-lg ${selected ? 'bg-mafiaDarkGray' : 'bg-mafiaGray'}`}
+      className={`flex-1 items-center justify-center rounded-lg ${selectable && selected ? 'bg-mafiaDarkGray' : 'bg-mafiaGray'}`}
       style={{ maxWidth: '32%' }}
       disabled={cardPlayerIsPlayer || !selectable}
       onPress={async () => {
@@ -28,6 +28,9 @@ function PlayerCard({ cardPlayer, selectable }: { cardPlayer: Player; selectable
       <View className="min-h-36">
         <ThemedText>{cardPlayer.name}</ThemedText>
         <ThemedText>{voteCount}</ThemedText>
+        {game?.phase === 'investigator' && cardPlayer.has_been_investigated === true ? (
+          <ThemedText>{cardPlayer.role}</ThemedText>
+        ) : null}
       </View>
     </Pressable>
   )
