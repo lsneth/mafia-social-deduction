@@ -72,7 +72,7 @@ export default function Mafia() {
       {playerRole === 'mafia' ? (
         <>
           <PlayerGrid />
-          <Group>
+          <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="ready-button">
             <ThemedText>{errorMessage ? errorMessage : null}</ThemedText>
             <ThemedPressable
               disabled={!selectedPlayerId || ready}
@@ -84,7 +84,6 @@ export default function Mafia() {
                   console.error(error)
                 }
               }}
-              testID="ready-button"
             >
               <ThemedText>{ready ? 'Waiting for other mafia...' : 'Ready'}</ThemedText>
             </ThemedPressable>

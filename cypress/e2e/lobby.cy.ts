@@ -11,7 +11,7 @@ describe('lobby screen', () => {
 
     cy.contains(Cypress.env('TEST_GAME_ID'))
     cy.contains('Invite others with this code')
-    cy.contains(Cypress.env('TEST_USER_NAME'))
+    cy.contains('Me')
     cy.contains('1 Player')
     cy.contains('0')
     cy.contains('Mafia')
@@ -30,7 +30,7 @@ describe('lobby screen', () => {
     cy.contains(Cypress.env('TEST_GAME_ID'))
     cy.contains('Invite others with this code')
     cy.contains('host')
-    cy.contains(Cypress.env('TEST_USER_NAME'))
+    cy.contains('Me')
     cy.contains('0')
     cy.contains('Mafia')
     cy.contains('Investigators')

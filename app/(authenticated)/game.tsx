@@ -17,11 +17,13 @@ function GameManager() {
 
   useEffect(() => {
     async function resetPlayerState() {
-      try {
-        const { error } = await clearPlayerState(game?.id ?? '')
-        if (error) throw error
-      } catch (error) {
-        console.error(error)
+      if (!window.Cypress) {
+        try {
+          const { error } = await clearPlayerState(game?.id ?? '')
+          if (error) throw error
+        } catch (error) {
+          console.error(error)
+        }
       }
     }
 

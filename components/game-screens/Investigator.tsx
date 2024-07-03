@@ -24,13 +24,12 @@ export default function Investigator() {
 
   useEffect(() => {
     async function endInvestigatorPhase() {
-      // from the host's device, mark player that the investigators guessed. When all are ready, display a yes or no and mark them not ready. Once they are ready again, transition to innocent phase
       if (isHost) {
         // we only want to make game changes from the host's device, even if they aren't an investigator
         if (investigatorPlayers.every((player) => player.ready === true)) {
-          // if all investigators are ready
+          // if all investigators are in ready state
           if (investigating) {
-            // if they're ready to see the results of their investigation
+            // if they're "ready" to see the results of their investigation
             const votedPlayerId = getVotedPlayerId(investigatorPlayers)
             if (votedPlayerId) {
               // if it isn't a tie
@@ -57,9 +56,9 @@ export default function Investigator() {
               }
             }
           } else {
-            // if they are confirming that they saw the results
-            if (player!.selected_player_id === playerId) {
-              // this seems a bit hacky but a good enough solution for now
+            // if they are "ready" confirming that they saw the results
+            if (!selectedPlayerId) {
+              // if we don't make this check, then it automatically transitions to the innocent phase because ready is still true for all investigators from when they investigated. This way, we make sure there is no selected player id because there won't be by the time our real time ready state comes back as false. If there is still a selectedPlayerId, then ready has not been updated to false yet.
               try {
                 const { error } = await updateGamePhase(game!.id, 'innocent')
                 if (error) throw error
@@ -72,7 +71,7 @@ export default function Investigator() {
       }
     }
     endInvestigatorPhase()
-  }, [game, isHost, investigatorPlayers, investigating, player, playerId])
+  }, [game, isHost, investigatorPlayers, investigating, player, playerId, selectedPlayerId])
 
   return (
     <ThemedView
@@ -99,10 +98,10 @@ export default function Investigator() {
         investigating ? (
           <>
             <PlayerGrid />
-            <Group>
+            <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="investigate-button">
               <ThemedText>{errorMessage ? errorMessage : null}</ThemedText>
               <ThemedPressable
-                disabled={!selectedPlayerId || ready}
+                disabled={!selectedPlayerId || ready} // if the player is already ready or hasn't selected a player yet
                 onPress={async () => {
                   try {
                     const { error } = await readyPlayer(playerId)
@@ -111,9 +110,14 @@ export default function Investigator() {
                     console.error(error)
                   }
                 }}
-                testID="ready-button"
               >
-                <ThemedText>{ready ? 'Waiting for other investigators...' : 'Ready'}</ThemedText>
+                <ThemedText>
+                  {ready
+                    ? investigatorPlayers.length > 1
+                      ? 'Waiting for other investigators...'
+                      : 'Loading...'
+                    : 'Investigate'}
+                </ThemedText>
               </ThemedPressable>
             </Group>
           </>
@@ -135,7 +139,9 @@ export default function Investigator() {
               }}
               testID="ready-button"
             >
-              <ThemedText>{ready ? 'Waiting for other investigators...' : 'Ready'}</ThemedText>
+              <ThemedText>
+                {ready ? (investigatorPlayers.length > 1 ? 'Waiting for other investigators...' : 'Loading...') : 'OK'}
+              </ThemedText>
             </ThemedPressable>
           </>
         )

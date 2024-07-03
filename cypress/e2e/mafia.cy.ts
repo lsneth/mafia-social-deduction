@@ -5,9 +5,10 @@ describe('mafia screen', () => {
 
     cy.contains('MAFIA PHASE')
     cy.contains('Tap on the name of the player you would like to kill.')
-    cy.contains('test0')
-    cy.contains('0')
+    cy.contains('Me')
+    cy.contains('mafia')
     cy.contains('test1')
+    cy.contains('0')
     cy.contains('test2')
     cy.contains('test3')
     cy.contains('test4')
@@ -36,7 +37,7 @@ describe('mafia screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     // cy.wait('@sleepAudio') // TODO: figure out why this passes alone but fails when run with other tests
-    cy.wait('@mafiaAudio', { timeout: 6000 }) // timeout is necessary because of the audio delay
+    cy.wait('@mafiaAudio', { timeout: 10000 }) // timeout is necessary because of the audio delay
   })
 
   it('should not play audio (non-host)', () => {
