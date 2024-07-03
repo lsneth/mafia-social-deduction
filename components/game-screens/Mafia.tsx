@@ -5,7 +5,7 @@ import { useGame } from '@/providers/GameProvider'
 import Spacer from '../Spacer'
 import Group from '../Group'
 import ThemedPressable from '../ThemedPressable'
-import { markPlayerKilled, readyPlayer, unreadyPlayers, updateGamePhase } from '@/services/game-services'
+import { markPlayer, readyPlayer, clearPlayerState, updateGamePhase } from '@/services/game-services'
 import { useEffect, useState } from 'react'
 import getVotedPlayerId from '@/helpers/getVotedPlayerId'
 
@@ -27,7 +27,7 @@ export default function Mafia() {
           const votedPlayerId = getVotedPlayerId(mafiaPlayers)
           if (votedPlayerId) {
             try {
-              const { error: markPlayerKilledError } = await markPlayerKilled(votedPlayerId)
+              const { error: markPlayerKilledError } = await markPlayer('killed', votedPlayerId)
               if (markPlayerKilledError) throw markPlayerKilledError
 
               const { error: updateGamePhaseError } = await updateGamePhase(game!.id, 'investigator')
@@ -38,7 +38,7 @@ export default function Mafia() {
           } else {
             try {
               setErrorMessage('The tie must be resolved.')
-              const { error } = await unreadyPlayers(mafiaPlayers.map((player) => player.profile_id))
+              const { error } = await clearPlayerState(game!.id)
               if (error) throw error
             } catch (error) {
               console.error(error)
@@ -72,7 +72,7 @@ export default function Mafia() {
       {playerRole === 'mafia' ? (
         <>
           <PlayerGrid />
-          <Group>
+          <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="ready-button">
             <ThemedText>{errorMessage ? errorMessage : null}</ThemedText>
             <ThemedPressable
               disabled={!selectedPlayerId || ready}
@@ -84,7 +84,6 @@ export default function Mafia() {
                   console.error(error)
                 }
               }}
-              testID="ready-button"
             >
               <ThemedText>{ready ? 'Waiting for other mafia...' : 'Ready'}</ThemedText>
             </ThemedPressable>

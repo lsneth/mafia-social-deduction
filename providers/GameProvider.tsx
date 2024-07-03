@@ -185,7 +185,14 @@ export function GameProvider(props: PropsWithChildren) {
   return (
     <GameContext.Provider
       value={{
-        players,
+        players: players
+          ? players.sort((a, b) => {
+              // sort players by name, but with the current player first
+              if (a.profile_id === profileId) return -1
+              if (b.profile_id === profileId) return 1
+              return a.name.localeCompare(b.name)
+            })
+          : null,
         player: players?.find((player) => player.profile_id === profileId) ?? null,
         game,
         loading: loading || rtLoading,

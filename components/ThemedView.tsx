@@ -22,7 +22,7 @@ export default function ThemedView({
   ...rest
 }: ThemedViewProps): JSX.Element {
   const insets = useSafeAreaInsets()
-  const opacity = useSharedValue(fadeIn ? 0 : 1)
+  const opacity = useSharedValue(fadeIn && !window.Cypress ? 0 : 1)
   const playFadeInAudio = useAudio(fadeInAudio)
   const playPreFadeInAudio = useAudio(preFadeInAudio)
   const { game, player } = useGame()
