@@ -4,7 +4,7 @@ describe('execution screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('EXECUTION PHASE')
-    cy.contains('Tap on the name of the player you would like to execute.')
+    cy.contains('Vote for the person you would like to execute.')
     cy.contains('Me')
     cy.contains('0')
     cy.contains('test1')
@@ -15,25 +15,25 @@ describe('execution screen', () => {
   })
 
   it('should play audio (host)', () => {
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleep.mp3*').as('sleepAudio')
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*wake.mp3*').as('wakeAudio')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleepInvestigator.mp3*').as('sleepInvestigator')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*wakeAll.mp3*').as('wakeAll')
     cy.setUpGame({ phase: 'execution', numOtherPlayers: 4 })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    // cy.wait('@sleepAudio') // TODO: figure out why this passes alone but fails when run with other tests. This could have something to do with chrome's autoplay restrictions
-    cy.wait('@wakeAudio', { timeout: 10000 }) // timeout is necessary because of the audio delay
+    // cy.wait('@sleepInvestigator') // TODO: figure out why this passes alone but fails when run with other tests. This could have something to do with chrome's autoplay restrictions
+    cy.wait('@wakeAll', { timeout: 10000 }) // timeout is necessary because of the audio delay
   })
 
   it('should not play audio (non-host)', () => {
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleep.mp3*').as('sleepAudio')
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*wake.mp3*').as('wakeAudio')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleepInvestigator.mp3*').as('sleepInvestigator')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*wakeAll.mp3*').as('wakeAll')
     cy.setUpGame({ hostedByMe: false, addMe: true, numOtherPlayers: 3, phase: 'execution' })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     // eslint-disable-next-line cypress/no-unnecessary-waiting -- necessary because of the audio delay
     cy.wait(6500)
-    cy.get(`@sleepAudio.all`).its('length').should(`equal`, 0)
-    cy.get(`@wakeAudio.all`).its('length').should(`equal`, 0)
+    cy.get(`@sleepInvestigator.all`).its('length').should(`equal`, 0)
+    cy.get(`@wakeAll.all`).its('length').should(`equal`, 0)
   })
 
   it('should disable (in addition to 0 opacity) vote button until player selects another player', () => {
@@ -80,7 +80,7 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Vote').click()
+    cy.get('[data-testid="vote-button"]').click()
     cy.contains('Waiting for other players...')
   })
 

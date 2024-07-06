@@ -4,7 +4,7 @@ describe('investigator screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('INVESTIGATOR PHASE')
-    cy.contains('Tap on the name of the player you would like to investigate.')
+    cy.contains('Vote for the person you would like to investigate.')
     cy.contains('Me')
     cy.contains('investigator')
     cy.contains('test1')
@@ -32,25 +32,25 @@ describe('investigator screen', () => {
   })
 
   it('should play audio (host)', () => {
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleep.mp3*').as('sleepAudio')
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*investigator.mp3*').as('investigatorAudio')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleepMafia.mp3*').as('sleepMafia')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*wakeInvestigator.mp3*').as('wakeInvestigator')
     cy.setUpGame({ phase: 'investigator', numOtherPlayers: 4 })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    // cy.wait('@sleepAudio') // TODO: figure out why this passes alone but fails when run with other tests. This is because of chrome's autoplay restrictions
-    cy.wait('@investigatorAudio', { timeout: 10000 }) // timeout is necessary because of the audio delay
+    // cy.wait('@sleepMafia') // TODO: figure out why this passes alone but fails when run with other tests. This is because of chrome's autoplay restrictions
+    cy.wait('@wakeInvestigator', { timeout: 10000 }) // timeout is necessary because of the audio delay
   })
 
   it('should not play audio (non-host)', () => {
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleep.mp3*').as('sleepAudio')
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*investigator.mp3*').as('investigatorAudio')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleepMafia.mp3*').as('sleepMafia')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*wakeInvestigator.mp3*').as('wakeInvestigator')
     cy.setUpGame({ hostedByMe: false, addMe: true, numOtherPlayers: 3, phase: 'investigator' })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     // eslint-disable-next-line cypress/no-unnecessary-waiting -- necessary because of the audio delay
     cy.wait(6500)
-    cy.get(`@sleepAudio.all`).its('length').should(`equal`, 0)
-    cy.get(`@investigatorAudio.all`).its('length').should(`equal`, 0)
+    cy.get(`@sleepMafia.all`).its('length').should(`equal`, 0)
+    cy.get(`@wakeInvestigator.all`).its('length').should(`equal`, 0)
   })
 
   it('should disable investigate button until player selects another player', () => {

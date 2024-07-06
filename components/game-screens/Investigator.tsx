@@ -21,8 +21,8 @@ export default function Investigator() {
   return (
     <ThemedView
       fadeIn
-      preFadeInAudio={require('../../assets/audio/sleep.mp3')}
-      fadeInAudio={require('../../assets/audio/investigator.mp3')}
+      preFadeInAudio={require('../../assets/audio/sleepMafia.mp3')}
+      fadeInAudio={require('../../assets/audio/wakeInvestigator.mp3')}
       bgImageSrc={require('../../assets/images/night.png')}
       className="justify-between"
     >
@@ -31,7 +31,7 @@ export default function Investigator() {
         <>
           <ThemedText>
             {voting
-              ? 'Tap on the name of the player you would like to investigate.'
+              ? 'Vote for the person you would like to investigate.'
               : `${votedPlayerName} is a${votedPlayerRole === 'mafia' ? '' : 'n'} ${votedPlayerRole}!`}
           </ThemedText>
           <PlayerGrid voting={voting} />

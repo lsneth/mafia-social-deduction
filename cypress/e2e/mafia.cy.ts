@@ -4,7 +4,7 @@ describe('mafia screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('MAFIA PHASE')
-    cy.contains('Tap on the name of the player you would like to kill.')
+    cy.contains('Vote for the person you would like to kill.')
     cy.contains('Me')
     cy.contains('mafia')
     cy.contains('test1')
@@ -31,25 +31,25 @@ describe('mafia screen', () => {
   })
 
   it('should play audio (host)', () => {
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleep.mp3*').as('sleepAudio')
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*mafia.mp3*').as('mafiaAudio')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleepAll.mp3*').as('sleepAll')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*wakeMafia.mp3*').as('wakeMafia')
     cy.setUpGame({ phase: 'mafia', numOtherPlayers: 4 })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    // cy.wait('@sleepAudio') // TODO: figure out why this passes alone but fails when run with other tests
-    cy.wait('@mafiaAudio', { timeout: 10000 }) // timeout is necessary because of the audio delay
+    // cy.wait('@sleepAll') // TODO: figure out why this passes alone but fails when run with other tests
+    cy.wait('@wakeMafia', { timeout: 10000 }) // timeout is necessary because of the audio delay
   })
 
   it('should not play audio (non-host)', () => {
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleep.mp3*').as('sleepAudio')
-    cy.intercept('http://localhost:8081/assets/?unstable_path=*mafia.mp3*').as('mafiaAudio')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*sleepAll.mp3*').as('sleepAll')
+    cy.intercept('http://localhost:8081/assets/?unstable_path=*wakeMafia.mp3*').as('wakeMafia')
     cy.setUpGame({ hostedByMe: false, addMe: true, numOtherPlayers: 3, phase: 'mafia' })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     // eslint-disable-next-line cypress/no-unnecessary-waiting -- necessary because of the audio delay
     cy.wait(6500)
-    cy.get(`@sleepAudio.all`).its('length').should(`equal`, 0)
-    cy.get(`@mafiaAudio.all`).its('length').should(`equal`, 0)
+    cy.get(`@sleepAll.all`).its('length').should(`equal`, 0)
+    cy.get(`@wakeMafia.all`).its('length').should(`equal`, 0)
   })
 
   it('should disable ready button if player has not selected another player', () => {
