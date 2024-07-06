@@ -32,7 +32,7 @@ function Vote() {
       <>
         <ThemedText>
           {voting
-            ? 'Tap on the name of the player you would like to execute.'
+            ? 'Vote for the person you would like to execute.'
             : `${votedPlayerName} is a${votedPlayerRole === 'mafia' ? '' : 'n'} ${votedPlayerRole}!`}
         </ThemedText>
         <PlayerGrid voting={voting} />
@@ -73,8 +73,8 @@ export default function Execution() {
     <ThemedView
       bgImageSrc={bgImageSrc}
       fadeIn
-      preFadeInAudio={require('../../assets/audio/sleep.mp3')}
-      fadeInAudio={require('../../assets/audio/wake.mp3')}
+      preFadeInAudio={require('../../assets/audio/sleepInvestigator.mp3')}
+      fadeInAudio={require('../../assets/audio/wakeAll.mp3')}
       className="justify-between"
     >
       {screen === 'vote' ? <Vote /> : null}

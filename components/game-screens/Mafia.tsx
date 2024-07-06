@@ -18,15 +18,15 @@ export default function Mafia() {
   return (
     <ThemedView
       fadeIn
-      preFadeInAudio={require('../../assets/audio/sleep.mp3')}
-      fadeInAudio={require('../../assets/audio/mafia.mp3')}
+      preFadeInAudio={require('../../assets/audio/sleepAll.mp3')}
+      fadeInAudio={require('../../assets/audio/wakeMafia.mp3')}
       bgImageSrc={require('../../assets/images/night.png')}
       className="justify-between"
     >
       <ThemedText type="title-sm">MAFIA PHASE</ThemedText>
       {playerRole === 'mafia' ? (
         <>
-          <ThemedText>Tap on the name of the player you would like to kill.</ThemedText>
+          <ThemedText>Vote for the person you would like to kill.</ThemedText>
           <PlayerGrid voting={voting} />
           <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="ready-button">
             <ThemedText>{errorMessage}</ThemedText>
