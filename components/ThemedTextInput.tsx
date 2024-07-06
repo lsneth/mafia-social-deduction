@@ -7,7 +7,7 @@ type ThemedTextInputProps = TextInputProps & { label?: string }
 
 export default function ThemedTextInput({ className, label, ...rest }: ThemedTextInputProps): JSX.Element {
   return (
-    <View className="w-full max-w-sm">
+    <View className="w-full">
       <ThemedText>{label}</ThemedText>
       <TextInput
         style={{ fontFamily: 'CrimsonText_400Regular' }}

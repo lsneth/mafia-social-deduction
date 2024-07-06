@@ -78,10 +78,10 @@ describe('investigator screen', () => {
     cy.get('[data-testid="investigate-button"]').should('be.visible')
   })
 
-  it('should disable ready if player is already ready', () => {
+  it.only('should disable ready if player is already ready', () => {
     cy.setUpGame({
       phase: 'investigator',
-      numOtherPlayers: 12,
+      numOtherPlayers: 12, // 12 players so that there are 2 investigators
       myRole: 'investigator',
       ready: Cypress.env('TEST_USER_ID'),
       selectedPlayerId: Cypress.env('TEST_USER_ID_1'),

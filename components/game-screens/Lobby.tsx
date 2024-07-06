@@ -32,12 +32,13 @@ export default function Lobby() {
   return (
     <ThemedView className="justify-between">
       <Group>
-        <ThemedText type="title">{gameId}</ThemedText>
-        <Spacer />
+        <ThemedText type="title-sm">{gameId}</ThemedText>
         <ThemedText>Invite others with this code</ThemedText>
       </Group>
 
+      <Spacer />
       <PlayerGrid selectable={false} />
+      <Spacer />
 
       <SummaryTable
         title={`${playerCount} Player${playerCount !== 1 ? 's' : ''}`}
@@ -71,6 +72,8 @@ export default function Lobby() {
           },
         ]}
       />
+      <Spacer size={5} />
+
       <Group>
         {isHost ? (
           <>

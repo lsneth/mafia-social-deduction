@@ -41,7 +41,7 @@ export default function RoleComponent() {
   const victory = roleDetails[role]['victory']
   const special = roleDetails[role]['special']
   return (
-    <View className="flex w-full max-w-sm flex-1 justify-between">
+    <View className="flex w-full flex-1 justify-between">
       <Group>
         <ThemedText>{`You're a${role !== 'mafia' ? 'n' : ''}`}</ThemedText>
         <ThemedText type="title-sm">{role.toUpperCase()}</ThemedText>

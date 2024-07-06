@@ -70,34 +70,17 @@ export async function selectPlayer(playerId: string, selectedPlayerId: string) {
   return supabase.from('players').update({ selected_player_id: selectedPlayerId }).eq('profile_id', playerId)
 }
 
-// marks player as killed or investigated
-export async function markPlayer(markType: 'killed' | 'investigated', playerId: string) {
-  try {
-    const { error } = await supabase.functions.invoke('mark-player', {
-      body: { markType, playerId },
-    })
-
-    if (error) throw error
-
-    return { error: null }
-  } catch (error: any) {
-    const errorObj = await error.context.json() // https://github.com/supabase/functions-js/issues/45#issuecomment-2068191215
-    return { error: { message: errorObj.error } }
-  }
+export async function killPlayer(playerId: string) {
+  return supabase.from('players').update({ is_alive: false }).eq('profile_id', playerId)
 }
 
-// clears selected_player_ids and sets all ready to false
+// marks player as killed or investigated (only works from host device because of RLS)
+export async function markPlayer(markType: 'murdered' | 'investigated', playerId: string) {
+  const updateObj = markType === 'murdered' ? { has_been_murdered: true } : { has_been_investigated: true }
+  return supabase.from('players').update(updateObj).eq('profile_id', playerId)
+}
+
+// clears selected_player_ids and sets all ready to false (only works from host device because of RLS)
 export async function clearPlayerState(gameId: string) {
-  try {
-    const { error } = await supabase.functions.invoke('clear-player-state', {
-      body: { gameId },
-    })
-
-    if (error) throw error
-
-    return { error: null }
-  } catch (error: any) {
-    const errorObj = await error.context.json() // https://github.com/supabase/functions-js/issues/45#issuecomment-2068191215
-    return { error: { message: errorObj.error } }
-  }
+  return supabase.from('players').update({ selected_player_id: null, ready: false }).eq('game_id', gameId)
 }

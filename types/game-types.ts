@@ -13,7 +13,7 @@ export type Player = {
   role: Role
   selected_player_id: string
   ready: boolean
-  has_been_killed: boolean
+  has_been_murdered: boolean
 }
 
 export type PlayersChange = {

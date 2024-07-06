@@ -2,53 +2,18 @@ import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
 import PlayerGrid from '../PlayerGrid'
 import { useGame } from '@/providers/GameProvider'
-import Spacer from '../Spacer'
 import Group from '../Group'
 import ThemedPressable from '../ThemedPressable'
-import { markPlayer, readyPlayer, clearPlayerState, updateGamePhase } from '@/services/game-services'
-import { useEffect, useState } from 'react'
-import getVotedPlayerId from '@/helpers/getVotedPlayerId'
+import { readyPlayer } from '@/services/game-services'
+import useVotes from '@/hooks/useVote'
 
 export default function Mafia() {
-  const { game, players, player } = useGame()
+  const { player } = useGame()
   const selectedPlayerId = player!.selected_player_id
   const playerId = player!.profile_id
   const playerRole = player!.role
   const ready = player!.ready
-  const mafiaPlayers = players!.filter((player) => player.role === 'mafia')
-  const isHost = game!.host_id === player!.profile_id
-  const [errorMessage, setErrorMessage] = useState('')
-
-  useEffect(() => {
-    async function endMafiaPhase() {
-      // from the host's device, mark player that mafia killed and transition to investigator phase when all mafia players are "ready"
-      if (isHost) {
-        if (mafiaPlayers.every((player) => player.ready === true)) {
-          const votedPlayerId = getVotedPlayerId(mafiaPlayers)
-          if (votedPlayerId) {
-            try {
-              const { error: markPlayerKilledError } = await markPlayer('killed', votedPlayerId)
-              if (markPlayerKilledError) throw markPlayerKilledError
-
-              const { error: updateGamePhaseError } = await updateGamePhase(game!.id, 'investigator')
-              if (updateGamePhaseError) throw updateGamePhaseError
-            } catch (error) {
-              console.error(error)
-            }
-          } else {
-            try {
-              setErrorMessage('The tie must be resolved.')
-              const { error } = await clearPlayerState(game!.id)
-              if (error) throw error
-            } catch (error) {
-              console.error(error)
-            }
-          }
-        }
-      }
-    }
-    endMafiaPhase()
-  }, [game, isHost, mafiaPlayers])
+  const { voting, errorMessage } = useVotes('mafia')
 
   return (
     <ThemedView
@@ -58,22 +23,13 @@ export default function Mafia() {
       bgImageSrc={require('../../assets/images/night.png')}
       className="justify-between"
     >
-      <Group>
-        <ThemedText type="title-sm">MAFIA PHASE</ThemedText>
-        <>
-          <Spacer />
-          <ThemedText>
-            {playerRole === 'mafia'
-              ? 'Tap on the name of the player you would like to kill.'
-              : 'Close your eyes and go to sleep.'}
-          </ThemedText>
-        </>
-      </Group>
+      <ThemedText type="title-sm">MAFIA PHASE</ThemedText>
       {playerRole === 'mafia' ? (
         <>
-          <PlayerGrid />
+          <ThemedText>Tap on the name of the player you would like to kill.</ThemedText>
+          <PlayerGrid voting={voting} />
           <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="ready-button">
-            <ThemedText>{errorMessage ? errorMessage : null}</ThemedText>
+            <ThemedText>{errorMessage}</ThemedText>
             <ThemedPressable
               disabled={!selectedPlayerId || ready}
               onPress={async () => {
@@ -89,7 +45,9 @@ export default function Mafia() {
             </ThemedPressable>
           </Group>
         </>
-      ) : null}
+      ) : (
+        <ThemedText>Close your eyes and go to sleep.</ThemedText>
+      )}
     </ThemedView>
   )
 }

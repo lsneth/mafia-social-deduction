@@ -57,7 +57,7 @@ export default function ThemedView({
           }}
           className="flex-1"
         >
-          <View className={`flex-1 items-center p-8 ${className}`} {...rest} />
+          <View className={`flex-1 items-center p-5 ${className}`} {...rest} />
         </View>
       </ImageBackground>
     </Animated.View>
@@ -70,7 +70,7 @@ export default function ThemedView({
       }}
       className="flex-1 bg-mafiaBlack"
     >
-      <View className={`flex-1 items-center p-8 ${className}`} {...rest} />
+      <View className={`flex-1 items-center p-5 ${className}`} {...rest} />
     </Animated.View>
   )
 }
