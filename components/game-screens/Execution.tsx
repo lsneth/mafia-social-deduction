@@ -48,7 +48,7 @@ function Vote() {
                 console.error(error)
               }
             }}
-            testID="execute-button"
+            testID="vote-button"
           >
             <ThemedText>{ready ? 'Waiting for other players...' : voting ? 'Vote' : 'Confirm'}</ThemedText>
           </ThemedPressable>
@@ -70,7 +70,13 @@ export default function Execution() {
   const [screen, setScreen] = useState<'vote' | 'history' | 'role'>('vote')
   const [bgImageSrc, setBgImageSrc] = useState(dayImage)
   return (
-    <ThemedView bgImageSrc={bgImageSrc} className="justify-between">
+    <ThemedView
+      bgImageSrc={bgImageSrc}
+      fadeIn
+      preFadeInAudio={require('../../assets/audio/sleep.mp3')}
+      fadeInAudio={require('../../assets/audio/wake.mp3')}
+      className="justify-between"
+    >
       {screen === 'vote' ? <Vote /> : null}
       {screen === 'history' ? <GameHistory /> : null}
       {screen === 'role' ? <RoleComponent /> : null}
