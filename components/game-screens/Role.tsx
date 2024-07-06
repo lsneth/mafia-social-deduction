@@ -1,39 +1,12 @@
 import { ThemedText } from '@/components/ThemedText'
 import ThemedView from '@/components/ThemedView'
-import innocentFemale from '../../assets/images/innocent-female.png'
-import innocentMale from '../../assets/images/innocent-male.png'
-import investigatorFemale from '../../assets/images/investigator-female.png'
-import investigatorMale from '../../assets/images/investigator-male.png'
-import mafiaFemale from '../../assets/images/mafia-female.png'
-import mafiaMale from '../../assets/images/mafia-male.png'
 import { useProfile } from '@/providers/ProfileProvider'
 import { useGame } from '@/providers/GameProvider'
-import Spacer from '../Spacer'
-import SummaryTable from '../SummaryTable'
 import Group from '../Group'
 import ThemedPressable from '../ThemedPressable'
 import { readyPlayer, updateGamePhase } from '@/services/game-services'
-
-const roleDetails = {
-  innocent: {
-    male: innocentMale,
-    female: innocentFemale,
-    victory: 'You win when all the mafia players are dead.',
-    special: null,
-  },
-  investigator: {
-    male: investigatorMale,
-    female: investigatorFemale,
-    victory: 'You win when all the mafia players are dead.',
-    special: 'The investigator team investigates a player every night.',
-  },
-  mafia: {
-    male: mafiaMale,
-    female: mafiaFemale,
-    victory: 'You win when all non-mafia players are dead.',
-    special: 'The mafia team kills a player every night.',
-  },
-}
+import RoleComponent from '../RoleComponent'
+import { roleImages } from '@/helpers/roleImages'
 
 export default function Role() {
   const { sex } = useProfile()
@@ -47,9 +20,7 @@ export default function Role() {
   const isHost = game!.host_id === playerId
   const allPlayersReady = players!.every((player) => player.ready)
 
-  const bgImageSrc = roleDetails[role][sex]
-  const victory = roleDetails[role]['victory']
-  const special = roleDetails[role]['special']
+  const bgImageSrc = roleImages[role][sex]
 
   return ready ? (
     <ThemedView className="justify-center">
@@ -74,31 +45,8 @@ export default function Role() {
     </ThemedView>
   ) : (
     <ThemedView bgImageSrc={bgImageSrc} className="justify-between">
+      <RoleComponent />
       <Group>
-        <ThemedText>{`You're a${role !== 'mafia' ? 'n' : ''}`}</ThemedText>
-        <ThemedText type="title-sm">{role.toUpperCase()}</ThemedText>
-      </Group>
-      <Group>
-        <SummaryTable
-          title="Victory"
-          sections={[{ component: <ThemedText>{victory}</ThemedText>, bgColor: 'bg-mafiaDarkGray' }]}
-        />
-        {special ? (
-          <>
-            <Spacer />
-            <SummaryTable
-              title="Special"
-              sections={[
-                {
-                  component: <ThemedText>{special}</ThemedText>,
-                  bgColor:
-                    role === 'investigator' ? 'bg-mafiaBlue' : role === 'mafia' ? 'bg-mafiaRed' : 'bg-mafiaYellow',
-                },
-              ]}
-            />
-          </>
-        ) : null}
-        <Spacer size={5} />
         <ThemedPressable
           onPress={async () => {
             try {

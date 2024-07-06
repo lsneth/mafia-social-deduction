@@ -1,6 +1,6 @@
 export type Role = 'mafia' | 'investigator' | 'innocent'
 
-export type Phase = 'lobby' | 'role' | 'mafia' | 'investigator' | 'innocent' | 'end'
+export type Phase = 'lobby' | 'role' | 'mafia' | 'investigator' | 'execution' | 'end'
 
 export type Event = 'INSERT' | 'UPDATE' | 'DELETE'
 
@@ -13,7 +13,7 @@ export type Player = {
   role: Role
   selected_player_id: string
   ready: boolean
-  has_been_killed: boolean
+  has_been_murdered: boolean
 }
 
 export type PlayersChange = {

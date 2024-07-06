@@ -37,7 +37,7 @@ describe('investigator screen', () => {
     cy.setUpGame({ phase: 'investigator', numOtherPlayers: 4 })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    // cy.wait('@sleepAudio') // TODO: figure out why this passes alone but fails when run with other tests
+    // cy.wait('@sleepAudio') // TODO: figure out why this passes alone but fails when run with other tests. This is because of chrome's autoplay restrictions
     cy.wait('@investigatorAudio', { timeout: 10000 }) // timeout is necessary because of the audio delay
   })
 
@@ -81,7 +81,7 @@ describe('investigator screen', () => {
   it('should disable ready if player is already ready', () => {
     cy.setUpGame({
       phase: 'investigator',
-      numOtherPlayers: 12,
+      numOtherPlayers: 12, // 12 players so that there are 2 investigators
       myRole: 'investigator',
       ready: Cypress.env('TEST_USER_ID'),
       selectedPlayerId: Cypress.env('TEST_USER_ID_1'),
@@ -119,7 +119,7 @@ describe('investigator screen', () => {
     cy.contains('innocent')
   })
 
-  it('should start innocent phase', () => {
+  it('should start execution phase', () => {
     cy.setUpGame({
       phase: 'investigator',
       numOtherPlayers: 4,
@@ -129,7 +129,7 @@ describe('investigator screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('OK').click()
-    cy.contains('Innocent')
+    cy.contains('Confirm').click()
+    cy.contains('EXECUTION PHASE')
   })
 })

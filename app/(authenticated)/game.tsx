@@ -1,6 +1,6 @@
 import ThemedActivityIndicator from '@/components/ThemedActivityIndicator'
 import GameEnd from '@/components/game-screens/GameEnd'
-import Innocent from '@/components/game-screens/Innocent'
+import Execution from '@/components/game-screens/Execution'
 import Investigator from '@/components/game-screens/Investigator'
 import Lobby from '@/components/game-screens/Lobby'
 import Mafia from '@/components/game-screens/Mafia'
@@ -41,7 +41,7 @@ function GameManager() {
       {phase === 'lobby' ? <Lobby /> : null}
       {phase === 'role' ? <Role /> : null}
       {phase === 'mafia' ? <Mafia /> : null}
-      {phase === 'innocent' ? <Innocent /> : null}
+      {phase === 'execution' ? <Execution /> : null}
       {phase === 'investigator' ? <Investigator /> : null}
       {phase === 'end' ? <GameEnd /> : null}
     </>
