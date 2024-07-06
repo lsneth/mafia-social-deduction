@@ -119,7 +119,7 @@ describe('investigator screen', () => {
     cy.contains('innocent')
   })
 
-  it('should start innocent phase', () => {
+  it('should start execution phase', () => {
     cy.setUpGame({
       phase: 'investigator',
       numOtherPlayers: 4,

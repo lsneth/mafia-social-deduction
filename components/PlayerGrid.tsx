@@ -38,7 +38,7 @@ function PlayerCard({
   let showRole
   let showVoteCount
   switch (phase) {
-    case 'innocent':
+    case 'execution':
       showVoteCount = voting && isAlive
       showRole = !isAlive
       break

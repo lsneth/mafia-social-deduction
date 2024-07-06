@@ -89,7 +89,7 @@ export default function useVotes(phase: 'mafia' | 'investigator' | 'execution') 
               votingPlayers?.find((player) => player.selected_player_id !== null) === undefined
             ) {
               // if there are not any players selected
-              const newPhase = phase === 'mafia' ? 'investigator' : phase === 'investigator' ? 'innocent' : 'mafia'
+              const newPhase = phase === 'mafia' ? 'investigator' : phase === 'investigator' ? 'execution' : 'mafia'
               const { error } = await updateGamePhase(game!.id, newPhase)
               if (error) console.error(error)
             }

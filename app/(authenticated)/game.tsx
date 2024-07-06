@@ -41,7 +41,7 @@ function GameManager() {
       {phase === 'lobby' ? <Lobby /> : null}
       {phase === 'role' ? <Role /> : null}
       {phase === 'mafia' ? <Mafia /> : null}
-      {phase === 'innocent' ? <Execution /> : null}
+      {phase === 'execution' ? <Execution /> : null}
       {phase === 'investigator' ? <Investigator /> : null}
       {phase === 'end' ? <GameEnd /> : null}
     </>

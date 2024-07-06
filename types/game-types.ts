@@ -1,6 +1,6 @@
 export type Role = 'mafia' | 'investigator' | 'innocent'
 
-export type Phase = 'lobby' | 'role' | 'mafia' | 'investigator' | 'innocent' | 'end'
+export type Phase = 'lobby' | 'role' | 'mafia' | 'investigator' | 'execution' | 'end'
 
 export type Event = 'INSERT' | 'UPDATE' | 'DELETE'
 
