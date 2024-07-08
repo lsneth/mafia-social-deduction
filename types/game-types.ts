@@ -32,6 +32,8 @@ export type Game = {
   phase: Phase
   result: 'innocent' | 'mafia' | null
   round_count: number
+  voted_player_id: string
+  voting: boolean
   start_time: string
 }
 

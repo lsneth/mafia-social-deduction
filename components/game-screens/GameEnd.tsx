@@ -20,6 +20,9 @@ export default function GameEnd() {
             ? require('../../assets/images/day.png')
             : null
       }
+      fadeIn
+      preFadeInAudio={result === 'mafia' ? require('../../assets/audio/sleepMafia.mp3') : null}
+      fadeInAudio={result === 'mafia' ? require('../../assets/audio/wakeAll.mp3') : null}
     >
       <ThemedText type="title-sm">
         {result === 'mafia' ? 'The Mafia wins!' : result === 'innocent' ? 'The innocent win!' : 'error'}

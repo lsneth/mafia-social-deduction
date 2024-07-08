@@ -4,7 +4,7 @@ describe('mafia screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('MAFIA PHASE')
-    cy.contains('Vote for the person you would like to kill.')
+    cy.contains('Vote for the person you would like to murder.')
     cy.contains('Me')
     cy.contains('mafia')
     cy.contains('test1')

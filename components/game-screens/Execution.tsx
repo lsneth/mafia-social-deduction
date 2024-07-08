@@ -15,12 +15,12 @@ import { killPlayer, readyPlayer, updateRoundCount } from '@/services/game-servi
 import useVote from '@/hooks/useVote'
 import Group from '../Group'
 import Spacer from '../Spacer'
-import { Player } from '@/types/game-types'
 
 function Vote() {
   const { player } = useGame()
   const { voting, votedPlayer, errorMessage } = useVote('execution') // this is the magic here, it handles the voting and phase update
 
+  const isAlive = player!.is_alive
   const selectedPlayerId = player!.selected_player_id
   const playerId = player!.profile_id
   const ready = player!.ready
@@ -33,7 +33,9 @@ function Vote() {
       <>
         <ThemedText>
           {voting
-            ? 'Vote for the person you would like to execute.'
+            ? isAlive
+              ? 'Vote for the person you would like to execute.'
+              : ''
             : `${votedPlayerName} was a${votedPlayerRole === 'mafia' ? '' : 'n'} ${votedPlayerRole}!`}
         </ThemedText>
         <PlayerGrid voting={voting} />
@@ -66,7 +68,7 @@ function GameHistory() {
 
 function Announce({ onClose }: { onClose: () => void }) {
   const { players, player, game } = useGame()
-  const [murderedPlayer, setMurderedPlayer] = useState<Player | null>(null)
+  const [murderedPlayer] = useState(players!.find((player) => player.is_alive && player.has_been_murdered))
 
   const murderedPlayerName = murderedPlayer?.name ?? null
   const murderedPlayerRole = murderedPlayer?.role ?? null
@@ -77,12 +79,9 @@ function Announce({ onClose }: { onClose: () => void }) {
     async function newRound() {
       if (isHost) {
         // kill murdered player
-        const murderedPlayer = players!.find((player) => player.is_alive && player.has_been_murdered) ?? null
         try {
           const { error } = await killPlayer(murderedPlayer!.profile_id)
           if (error) throw error
-
-          setMurderedPlayer(murderedPlayer)
         } catch (error) {
           console.error(error)
         }
@@ -114,18 +113,20 @@ function Announce({ onClose }: { onClose: () => void }) {
 
 export default function Execution() {
   const { sex } = useProfile()
-  const { player, game } = useGame()
+  const { players, player, game } = useGame()
+  const [bgImageSrc, setBgImageSrc] = useState(dayImage)
+  const [screen, setScreen] = useState<'vote' | 'history' | 'role' | 'announce'>('announce')
 
   const role = player!.role
-  const [screen, setScreen] = useState<'vote' | 'history' | 'role' | 'announce'>('announce')
-  const [bgImageSrc, setBgImageSrc] = useState(dayImage)
+  const roundCount = game!.round_count
+  const livingInvestigators = players!.filter((player) => player.is_alive && player.role === 'investigator')
 
   return (
     <ThemedView
       bgImageSrc={bgImageSrc}
       fadeIn
       preFadeInAudio={
-        game?.round_count === 0
+        roundCount === 0 || livingInvestigators.length > 0
           ? require('../../assets/audio/sleepMafia.mp3')
           : require('../../assets/audio/sleepInvestigator.mp3')
       }

@@ -90,6 +90,16 @@ export async function updateResult(gameId: string, result: 'innocent' | 'mafia')
   return supabase.from('games').update({ result }).eq('id', gameId)
 }
 
+// updates the current voted_player_id
+export async function updateVotedPlayerId(gameId: string, votedPlayerId: string | null) {
+  return supabase.from('games').update({ voted_player_id: votedPlayerId }).eq('id', gameId)
+}
+
+// updates the current voting state
+export async function updateVoting(gameId: string, voting: string) {
+  return supabase.from('games').update({ voting }).eq('id', gameId)
+}
+
 // increments round_count by 1
 export async function updateRoundCount(gameId: string) {
   const res = await supabase.from('games').select('round_count').eq('id', gameId).single()
