@@ -1,6 +1,6 @@
 import { useGame } from '@/providers/GameProvider'
-import { clearPlayerState, killPlayer, markPlayer, updateGamePhase } from '@/services/game-services'
-import { Player } from '@/types/game-types'
+import { clearPlayerState, killPlayer, markPlayer, updateGamePhase, updateResult } from '@/services/game-services'
+import { Phase, Player } from '@/types/game-types'
 import { useEffect, useState } from 'react'
 
 function getVotedPlayerId(players: Player[]) {
@@ -31,7 +31,7 @@ function getVotedPlayerId(players: Player[]) {
   return duplicateVoteCount === maxVoteCount ? null : votedPlayerId
 }
 
-export default function useVotes(phase: 'mafia' | 'investigator' | 'execution') {
+export default function useVote(phase: 'mafia' | 'investigator' | 'execution') {
   const [voting, setVoting] = useState(true)
   const { player, players, game } = useGame()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -39,8 +39,14 @@ export default function useVotes(phase: 'mafia' | 'investigator' | 'execution') 
 
   const playerId = player!.profile_id
   const isHost = game!.host_id === playerId
-  const votingPlayers = phase === 'execution' ? players : players?.filter((player) => player.role === phase)
+  const votingPlayers = players?.filter((player) => player.is_alive && (player.role === phase || phase === 'execution'))
   const allVotingPlayersReady = votingPlayers!.every((player) => player.ready === true)
+  const livingMafia = players!.filter((player) => player.is_alive && player.role === 'mafia')
+  const livingNonMafia = players!.filter(
+    (player) => player.is_alive && !player.has_been_murdered && player.role !== 'mafia',
+  )
+  const gameResult = // the game ends when all the mafia are dead or when the mafia equal or outnumber the non-mafia
+    livingMafia.length === 0 ? 'innocent' : livingMafia.length >= livingNonMafia.length ? 'mafia' : null
 
   useEffect(() => {
     async function endVoting() {
@@ -86,10 +92,47 @@ export default function useVotes(phase: 'mafia' | 'investigator' | 'execution') 
           } else {
             if (
               phase === 'mafia' ||
-              votingPlayers?.find((player) => player.selected_player_id !== null) === undefined
+              votingPlayers?.find((player) => player.selected_player_id !== null) === undefined // this means it's the second time they're ready.
             ) {
-              // if there are not any players selected
-              const newPhase = phase === 'mafia' ? 'investigator' : phase === 'investigator' ? 'execution' : 'mafia'
+              let newPhase: Phase
+              switch (phase) {
+                case 'mafia':
+                  newPhase = game?.round_count === 0 ? 'execution' : 'investigator'
+                  break
+                case 'investigator':
+                  // if game is over, save the result so that we can use that data on the GameEnd screen
+                  if (gameResult) {
+                    // this is the case that the game ended because of a player the mafia killed in the night
+                    try {
+                      const { error } = await updateResult(game!.id, gameResult)
+                      if (error) throw error
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  }
+                  // figure out if game is over, if it is: game end, else: execution
+                  newPhase = gameResult ? 'end' : 'execution'
+                  break
+                case 'execution':
+                  // if game is over, save the result so that we can use that data on the GameEnd screen
+                  if (gameResult) {
+                    // this is the case that the game ended because of a player the innocents killed in the day
+                    try {
+                      const { error } = await updateResult(game!.id, gameResult)
+                      if (error) throw error
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  }
+                  // figure out if game is over, if it is: game end, else: mafia
+                  newPhase = gameResult ? 'end' : 'mafia'
+                  break
+
+                default:
+                  // this should never happen
+                  newPhase = 'end'
+                  break
+              }
               const { error } = await updateGamePhase(game!.id, newPhase)
               if (error) console.error(error)
             }
@@ -98,7 +141,7 @@ export default function useVotes(phase: 'mafia' | 'investigator' | 'execution') 
       }
     }
     endVoting()
-  }, [allVotingPlayersReady, game, isHost, phase, players, voting, votingPlayers])
+  }, [allVotingPlayersReady, game, gameResult, isHost, phase, players, voting, votingPlayers])
 
   return { voting, votedPlayer, errorMessage }
 }

@@ -30,6 +30,8 @@ export type Game = {
   id: string
   host_id: string
   phase: Phase
+  result: 'innocent' | 'mafia' | null
+  round_count: number
   start_time: string
 }
 

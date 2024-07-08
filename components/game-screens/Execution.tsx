@@ -3,7 +3,7 @@ import ThemedView from '@/components/ThemedView'
 import { Pressable, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { mafiaWhite } from '@/constants/colors'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import RoleComponent from '../RoleComponent'
 import { roleImages } from '@/helpers/roleImages'
 import { useProfile } from '@/providers/ProfileProvider'
@@ -11,14 +11,15 @@ import { useGame } from '@/providers/GameProvider'
 import PlayerGrid from '../PlayerGrid'
 import dayImage from '../../assets/images/day.png'
 import ThemedPressable from '../ThemedPressable'
-import { readyPlayer } from '@/services/game-services'
-import useVotes from '@/hooks/useVote'
+import { killPlayer, readyPlayer, updateRoundCount } from '@/services/game-services'
+import useVote from '@/hooks/useVote'
 import Group from '../Group'
 import Spacer from '../Spacer'
+import { Player } from '@/types/game-types'
 
 function Vote() {
   const { player } = useGame()
-  const { voting, votedPlayer, errorMessage } = useVotes('execution')
+  const { voting, votedPlayer, errorMessage } = useVote('execution') // this is the magic here, it handles the voting and phase update
 
   const selectedPlayerId = player!.selected_player_id
   const playerId = player!.profile_id
@@ -33,7 +34,7 @@ function Vote() {
         <ThemedText>
           {voting
             ? 'Vote for the person you would like to execute.'
-            : `${votedPlayerName} is a${votedPlayerRole === 'mafia' ? '' : 'n'} ${votedPlayerRole}!`}
+            : `${votedPlayerName} was a${votedPlayerRole === 'mafia' ? '' : 'n'} ${votedPlayerRole}!`}
         </ThemedText>
         <PlayerGrid voting={voting} />
         <Group style={{ opacity: selectedPlayerId || !voting ? 1 : 0 }}>
@@ -63,52 +64,109 @@ function GameHistory() {
   return <ThemedText type="title-sm">Game History</ThemedText>
 }
 
+function Announce({ onClose }: { onClose: () => void }) {
+  const { players, player, game } = useGame()
+  const [murderedPlayer, setMurderedPlayer] = useState<Player | null>(null)
+
+  const murderedPlayerName = murderedPlayer?.name ?? null
+  const murderedPlayerRole = murderedPlayer?.role ?? null
+  const isHost = game!.host_id === player!.profile_id
+
+  useEffect(() => {
+    // this is just to put into effect the choices made during the night, should only run once
+    async function newRound() {
+      if (isHost) {
+        // kill murdered player
+        const murderedPlayer = players!.find((player) => player.is_alive && player.has_been_murdered) ?? null
+        try {
+          const { error } = await killPlayer(murderedPlayer!.profile_id)
+          if (error) throw error
+
+          setMurderedPlayer(murderedPlayer)
+        } catch (error) {
+          console.error(error)
+        }
+
+        // update round count
+        try {
+          const { error } = await updateRoundCount(game!.id)
+          if (error) throw error
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+
+    newRound()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
+  }, [])
+
+  return (
+    <>
+      <Spacer />
+      <ThemedText>{`${murderedPlayerName}, an ${murderedPlayerRole}, was murdered last night!`}</ThemedText>
+      <ThemedPressable onPress={onClose}>
+        <ThemedText>Confirm</ThemedText>
+      </ThemedPressable>
+    </>
+  )
+}
+
 export default function Execution() {
   const { sex } = useProfile()
-  const { player } = useGame()
+  const { player, game } = useGame()
+
   const role = player!.role
-  const [screen, setScreen] = useState<'vote' | 'history' | 'role'>('vote')
+  const [screen, setScreen] = useState<'vote' | 'history' | 'role' | 'announce'>('announce')
   const [bgImageSrc, setBgImageSrc] = useState(dayImage)
+
   return (
     <ThemedView
       bgImageSrc={bgImageSrc}
       fadeIn
-      preFadeInAudio={require('../../assets/audio/sleepInvestigator.mp3')}
+      preFadeInAudio={
+        game?.round_count === 0
+          ? require('../../assets/audio/sleepMafia.mp3')
+          : require('../../assets/audio/sleepInvestigator.mp3')
+      }
       fadeInAudio={require('../../assets/audio/wakeAll.mp3')}
       className="justify-between"
     >
+      {screen === 'announce' ? <Announce onClose={() => setScreen('vote')} /> : null}
       {screen === 'vote' ? <Vote /> : null}
       {screen === 'history' ? <GameHistory /> : null}
       {screen === 'role' ? <RoleComponent /> : null}
 
-      <View className="-mx-5 -mb-5 flex flex-row bg-mafiaDarkGray">
-        <Pressable
-          className={`flex-1 items-center p-4 ${screen === 'vote' ? 'border-t-4 border-mafiaWhite' : ''}`}
-          onPress={() => setScreen('vote')}
-        >
-          <MaterialIcons name="supervisor-account" size={24} color={mafiaWhite} />
-        </Pressable>
-        {/* // TODO: Implement game history */}
-        {/* <Pressable
+      {screen !== 'announce' ? (
+        <View className="-mx-5 -mb-5 flex flex-row bg-mafiaDarkGray">
+          <Pressable
+            className={`flex-1 items-center p-4 ${screen === 'vote' ? 'border-t-4 border-mafiaWhite' : ''}`}
+            onPress={() => setScreen('vote')}
+          >
+            <MaterialIcons name="supervisor-account" size={24} color={mafiaWhite} />
+          </Pressable>
+          {/* // TODO: Implement game history */}
+          {/* <Pressable
           className={`flex-1 items-center p-4 ${screen === 'history' ? 'border-b-4 border-mafiaWhite' : ''}`}
           onPress={() => setScreen('history')}
         >
           <MaterialIcons name="history" size={24} color={mafiaWhite} />
         </Pressable> */}
-        <Pressable
-          className={`flex-1 items-center p-4 ${screen === 'role' ? 'border-t-4 border-mafiaWhite' : ''}`}
-          onPressIn={() => {
-            setScreen('role')
-            setBgImageSrc(roleImages[role][sex])
-          }}
-          onPressOut={() => {
-            setScreen('vote')
-            setBgImageSrc(dayImage)
-          }}
-        >
-          <MaterialIcons name="person" size={24} color={mafiaWhite} />
-        </Pressable>
-      </View>
+          <Pressable
+            className={`flex-1 items-center p-4 ${screen === 'role' ? 'border-t-4 border-mafiaWhite' : ''}`}
+            onPressIn={() => {
+              setScreen('role')
+              setBgImageSrc(roleImages[role][sex])
+            }}
+            onPressOut={() => {
+              setScreen('vote')
+              setBgImageSrc(dayImage)
+            }}
+          >
+            <MaterialIcons name="person" size={24} color={mafiaWhite} />
+          </Pressable>
+        </View>
+      ) : null}
     </ThemedView>
   )
 }

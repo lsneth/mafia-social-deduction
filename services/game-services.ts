@@ -84,3 +84,18 @@ export async function markPlayer(markType: 'murdered' | 'investigated', playerId
 export async function clearPlayerState(gameId: string) {
   return supabase.from('players').update({ selected_player_id: null, ready: false }).eq('game_id', gameId)
 }
+
+// saves end result of game for stats and display on GameEnd screen
+export async function updateResult(gameId: string, result: 'innocent' | 'mafia') {
+  return supabase.from('games').update({ result }).eq('id', gameId)
+}
+
+// increments round_count by 1
+export async function updateRoundCount(gameId: string) {
+  const res = await supabase.from('games').select('round_count').eq('id', gameId).single()
+  if (res.error) return res
+  return supabase
+    .from('games')
+    .update({ round_count: res.data?.round_count + 1 })
+    .eq('id', gameId)
+}

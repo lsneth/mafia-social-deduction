@@ -50,6 +50,10 @@ function PlayerCard({
       showVoteCount = voting && isAlive && !isInvestigator && !hasBeenInvestigated
       showRole = !isAlive || isInvestigator || hasBeenInvestigated
       break
+    case 'end':
+      showVoteCount = false
+      showRole = true
+      break
 
     default:
       showVoteCount = false
