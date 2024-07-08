@@ -156,7 +156,17 @@ export default function useVote(phase: 'mafia' | 'investigator' | 'execution') {
       }
       firstAllReady()
     }
-  }, [allVotingPlayersReady, gameId, isHost, phase, roundCount, voting, votingPlayers])
+  }, [
+    allVotingPlayersReady,
+    gameId,
+    gameResult,
+    isHost,
+    livingInvestigators.length,
+    phase,
+    roundCount,
+    voting,
+    votingPlayers,
+  ])
 
   // wait for 2nd all ready (not voting, confirming)
   useEffect(() => {
