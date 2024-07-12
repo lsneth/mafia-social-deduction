@@ -96,7 +96,7 @@ export async function updateVotedPlayerId(gameId: string, votedPlayerId: string 
 }
 
 // updates the current voting state
-export async function updateVoting(gameId: string, voting: string) {
+export async function updateVoting(gameId: string, voting: boolean) {
   return supabase.from('games').update({ voting }).eq('id', gameId)
 }
 

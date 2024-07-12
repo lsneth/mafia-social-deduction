@@ -71,7 +71,7 @@ export default function useVote(phase: 'mafia' | 'investigator' | 'execution') {
         const { error: updateVotedPlayerIdError } = await updateVotedPlayerId(gameId, null)
         if (updateVotedPlayerIdError) throw updateVotedPlayerIdError
         // set voting to true
-        const { error: updateVotingError } = await updateVoting(gameId, 'true')
+        const { error: updateVotingError } = await updateVoting(gameId, true)
         if (updateVotingError) throw updateVotingError
       }
       setUpVoting()
@@ -137,7 +137,7 @@ export default function useVote(phase: 'mafia' | 'investigator' | 'execution') {
               // update the game voting states
               const { error: updateVotedPlayerIdError } = await updateVotedPlayerId(gameId, votedPlayerId)
               if (updateVotedPlayerIdError) throw updateVotedPlayerIdError
-              const { error: updateVotingError } = await updateVoting(gameId, 'false')
+              const { error: updateVotingError } = await updateVoting(gameId, false)
               if (updateVotingError) throw updateVotingError
             } catch (error) {
               console.error(error)
