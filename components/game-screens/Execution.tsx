@@ -15,10 +15,18 @@ import { killPlayer, readyPlayer, updateRoundCount } from '@/services/game-servi
 import useVote from '@/hooks/useVote'
 import Group from '../Group'
 import Spacer from '../Spacer'
+import { Player } from '@/types/game-types'
 
-function Vote() {
+function Vote({
+  voting,
+  votedPlayer,
+  errorMessage,
+}: {
+  voting: boolean
+  votedPlayer: Player | undefined
+  errorMessage: string | null
+}) {
   const { player } = useGame()
-  const { voting, votedPlayer, errorMessage } = useVote('execution') // this is the magic here, it handles the voting and phase update
 
   const isAlive = player!.is_alive
   const selectedPlayerId = player!.selected_player_id
@@ -114,6 +122,7 @@ function Announce({ onClose }: { onClose: () => void }) {
 export default function Execution() {
   const { sex } = useProfile()
   const { players, player, game } = useGame()
+  const { voting, votedPlayer, errorMessage } = useVote('execution') // this is the magic here, it handles the voting and phase update
   const [bgImageSrc, setBgImageSrc] = useState(dayImage)
   const [screen, setScreen] = useState<'vote' | 'history' | 'role' | 'announce'>('announce')
 
@@ -134,7 +143,7 @@ export default function Execution() {
       className="justify-between"
     >
       {screen === 'announce' ? <Announce onClose={() => setScreen('vote')} /> : null}
-      {screen === 'vote' ? <Vote /> : null}
+      {screen === 'vote' ? <Vote voting={voting} votedPlayer={votedPlayer} errorMessage={errorMessage} /> : null}
       {screen === 'history' ? <GameHistory /> : null}
       {screen === 'role' ? <RoleComponent /> : null}
 
