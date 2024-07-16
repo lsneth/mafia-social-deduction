@@ -126,10 +126,11 @@ describe('investigator screen', () => {
       myRole: 'investigator',
       selectedPlayerId: Cypress.env('TEST_USER_ID_1'),
       ready: Cypress.env('TEST_USER_ID'),
+      murderedPlayerId: Cypress.env('TEST_USER_ID_1'),
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('Confirm').click()
-    cy.contains('EXECUTION PHASE')
+    cy.contains('test1, an innocent, was murdered last night!')
   })
 })
