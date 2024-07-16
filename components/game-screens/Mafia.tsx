@@ -28,7 +28,9 @@ export default function Mafia() {
       {playerRole === 'mafia' ? (
         <>
           <ThemedText>Vote for the person you would like to murder.</ThemedText>
+
           <PlayerGrid voting={voting} />
+
           <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="ready-button">
             <ThemedText>{errorMessage}</ThemedText>
             <ThemedPressable

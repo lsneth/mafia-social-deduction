@@ -37,9 +37,12 @@ function Vote({
 
   return (
     <>
-      <ThemedText type="title-sm">EXECUTION PHASE</ThemedText>
+      <ThemedText type="title-sm" dropShadow>
+        EXECUTION PHASE
+      </ThemedText>
       <>
-        <ThemedText>
+        <Spacer />
+        <ThemedText dropShadow>
           {voting
             ? isAlive
               ? 'Vote for the person you would like to execute.'
@@ -110,8 +113,13 @@ function Announce({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      <Spacer />
-      <ThemedText>{`${murderedPlayerName}, an ${murderedPlayerRole}, was murdered last night!`}</ThemedText>
+      <Group>
+        <ThemedText type="title-sm" dropShadow>{`${murderedPlayerName?.toUpperCase()}`}</ThemedText>
+        <ThemedText type="title-sm" dropShadow>{`WAS MURDERED!`}</ThemedText>
+      </Group>
+      <ThemedText
+        dropShadow
+      >{`${murderedPlayerName} was an ${murderedPlayerRole}. They may no longer speak, vote, or participate in any way.`}</ThemedText>
       <ThemedPressable onPress={onClose}>
         <ThemedText>Confirm</ThemedText>
       </ThemedPressable>
