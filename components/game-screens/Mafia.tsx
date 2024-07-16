@@ -5,15 +5,16 @@ import { useGame } from '@/providers/GameProvider'
 import Group from '../Group'
 import ThemedPressable from '../ThemedPressable'
 import { readyPlayer } from '@/services/game-services'
-import useVotes from '@/hooks/useVote'
+import useVote from '@/hooks/useVote'
 
 export default function Mafia() {
   const { player } = useGame()
+  const { voting, errorMessage } = useVote('mafia') // this is the magic here, it handles the voting and phase update
+
   const selectedPlayerId = player!.selected_player_id
   const playerId = player!.profile_id
   const playerRole = player!.role
   const ready = player!.ready
-  const { voting, errorMessage } = useVotes('mafia')
 
   return (
     <ThemedView
@@ -26,7 +27,7 @@ export default function Mafia() {
       <ThemedText type="title-sm">MAFIA PHASE</ThemedText>
       {playerRole === 'mafia' ? (
         <>
-          <ThemedText>Vote for the person you would like to kill.</ThemedText>
+          <ThemedText>Vote for the person you would like to murder.</ThemedText>
           <PlayerGrid voting={voting} />
           <Group style={{ opacity: selectedPlayerId ? 1 : 0 }} testID="ready-button">
             <ThemedText>{errorMessage}</ThemedText>

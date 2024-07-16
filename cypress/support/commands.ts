@@ -24,13 +24,25 @@ Cypress.Commands.add(
     myRole,
     ready = '',
     selectedPlayerId = null,
+    result = null,
+    murderedPlayerId = null,
   } = {}) => {
     cy.task('deleteGames')
     cy.task('addUserName')
     cy.task('signIn').then((sessionData) => {
       localStorage.setItem('sb-krsvqfsdxblshgkwnwnb-auth-token', JSON.stringify(sessionData))
     })
-    cy.task('setUpGame', { phase, numOtherPlayers, hostedByMe, addMe, myRole, ready, selectedPlayerId })
+    cy.task('setUpGame', {
+      phase,
+      numOtherPlayers,
+      hostedByMe,
+      addMe,
+      myRole,
+      ready,
+      selectedPlayerId,
+      result,
+      murderedPlayerId,
+    })
   },
 )
 
@@ -51,6 +63,8 @@ declare global {
         myRole?: Role
         ready?: string
         selectedPlayerId?: string
+        result?: 'mafia' | 'innocent' | null
+        murderedPlayerId?: string | null
       }): Chainable<void>
     }
   }

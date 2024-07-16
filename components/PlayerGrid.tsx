@@ -50,12 +50,16 @@ function PlayerCard({
       showVoteCount = voting && isAlive && !isInvestigator && !hasBeenInvestigated
       showRole = !isAlive || isInvestigator || hasBeenInvestigated
       break
+    case 'end':
+      showVoteCount = false
+      showRole = true
+      break
 
     default:
       showVoteCount = false
       showRole = false
   }
-  const selectable = showVoteCount && !isCurrentPlayer
+  const selectable = showVoteCount && !isCurrentPlayer && player?.is_alive
   const roleBgColor = role === 'mafia' ? 'bg-mafiaRed' : role === 'investigator' ? 'bg-mafiaBlue' : 'bg-mafiaYellow'
   const bgColor =
     (isInvestigatorPhase && showRole) || !isAlive ? roleBgColor : selectable ? 'bg-mafiaDarkGray' : 'bg-mafiaGray'

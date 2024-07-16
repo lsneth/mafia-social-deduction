@@ -74,10 +74,10 @@ export function useGame() {
 
 export function GameProvider(props: PropsWithChildren) {
   // These set/dispatch functions should never be used outside of this provider. All updates to game state should be done through the supabase JavaScript Client Library. As subscription changes come in from the supabase real time channel, state updates will be handled here.
+  const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id: string }>()
   const [players, dispatch] = useReducer(playersReducer, null)
   const [game, setGame] = useState<Game | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
-  const { id: gameIdFromQueryParam } = useGlobalSearchParams<{ id: string }>()
   const [rtChannel] = useState<RealtimeChannel>(supabase.channel(gameIdFromQueryParam ?? ''))
   const [rtLoading, setRtLoading] = useState<boolean>(true)
   const { id: profileId } = useProfile()
@@ -114,14 +114,22 @@ export function GameProvider(props: PropsWithChildren) {
             'postgres_changes',
             { event: '*', schema: 'public', table: 'players', filter: `game_id=eq.${gameIdFromQueryParam}` },
             (change) => {
-              onPlayersUpdate(change as PlayersChange)
+              // all DELETE events from real time tables are sent to all subscribers regardless of filter. So here's my own filter.
+              if (!(change.eventType === 'DELETE' && change.old.id !== gameIdFromQueryParam)) {
+                // if the event is not a DELETE for the wrong gameId, update state
+                onPlayersUpdate(change as PlayersChange)
+              }
             },
           )
           ?.on(
             'postgres_changes',
             { event: '*', schema: 'public', table: 'games', filter: `id=eq.${gameIdFromQueryParam}` },
             (change) => {
-              onGameUpdate(change as GameChange)
+              // all DELETE events from real time tables are sent to all subscribers regardless of filter. So here's my own filter.
+              if (!(change.eventType === 'DELETE' && change.old.id !== gameIdFromQueryParam)) {
+                // if the event is not a DELETE for the wrong gameId, update state
+                onGameUpdate(change as GameChange)
+              }
             },
           )
           // https://github.com/supabase/realtime/issues/282

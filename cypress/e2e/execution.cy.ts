@@ -1,7 +1,17 @@
 describe('execution screen', () => {
-  it('should render all elements', () => {
+  it('should render all elements (announce overlay)', () => {
+    cy.setUpGame({ phase: 'execution', numOtherPlayers: 4, murderedPlayerId: Cypress.env('TEST_USER_ID_1') })
+    cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
+
+    cy.contains('test1, an innocent, was murdered last night!')
+    cy.contains('Confirm')
+  })
+
+  it('should render all elements (after announce overlay)', () => {
     cy.setUpGame({ phase: 'execution', numOtherPlayers: 4 })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
+
+    cy.contains('Confirm').click()
 
     cy.contains('EXECUTION PHASE')
     cy.contains('Vote for the person you would like to execute.')
@@ -44,6 +54,8 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
+    cy.contains('Confirm').click()
+
     cy.get('[data-testid="vote-button"]').click()
     cy.get('[data-testid="vote-button"]')
   })
@@ -54,6 +66,8 @@ describe('execution screen', () => {
       numOtherPlayers: 4,
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
+
+    cy.contains('Confirm').click()
 
     cy.contains('test1').click()
     cy.get('[data-testid="vote-button"]').should('be.visible')
@@ -68,6 +82,8 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
+    cy.contains('Confirm').click()
+
     cy.contains('Waiting for other players...').click()
     cy.contains('Waiting for other players...')
   })
@@ -79,6 +95,8 @@ describe('execution screen', () => {
       selectedPlayerId: Cypress.env('TEST_USER_ID_1'),
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
+
+    cy.contains('Confirm').click()
 
     cy.get('[data-testid="vote-button"]').click()
     cy.contains('Waiting for other players...')
@@ -93,7 +111,9 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('test1 is an innocent')
+    cy.contains('Confirm').click()
+
+    cy.contains('test1 was an innocent')
     cy.contains('innocent')
   })
 

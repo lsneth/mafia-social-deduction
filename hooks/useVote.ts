@@ -1,7 +1,15 @@
 import { useGame } from '@/providers/GameProvider'
-import { clearPlayerState, killPlayer, markPlayer, updateGamePhase } from '@/services/game-services'
+import {
+  clearPlayerState,
+  killPlayer,
+  markPlayer,
+  updateGamePhase,
+  updateResult,
+  updateVotedPlayerId,
+  updateVoting,
+} from '@/services/game-services'
 import { Player } from '@/types/game-types'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 function getVotedPlayerId(players: Player[]) {
   const votes: Record<string, number> = {}
@@ -31,74 +39,157 @@ function getVotedPlayerId(players: Player[]) {
   return duplicateVoteCount === maxVoteCount ? null : votedPlayerId
 }
 
-export default function useVotes(phase: 'mafia' | 'investigator' | 'execution') {
-  const [voting, setVoting] = useState(true)
+// TODO: display error when there is a tie
+export default function useVote(phase: 'mafia' | 'investigator' | 'execution') {
   const { player, players, game } = useGame()
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [votedPlayer, setVotedPlayer] = useState<Player | null>(null)
 
   const playerId = player!.profile_id
+  const gameId = game!.id
+  const voting = game!.voting
   const isHost = game!.host_id === playerId
-  const votingPlayers = phase === 'execution' ? players : players?.filter((player) => player.role === phase)
+  const roundCount = game!.round_count
+  const votingPlayers = players!.filter((player) => player.is_alive && (player.role === phase || phase === 'execution'))
   const allVotingPlayersReady = votingPlayers!.every((player) => player.ready === true)
+  const livingInvestigators = players!.filter(
+    (player) => player.is_alive && !player.has_been_murdered && player.role === 'investigator',
+  )
 
+  // game end check
+  const livingMafia = players!.filter((player) => player.is_alive && player.role === 'mafia')
+  const livingNonMafia = players!.filter(
+    (player) => player.is_alive && !player.has_been_murdered && player.role !== 'mafia',
+  )
+  const gameResult = // the game ends when all the mafia are dead or when the mafia equal or outnumber the non-mafia
+    livingMafia.length === 0 ? 'innocent' : livingMafia.length >= livingNonMafia.length ? 'mafia' : null
+
+  // set up for voting
   useEffect(() => {
-    async function endVoting() {
-      if (isHost) {
-        // we only want to make game changes from the host's device
+    if (isHost) {
+      async function setUpVoting() {
+        // clear voted_player_id
+        const { error: updateVotedPlayerIdError } = await updateVotedPlayerId(gameId, null)
+        if (updateVotedPlayerIdError) throw updateVotedPlayerIdError
+        // set voting to true
+        const { error: updateVotingError } = await updateVoting(gameId, true)
+        if (updateVotingError) throw updateVotingError
+      }
+      setUpVoting()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to do this on our first render
+  }, [])
+
+  // voting/phase update
+  useEffect(() => {
+    if (isHost) {
+      async function voteLogic() {
         if (allVotingPlayersReady) {
-          // if all players are in ready state
+          // voting
           if (voting) {
-            const votedPlayerId = getVotedPlayerId(votingPlayers!)
+            const votedPlayerId = getVotedPlayerId(votingPlayers)
+            // if no tie
             if (votedPlayerId) {
-              // if it isn't a tie
               try {
-                if (phase === 'execution') {
-                  const { error: killPlayerError } = await killPlayer(votedPlayerId)
-                  if (killPlayerError) throw killPlayerError
+                if (phase === 'mafia') {
+                  const { error: markMurderedError } = await markPlayer('murdered', votedPlayerId)
+                  if (markMurderedError) throw markMurderedError
+
+                  if (gameResult && livingInvestigators.length <= 0) {
+                    // if game is over and there are no investigators, save the result and update phase to end
+                    try {
+                      const { error: updateResultError } = await updateResult(gameId, gameResult)
+                      if (updateResultError) throw updateResultError
+
+                      const { error: updatePhaseError } = await updateGamePhase(gameId, 'end')
+                      if (updatePhaseError) console.error(updatePhaseError)
+                    } catch (error) {
+                      console.error(error)
+                    }
+                  } else {
+                    // skip straight to next phase, mafia phase doesn't need any confirmations
+                    const { error: updateGamePhaseError } = await updateGamePhase(
+                      gameId,
+                      roundCount === 0 || livingInvestigators.length <= 0 ? 'execution' : 'investigator',
+                    )
+                    if (updateGamePhaseError) throw updateGamePhaseError
+                  }
                 } else {
-                  const { error: markPlayerError } = await markPlayer(
-                    phase === 'mafia' ? 'murdered' : 'investigated',
-                    votedPlayerId,
-                  )
-                  if (markPlayerError) throw markPlayerError
+                  if (phase === 'execution') {
+                    const { error: killPlayerError } = await killPlayer(votedPlayerId)
+                    if (killPlayerError) throw killPlayerError
+                  }
+
+                  if (phase === 'investigator') {
+                    const { error: markInvestigatedError } = await markPlayer('investigated', votedPlayerId)
+                    if (markInvestigatedError) throw markInvestigatedError
+                  }
+
+                  // even though it happens on phase change too, we want to clear player ready states so that we can do the confirmation all ready check (below)
+                  const { error: clearPlayerStateError } = await clearPlayerState(gameId)
+                  if (clearPlayerStateError) throw clearPlayerStateError
+
+                  // update the game voting states
+                  const { error: updateVotedPlayerIdError } = await updateVotedPlayerId(gameId, votedPlayerId)
+                  if (updateVotedPlayerIdError) throw updateVotedPlayerIdError
+                  const { error: updateVotingError } = await updateVoting(gameId, false)
+                  if (updateVotingError) throw updateVotingError
                 }
-
-                // even though it happens on phase change already, we want to clear player states so that we can do the check before navigating (below)
-                const { error: clearPlayerStateError } = await clearPlayerState(game!.id)
-                if (clearPlayerStateError) throw clearPlayerStateError
-
-                setVotedPlayer(players!.find((player) => player.profile_id === votedPlayerId) ?? null)
-                setVoting(false)
               } catch (error) {
                 console.error(error)
               }
-            } else {
-              // if it is a tie
+            }
+            // if tie
+            else {
+              // reset voting so they can try to break the tie
               try {
-                setErrorMessage('The tie must be resolved.')
-                const { error } = await clearPlayerState(game!.id)
+                const { error } = await clearPlayerState(gameId)
                 if (error) throw error
               } catch (error) {
                 console.error(error)
               }
             }
-          } else {
-            if (
-              phase === 'mafia' ||
-              votingPlayers?.find((player) => player.selected_player_id !== null) === undefined
-            ) {
-              // if there are not any players selected
-              const newPhase = phase === 'mafia' ? 'investigator' : phase === 'investigator' ? 'execution' : 'mafia'
-              const { error } = await updateGamePhase(game!.id, newPhase)
-              if (error) console.error(error)
+          }
+          // not voting, confirming (only in investigator and execution phases)
+          else {
+            if (phase === 'investigator' || phase === 'execution') {
+              // check for game end, if game is over, save the result and update phase to end
+              if (gameResult) {
+                try {
+                  const { error: updateResultError } = await updateResult(gameId, gameResult)
+                  if (updateResultError) throw updateResultError
+
+                  const { error: updatePhaseError } = await updateGamePhase(gameId, 'end')
+                  if (updatePhaseError) console.error(updatePhaseError)
+                } catch (error) {
+                  console.error(error)
+                }
+              }
+              // update phase
+              else {
+                const newPhase = phase === 'investigator' ? 'execution' : phase === 'execution' ? 'mafia' : 'end' // this 'end' should never happen here
+                const { error } = await updateGamePhase(gameId, newPhase)
+                if (error) console.error(error)
+              }
             }
           }
         }
       }
+      voteLogic()
     }
-    endVoting()
-  }, [allVotingPlayersReady, game, isHost, phase, players, voting, votingPlayers])
+  }, [
+    allVotingPlayersReady,
+    gameId,
+    gameResult,
+    isHost,
+    livingInvestigators.length,
+    phase,
+    roundCount,
+    voting,
+    votingPlayers,
+  ])
 
-  return { voting, votedPlayer, errorMessage }
+  return {
+    voting,
+    votedPlayer: players!.find((player) => player.profile_id === game!.voted_player_id),
+    errorMessage: null,
+  }
 }

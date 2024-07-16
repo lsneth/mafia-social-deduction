@@ -68,6 +68,8 @@ export async function setUpGame({
   myRole,
   ready,
   selectedPlayerId,
+  result,
+  murderedPlayerId,
 }: {
   hostedByMe: boolean
   addMe: boolean
@@ -76,10 +78,12 @@ export async function setUpGame({
   myRole: Role
   ready: string
   selectedPlayerId: string | null
+  result: 'mafia' | 'innocent' | null
+  murderedPlayerId: string | null
 }) {
   try {
     const { error } = await supabase.functions.invoke('cypress-set-up-game', {
-      body: { hostedByMe, addMe, numOtherPlayers, phase, myRole, ready, selectedPlayerId },
+      body: { hostedByMe, addMe, numOtherPlayers, phase, myRole, ready, selectedPlayerId, result, murderedPlayerId },
     })
     if (error) throw error
   } catch (error) {

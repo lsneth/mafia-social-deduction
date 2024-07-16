@@ -33,7 +33,13 @@ function GameManager() {
   }, [phase])
 
   if (loading) return <ThemedActivityIndicator />
-  if (!game || !player || !players || playerCount <= 0 || (phase !== 'lobby' && playerCount < 5))
+  if (
+    Object.keys(game ?? {}).length === 0 ||
+    !player ||
+    !players ||
+    playerCount <= 0 ||
+    (phase !== 'lobby' && playerCount < 5)
+  )
     return <Redirect href="/+not-found" />
 
   return (

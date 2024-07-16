@@ -5,11 +5,11 @@ import { useGame } from '@/providers/GameProvider'
 import Group from '../Group'
 import ThemedPressable from '../ThemedPressable'
 import { readyPlayer } from '@/services/game-services'
-import useVotes from '@/hooks/useVote'
+import useVote from '@/hooks/useVote'
 
 export default function Investigator() {
   const { players, player } = useGame()
-  const { voting, votedPlayer, errorMessage } = useVotes('investigator')
+  const { voting, votedPlayer, errorMessage } = useVote('investigator') // this is the magic here, it handles the voting and phase update
 
   const selectedPlayerId = player!.selected_player_id
   const playerId = player!.profile_id
