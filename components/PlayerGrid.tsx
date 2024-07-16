@@ -30,9 +30,7 @@ function PlayerCard({
   const isInvestigator = cardPlayer.role === 'investigator'
   const isMafia = cardPlayer.role === 'mafia'
   const isAlive = cardPlayer.is_alive
-  const isInvestigatorPhase = phase === 'investigator'
   const hasBeenInvestigated = cardPlayer.has_been_investigated
-  const hasBeenMurdered = cardPlayer.has_been_murdered
 
   // compound logic flags
   let showRole
@@ -61,9 +59,7 @@ function PlayerCard({
   }
   const selectable = showVoteCount && !isCurrentPlayer && player?.is_alive
   const roleBgColor = role === 'mafia' ? 'bg-mafiaRed' : role === 'investigator' ? 'bg-mafiaBlue' : 'bg-mafiaYellow'
-  const bgColor =
-    (isInvestigatorPhase && showRole) || !isAlive ? roleBgColor : selectable ? 'bg-mafiaDarkGray' : 'bg-mafiaGray'
-  const bgBorder = !isAlive ? (hasBeenMurdered ? 'bg-mafiaRed' : 'bg-mafiaYellow') : selected ? 'bg-mafiaGray' : ''
+  const bgColor = showRole ? roleBgColor : selectable ? 'bg-mafiaDarkGray' : 'bg-mafiaGray'
 
   useEffect(() => {
     // make sure to keep UI votes in sync with master in db once realtime catches up
@@ -72,8 +68,8 @@ function PlayerCard({
 
   return (
     <Pressable
-      className={`flex-1 rounded-lg ${bgBorder ? bgBorder : bgColor} p-1`}
-      style={{ maxWidth: '32%' }}
+      className={`flex-1 rounded-lg ${selected ? 'bg-mafiaWhite' : bgColor} p-1`}
+      style={{ maxWidth: '33%' }}
       disabled={!selectable || selected}
       onPress={() => {
         // update state for snappy UI updates before realtime catches up
@@ -122,9 +118,9 @@ export default function PlayerGrid({ voting = true }: { voting?: boolean }) {
       )}
       numColumns={3}
       keyExtractor={(player) => player.profile_id}
-      columnWrapperStyle={{ gap: 8, height: 100 }}
-      ItemSeparatorComponent={Spacer}
-      // contentContainerStyle={{ flex: 1, justifyContent: 'center' }} // TODO: figure out how to justify-center without hiding top of grid on small screens
+      columnWrapperStyle={{ gap: 4, height: 100 }}
+      ItemSeparatorComponent={() => <Spacer size={1} />}
+      contentContainerStyle={{ marginVertical: 'auto' }}
       style={{ width: '100%' }}
     />
   )

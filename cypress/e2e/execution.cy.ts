@@ -3,7 +3,9 @@ describe('execution screen', () => {
     cy.setUpGame({ phase: 'execution', numOtherPlayers: 4, murderedPlayerId: Cypress.env('TEST_USER_ID_1') })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('test1, an innocent, was murdered last night!')
+    cy.contains('TEST1')
+    cy.contains('WAS MURDERED!')
+    cy.contains('test1 was an innocent. They may no longer speak, vote, or participate in any way.')
     cy.contains('Confirm')
   })
 
