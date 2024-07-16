@@ -1,5 +1,5 @@
 describe('execution screen', () => {
-  it.only('should render all elements (announce overlay)', () => {
+  it('should render all elements (announce overlay)', () => {
     cy.setUpGame({ phase: 'execution', numOtherPlayers: 4, murderedPlayerId: Cypress.env('TEST_USER_ID_1') })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 

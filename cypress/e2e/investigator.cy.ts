@@ -131,6 +131,6 @@ describe('investigator screen', () => {
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('Confirm').click()
-    cy.contains('test1, an innocent, was murdered last night!')
+    cy.contains('WAS MURDERED!')
   })
 })
