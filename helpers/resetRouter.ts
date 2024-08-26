@@ -1,8 +1,7 @@
 import { NavigationProp, StackActions } from '@react-navigation/native'
-import { ExpoRouter } from 'expo-router/types/expo-router'
 
 const resetRouter = (
-  router: ExpoRouter.Router,
+  router: any, // TODO: find how to type this properly
   navigation: NavigationProp<ReactNavigation.RootParamList>,
   initialRoute: string,
 ) => {
