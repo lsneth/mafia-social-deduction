@@ -69,7 +69,7 @@ function PlayerCard({
   return (
     <Pressable
       className={`flex-1 rounded-lg ${selected ? 'bg-mafiaWhite' : bgColor} p-1`}
-      style={{ maxWidth: '33%' }}
+      style={{ maxWidth: '32.5%' }}
       disabled={!selectable || selected}
       onPress={() => {
         // update state for snappy UI updates before realtime catches up
@@ -98,30 +98,34 @@ export default function PlayerGrid({ voting = true }: { voting?: boolean }) {
   }, [player?.selected_player_id])
 
   return (
-    <FlatList
-      data={players}
-      renderItem={({ item }) => (
-        <PlayerCard
-          cardPlayer={item}
-          voting={voting}
-          selected={item.profile_id === newSelectedPlayerId} // state for snappy UI updates before realtime catches up
-          onSelect={async () => {
-            setNewSelectedPlayerId(item.profile_id) // update state for snappy UI updates before realtime catches up
-            try {
-              const { error } = await selectPlayer(player?.profile_id ?? '', item.profile_id ?? '') // update master in db
-              if (error) throw error
-            } catch (error) {
-              console.error(error)
-            }
-          }}
-        />
-      )}
-      numColumns={3}
-      keyExtractor={(player) => player.profile_id}
-      columnWrapperStyle={{ gap: 4, height: 100 }}
-      ItemSeparatorComponent={() => <Spacer size={1} />}
-      contentContainerStyle={{ marginVertical: 'auto' }}
-      style={{ width: '100%' }}
-    />
+    <>
+      <Spacer />
+      <FlatList
+        data={players}
+        renderItem={({ item }) => (
+          <PlayerCard
+            cardPlayer={item}
+            voting={voting}
+            selected={item.profile_id === newSelectedPlayerId} // state for snappy UI updates before realtime catches up
+            onSelect={async () => {
+              setNewSelectedPlayerId(item.profile_id) // update state for snappy UI updates before realtime catches up
+              try {
+                const { error } = await selectPlayer(player?.profile_id ?? '', item.profile_id ?? '') // update master in db
+                if (error) throw error
+              } catch (error) {
+                console.error(error)
+              }
+            }}
+          />
+        )}
+        numColumns={3}
+        keyExtractor={(player) => player.profile_id}
+        columnWrapperStyle={{ gap: 4, height: 100 }}
+        ItemSeparatorComponent={() => <Spacer size={1} />}
+        contentContainerStyle={{ marginVertical: 'auto' }}
+        style={{ width: '100%' }}
+      />
+      <Spacer />
+    </>
   )
 }
