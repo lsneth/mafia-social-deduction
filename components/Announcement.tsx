@@ -1,24 +1,24 @@
-import ThemedView from './ThemedView'
 import { ThemedText } from './ThemedText'
 import ThemedPressable from './ThemedPressable'
 
 export default function Announcement({
-  announcementText,
+  announcementTitle,
+  announcementSubtitle,
   actionButtonText,
   onActionButtonPress,
-  bgImageSrc,
 }: {
-  announcementText: string
+  announcementTitle: string
+  announcementSubtitle: string
   actionButtonText: string
   onActionButtonPress: () => void
-  bgImageSrc: any
 }) {
   return (
-    <ThemedView bgImageSrc={bgImageSrc} className="justify-between">
-      <ThemedText type="title-sm">{announcementText}</ThemedText>
+    <>
+      <ThemedText type="title-sm">{announcementTitle}</ThemedText>
+      <ThemedText type="default">{announcementSubtitle}</ThemedText>
       <ThemedPressable onPress={onActionButtonPress}>
         <ThemedText>{actionButtonText}</ThemedText>
       </ThemedPressable>
-    </ThemedView>
+    </>
   )
 }
