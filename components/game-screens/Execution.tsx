@@ -170,7 +170,6 @@ export default function Execution() {
       fadeInAudio={require('../../assets/audio/wakeAll.mp3')}
       className="justify-between"
     >
-      {/* {screen === 'announce' ? <Announce onClose={() => setScreen('vote')} /> : null} */}
       {voting && !hideMurderAnnouncement ? (
         <Announcement
           announcementTitle={`${murderedPlayerName?.toUpperCase()} WAS MURDERED!`}

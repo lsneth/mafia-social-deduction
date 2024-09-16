@@ -8,14 +8,14 @@ export default function Announcement({
   onActionButtonPress,
 }: {
   announcementTitle: string
-  announcementSubtitle: string
+  announcementSubtitle?: string
   actionButtonText: string
   onActionButtonPress: () => void
 }) {
   return (
     <>
       <ThemedText type="title-sm">{announcementTitle}</ThemedText>
-      <ThemedText type="default">{announcementSubtitle}</ThemedText>
+      {announcementSubtitle ? <ThemedText type="default">{announcementSubtitle}</ThemedText> : null}
       <ThemedPressable onPress={onActionButtonPress}>
         <ThemedText>{actionButtonText}</ThemedText>
       </ThemedPressable>
