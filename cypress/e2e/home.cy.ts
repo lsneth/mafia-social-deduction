@@ -14,6 +14,7 @@ describe('home screen', () => {
     cy.contains('Join Game')
     cy.contains('Host Game')
     cy.contains('Account')
+    cy.contains('Rules')
   })
 
   it('should navigate to join screen', () => {

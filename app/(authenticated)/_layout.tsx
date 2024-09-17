@@ -49,6 +49,20 @@ export default function AuthenticatedLayout() {
             headerStyle: { backgroundColor: colors.mafiaBlack },
           }}
         />
+        <Stack.Screen
+          name="rules"
+          options={{
+            headerTitle: 'How to Play',
+            headerTitleStyle: {
+              color: colors.mafiaWhite,
+              fontFamily: 'CrimsonText_400Regular',
+            },
+            headerTitleAlign: 'center',
+            headerShadowVisible: false,
+            headerTintColor: colors.mafiaWhite, // back arrow
+            headerStyle: { backgroundColor: colors.mafiaBlack },
+          }}
+        />
       </Stack>
     </ProfileProvider>
   )

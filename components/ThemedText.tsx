@@ -5,11 +5,13 @@ export type ThemedTextProps = TextProps & {
   type?: 'default' | 'title' | 'title-sm' | 'subtitle'
   underline?: boolean
   dropShadow?: boolean
+  align?: 'center' | 'left'
 }
 
 export function ThemedText({
   className,
   type = 'default',
+  align = 'center',
   underline = false,
   dropShadow,
   ...rest
@@ -26,7 +28,7 @@ export function ThemedText({
             }
           : {}),
       }}
-      className={`text-mafiaWhite ${type === 'title' ? 'pt-2 text-7xl' : type === 'title-sm' ? 'pt-2 text-5xl' : type === 'subtitle' ? 'text-3xl' : 'text-lg'} ${underline ? 'underline' : ''} text-center ${className}`}
+      className={`text-mafiaWhite ${type === 'title' ? 'pt-2 text-7xl' : type === 'title-sm' ? 'pt-2 text-5xl' : type === 'subtitle' ? 'text-3xl' : 'text-lg'} ${underline ? 'underline' : ''} ${align === 'left' ? 'text-left' : 'text-center'} ${className}`}
       {...rest}
     />
   )
