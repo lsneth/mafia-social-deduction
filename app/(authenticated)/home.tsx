@@ -56,9 +56,17 @@ export default function AuthenticatedHomeScreen() {
           <ThemedText>Host Game</ThemedText>
         </ThemedPressable>
         <Spacer />
+
         <Link href="/account" asChild>
           <ThemedPressable secondary>
             <ThemedText>Account</ThemedText>
+          </ThemedPressable>
+        </Link>
+        <Spacer />
+
+        <Link href="/rules" asChild>
+          <ThemedPressable secondary>
+            <ThemedText>Rules</ThemedText>
           </ThemedPressable>
         </Link>
       </Group>
