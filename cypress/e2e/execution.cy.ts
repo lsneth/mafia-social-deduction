@@ -1,20 +1,19 @@
 describe('execution screen', () => {
-  // eslint-disable-next-line no-only-tests/no-only-tests -- // TODO: fix test
-  it.skip('should render all elements (announce overlay)', () => {
+  it('should render all elements (announce overlay)', () => {
     cy.setUpGame({ phase: 'execution', numOtherPlayers: 4, murderedPlayerId: Cypress.env('TEST_USER_ID_1') })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
     cy.contains('TEST1')
     cy.contains('WAS MURDERED!')
     cy.contains('test1 was an innocent. They may no longer speak, vote, or participate in any way.')
-    cy.contains('Confirm')
+    cy.contains('Dismiss')
   })
 
   it('should render all elements (after announce overlay)', () => {
     cy.setUpGame({ phase: 'execution', numOtherPlayers: 4 })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Confirm').click()
+    cy.contains('Dismiss').click()
 
     cy.contains('EXECUTION PHASE')
     cy.contains('Vote for the person you would like to execute.')
@@ -57,7 +56,7 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Confirm').click()
+    cy.contains('Dismiss').click()
 
     cy.get('[data-testid="vote-button"]').click()
     cy.get('[data-testid="vote-button"]')
@@ -70,7 +69,7 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Confirm').click()
+    cy.contains('Dismiss').click()
 
     cy.contains('test1').click()
     cy.get('[data-testid="vote-button"]').should('be.visible')
@@ -85,7 +84,7 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Confirm').click()
+    cy.contains('Dismiss').click()
 
     cy.contains('Waiting for other players...').click()
     cy.contains('Waiting for other players...')
@@ -99,7 +98,7 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Confirm').click()
+    cy.contains('Dismiss').click()
 
     cy.get('[data-testid="vote-button"]').click()
     cy.contains('Waiting for other players...')
@@ -114,7 +113,7 @@ describe('execution screen', () => {
     })
     cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-    cy.contains('Confirm').click()
+    cy.contains('Dismiss').click()
 
     cy.contains('test1 was an innocent')
     cy.contains('innocent')
@@ -130,7 +129,7 @@ describe('execution screen', () => {
   //   })
   //   cy.visit(`/game?id=${Cypress.env('TEST_GAME_ID')}`)
 
-  //   cy.contains('Confirm').click()
+  //   cy.contains('Dismiss').click()
   //   cy.contains('MAFIA PHASE')
   // })
 })
