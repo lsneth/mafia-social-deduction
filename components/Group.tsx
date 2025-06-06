@@ -4,6 +4,12 @@ import { View, ViewProps } from 'react-native'
 type GroupProps = ViewProps & {}
 
 export default forwardRef(function Group(props: GroupProps, ref): JSX.Element {
-  const { className, ...rest } = props
-  return <View className={`flex w-full items-center`} {...rest} />
+  const { className = '', ...rest } = props
+  return (
+    <View
+      ref={ref}
+      className={`flex w-full items-center ${className}`}
+      {...rest}
+    />
+  )
 })
