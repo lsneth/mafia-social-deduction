@@ -21,6 +21,23 @@ The back-end is built with [Supabase](https://supabase.com/). Data such as playe
 
 - Testing: [Cypress](https://www.cypress.io/) E2E
 
+## Onboarding
+
+The following NPM scripts are available for running the project and its tests:
+
+| Script | Description |
+| --- | --- |
+| `npm start` | Launches the Expo development server. |
+| `npm run android` | Starts the app on an Android emulator or device. |
+| `npm run ios` | Starts the app on an iOS simulator. |
+| `npm run web` | Serves the web version of the app. |
+| `npm run start-test` | Builds the web bundle and serves it on port `8081` for tests. |
+| `npm run test` | Runs the Cypress end-to-end test suite. |
+| `npm run test-open` | Opens the Cypress interface for interactive testing. |
+| `npm run lint` | Runs the Expo linter on the project. |
+| `npm run build` | Exports a production web build. |
+| `npm run reset-project` | Resets cached build data and reinstalls dependencies. |
+
 ## Current Roadmap
 
 ### 1. Minimum Viable Product
