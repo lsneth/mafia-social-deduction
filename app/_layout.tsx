@@ -7,7 +7,7 @@ import { AuthProvider } from '@/providers/AuthProvider'
 import colors from '../constants/colors'
 import * as SystemUI from 'expo-system-ui'
 
-// This makes it so native-wind styles also work on web. For some reason it was necessary even though I'm currently using Expo 51 which is greater than 45.
+// This makes it so native-wind styles also work on web. For some reason it was necessary even though I'm currently using Expo 53 which is greater than 45.
 // https://www.nativewind.dev/quick-starts/expo#expo-sdk-45
 NativeWindStyleSheet.setOutput({
   default: 'native',
