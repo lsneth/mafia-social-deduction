@@ -9,7 +9,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "TS_NODE_PROJECT=tsconfig.node.json npx cypress run",
+    "test": "cross-env TS_NODE_PROJECT=tsconfig.node.json npx cypress run",
     "test-open": "npx cypress open",
     "lint": "expo lint",
     "build": "npx expo export -p web"
@@ -55,6 +55,7 @@
     "@types/react": "~19.0.10",
     "@types/react-test-renderer": "^18.3.0",
     "cypress": "^13.12.0",
+    "cross-env": "^7.0.2",
     "eslint": "^8.57.0",
     "eslint-config-expo": "~9.2.0",
     "eslint-plugin-cypress": "^3.3.0",
