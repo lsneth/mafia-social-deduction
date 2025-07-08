@@ -9,7 +9,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "npx cypress run",
+    "test": "TS_NODE_PROJECT=tsconfig.node.json npx cypress run",
     "test-open": "npx cypress open",
     "lint": "expo lint",
     "build": "npx expo export -p web"
