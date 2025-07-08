@@ -1,6 +1,6 @@
 import useAudio from '@/hooks/useAudio'
 import { useGame } from '@/providers/GameProvider'
-import { AVPlaybackSource } from 'expo-av'
+import { AVPlaybackSource } from 'expo-audio'
 import { useEffect } from 'react'
 import { ImageBackground, ImageSourcePropType, View, type ViewProps } from 'react-native'
 import Animated, { useSharedValue, withTiming } from 'react-native-reanimated'

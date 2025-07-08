@@ -1,4 +1,4 @@
-import { AVPlaybackSource, Audio } from 'expo-av'
+import { AVPlaybackSource, Audio } from 'expo-audio'
 import { useEffect, useState } from 'react'
 
 export default function useAudio(audio: AVPlaybackSource | null, callback?: () => void) {
