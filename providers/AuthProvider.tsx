@@ -35,35 +35,29 @@ export function AuthProvider(props: PropsWithChildren) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    let ignore = false
-    let subscription: { unsubscribe: () => void } | null = null
+    let isMounted = true
 
-    const initialize = async () => {
-      setLoading(true)
-
-      try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
-        if (!ignore) setSession(session)
-
-        const {
-          data: { subscription: sub },
-        } = supabase.auth.onAuthStateChange((_event, sess) => {
-          if (!ignore) setSession(sess)
-        })
-
-        subscription = sub
-      } finally {
-        if (!ignore) setLoading(false)
+    const getInitialSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      if (isMounted) {
+        setSession(session)
+        setLoading(false)
       }
     }
 
-    initialize()
+    getInitialSession()
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, sess) => {
+      if (isMounted) setSession(sess)
+    })
 
     return () => {
-      ignore = true
-      subscription?.unsubscribe()
+      isMounted = false
+      subscription.unsubscribe()
     }
   }, [])
 
