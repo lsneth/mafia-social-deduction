@@ -40,18 +40,25 @@ export function AuthProvider(props: PropsWithChildren) {
     // the app is in the foreground. When this is added, you will continue to receive
     // `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
     // if the user's session is terminated. This should only be registered once.
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+      setLoading(false)
+    })
+
     supabase.auth
       .getSession()
       .then(({ data: { session } }) => {
         setSession(session)
+        setLoading(false)
       })
-      .then(() => setLoading(false))
+      .catch(() => setLoading(false))
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setLoading(true)
-      setSession(session)
-      setLoading(false)
-    })
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   return (
