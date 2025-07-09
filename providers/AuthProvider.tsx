@@ -35,28 +35,34 @@ export function AuthProvider(props: PropsWithChildren) {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    // Tells Supabase Auth to continuously refresh the session automatically if
-    // the app is in the foreground. When this is added, you will continue to receive
-    // `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-    // if the user's session is terminated. This should only be registered once.
+    let ignore = false
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      setLoading(false)
-    })
-
-    supabase.auth
-      .getSession()
-      .then(({ data: { session } }) => {
+      if (!ignore) {
         setSession(session)
         setLoading(false)
-      })
-      .catch(() => setLoading(false))
+      }
+    })
+
+    const initialize = async () => {
+      setLoading(true)
+
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        if (!ignore) setSession(session)
+      } finally {
+        if (!ignore) setLoading(false)
+      }
+    }
+
+    initialize()
 
     return () => {
+      ignore = true
       subscription.unsubscribe()
     }
   }, [])
