@@ -6,7 +6,10 @@ const resetRouter = (
   initialRoute: string,
 ) => {
   // this is a bit hacky but seems to currently be the best solution since expo doesn't offer any kind of navigation.reset() function
-  navigation.dispatch(StackActions.popToTop())
+  // 'POP_TO_TOP' can throw a warning if there is no screen to go back to, so only dispatch when possible
+  if (navigation.canGoBack()) {
+    navigation.dispatch(StackActions.popToTop())
+  }
   router.replace(initialRoute)
 }
 
