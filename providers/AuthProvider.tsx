@@ -45,13 +45,19 @@ export function AuthProvider(props: PropsWithChildren) {
       .then(({ data: { session } }) => {
         setSession(session)
       })
-      .then(() => setLoading(false))
+      .finally(() => setLoading(false))
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setLoading(true)
       setSession(session)
       setLoading(false)
     })
+
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   return (
